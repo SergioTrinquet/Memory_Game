@@ -1,6 +1,6 @@
 # memory-game
 
-EN COURS DE REALIDSATION !  
+!!! EN COURS DE REALISATION !!!  
 Jeu du memory.  
 Développé avec Vue.js 3
 
