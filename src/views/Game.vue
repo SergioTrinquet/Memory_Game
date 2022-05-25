@@ -79,7 +79,7 @@
   import Message from '@/components/Message.vue'
 
   import { useStore } from 'vuex'
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
 
   import JSConfetti from 'js-confetti' /* TEST */
@@ -347,17 +347,19 @@
 
 
 
-  const styleContainer = ref(""); // NEW
-  const rowsColumnsGridCards = ref("");
-  const displayButtonChangeDispo = ref(false);
+
+
+  const gridDisposition_Prop = reactive({ rows: 0, columns: 0 })
+  const gridDisposition = reactive({ rows: 0, columns: 0 })
+  const gridDimensions = reactive({ width: 0, height: 0 })  
+  const gridTemplateAreasStyle = ref([])
+  const displayButtonChangeDispo = ref(false)
   let lastValOrientation = "";
-  let lastValcolumns, lastValRows = 0;
-  let gridTemplateAreasStyle = [];
 
-  let rowsProposition, columnsProposition, width_Grid, height_Grid = 0; // NEW
+  const getOrientation = () =>  (window.matchMedia("(min-aspect-ratio:1/1)").matches) ? "paysage" : "portrait"
 
-  function goodDispoGridCards() {
-    const orientation = (window.matchMedia("(min-aspect-ratio:1/1)").matches) ? "paysage" : "portrait";
+  function getGridRowsAndColumsProposition() {
+    const orientation = getOrientation();
 
     // Prevoir cas changement orientation mobile/tablette
     /* if(window.matchMedia("(hover:hover)").matches) {
@@ -366,91 +368,60 @@
       console.log("Mobile/Tablette"); //TEST
       //if(window.matchMedia("orientation: portrait").matches) { }
     } */
-
+    
+    //console.log("orientation", orientation, "lastValOrientation", lastValOrientation); //TEST
     if(orientation !== lastValOrientation) { // Si changement orientation...
-
-      /* // Affichage message
-      contentMsg.value = { 
-          text : `
-          <span class="msg-disposition-cartes">
-            Pour une meilleure expérience, vous pouvez changer la disposition des cartes en cliquant sur le bouton ci-dessous afin que l'affichage s'adapte au mieux à l'orientation de votre écran.<br> 
-            Cependant, sachez que cela peut perturber le(s) joueur(s), le but du jeu étant de mémoriser l'emplacement de ces cartes.
-          </span>
-          `, 
-          animationName: "messageChangeDispo"
-      } */
-
-      // Affichage bouton pour demander à l'utilisateur s'il veut changer la dispo des cartes
-      const lvo = !!lastValOrientation;
-      if(lvo) displayButtonChangeDispo.value = true;
-
 
       // Récup nb lignes et colonnes de la grid en fct° de l'orientation de l'écran
       const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(orientation);
-      // NEW
-      rowsProposition = rows; 
-      columnsProposition = columns;
-      // FIN NEW
-      console.log("c", columns, "r", rows); //TEST
+      gridDisposition_Prop.rows = rows;
+      gridDisposition_Prop.columns = columns;
 
-      
-      // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
-      gridTemplateAreasStyle = getGridTemplateAreasStyle(columns, rows);
-     
-      lastValcolumns = columns;
-      lastValRows = rows;
-       
 
-      // Libellé bouton
-      rowsColumnsGridCards.value = `${rows} lignes X ${columns} colonnes`;
+      // Affichage message et bouton
+      /* const lvo = !!lastValOrientation;
+      if(!lvo) { */
+        contentMsg.value = { 
+            text : `
+            <span class="msg-disposition-cartes">
+              Pour une meilleure expérience, vous pouvez changer la disposition des cartes en cliquant sur le bouton ci-dessous afin d'avoir un affichage qui s'adapte au mieux aux dimensions de votre écran.<br> 
+              Sachez cependant que cela peut perturber le(s) joueur(s), le but du jeu étant de mémoriser l'emplacement des cartes.
+            </span>
+            `, 
+            animationName: "messageChangeDispo"
+        }
+      //}
+
+      // Affichage bouton pour demander à l'utilisateur s'il veut changer la dispo des cartes
+      displayButtonChangeDispo.value = (gridDisposition_Prop.rows !==  gridDisposition.rows) ? true : false;
+
     }
     lastValOrientation = orientation;
-
-     // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
-    const [widthGrid, heightGrid] = getWidthAndHeightGridStyle(lastValcolumns, lastValRows);
-
-    // NEW
-    width_Grid = widthGrid; 
-    height_Grid = heightGrid;
-    console.log("width_Grid", width_Grid, "height_Grid", height_Grid); //TEST
-    // FIN NEW
-
-    
-    // Affectation variable accueillant les attributs de style de la grille
-    styleContainer.value = {
-      'grid-template-columns': `repeat(${lastValcolumns}, minmax(0, 1fr))`,
-      'grid-template-rows': `repeat(${lastValRows}, minmax(0, 1fr))`,
-      'grid-template-areas': gridTemplateAreasStyle.join(" "),
-      'aspect-ratio': `${lastValcolumns} / ${lastValRows}`,
-      // Solution n°1 qui fonctionne mais pas top visuellement
-      //'height': '70vh'
-      // Solution n°2
-      'width': widthGrid,
-      'height': heightGrid
-    }
   }
 
-/*******/
-/* const styleContainer_2 = computed(() => {
-  return {
-      'grid-template-columns': `repeat(${columnsProposition}, minmax(0, 1fr))`,
-      'grid-template-rows': `repeat(${rowsProposition}, minmax(0, 1fr))`,
-      'grid-template-areas': gridTemplateAreasStyle.join(" "),
-      'aspect-ratio': `${columnsProposition} / ${rowsProposition}`,
-      // Solution n°1 qui fonctionne mais pas top visuellement
-      //'height': '70vh'
-      // Solution n°2
-      'width': width_Grid,
-      'height': height_Grid
-    }
-}) */
-/*******/
+
+  // Attributs de style de la grille
+  const styleContainer = computed(() => {
+    return {
+        'grid-template-columns': `repeat(${gridDisposition.columns}, minmax(0, 1fr))`,
+        'grid-template-rows': `repeat(${gridDisposition.rows}, minmax(0, 1fr))`,
+        'grid-template-areas': gridTemplateAreasStyle.value,
+        'aspect-ratio': `${gridDisposition.columns} / ${gridDisposition.rows}`,
+        // Solution n°1 qui fonctionne mais pas top visuellement
+        //'height': '70vh'
+        // Solution n°2
+        'width': gridDimensions.width,
+        'height': gridDimensions.height
+      }
+  })
+
+  // Libellé bouton
+  const rowsColumnsGridCards = computed(() => `${gridDisposition_Prop.rows} lignes X ${gridDisposition_Prop.columns} colonnes`)
 
 
 
-
+  // Pour générer les areas de la prop. 'grid-template-areas'
   function getGridTemplateAreasStyle(columns, rows) {
-    // Pour générer les areas de la prop. 'grid-template-areas'
     let valAttributeGTA = [];
     let k = 1;
     for(var i = 1; i <= rows; i++) {
@@ -461,11 +432,11 @@
       }
       valAttributeGTA.push(`"${lgn.trim()}"`);
     }
-    return valAttributeGTA;
+    gridTemplateAreasStyle.value = valAttributeGTA.join(" ");
   }
 
 
-  function getWidthAndHeightGridStyle(columns, rows) {
+  function getGridWidthAndHeightStyle(columns, rows) {
     // Affectation variables servant à déterminer largeur ou hauteur de la grille de cartes afin que celle-ci ne déborde jamais de l'écran :
     // Détermination du point de bascule entre hauteur fixe / largeur auto, et largeur fixe / hauteur auto.
     const windowWidth = document.documentElement.clientWidth;
@@ -484,7 +455,8 @@
       height_cardsGrid = "auto";
     }
     //console.log("width_cardsGrid", width_cardsGrid, "height_cardsGrid", height_cardsGrid); //TEST
-    return [width_cardsGrid, height_cardsGrid]
+    gridDimensions.width = width_cardsGrid;
+    gridDimensions.height = height_cardsGrid;
   }
 
  
@@ -492,18 +464,27 @@
   window.addEventListener("resize", () => {
     // Appel fonction que qd event 'resize' s'arrête pour des raisons de performance
     clearTimeout(sto);
-    sto = setTimeout(goodDispoGridCards, 500);
+    sto = setTimeout(() => { 
+        getGridRowsAndColumsProposition(); 
+        // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
+        getGridWidthAndHeightStyle(gridDisposition.columns, gridDisposition.rows);
+      }, 500);
   })
 
 
-  // EN COURS : Pour changer la disposition des cartes qd redimentionnement écran / chgmt orientation mobile
-  function changeDispositionCards() {
-    // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
-    gridTemplateAreasStyle = getGridTemplateAreasStyle(columnsProposition, rowsProposition);
 
+  // Pour changer la disposition des cartes qd redimentionnement écran / chgmt orientation mobile
+  function changeDispositionCards() {
+    gridDisposition.rows = gridDisposition_Prop.rows;
+    gridDisposition.columns = gridDisposition_Prop.columns;
+
+    // Mise à jour computed qui renseigne les styles CSS de la grid :
+    getGridTemplateAreasStyle(gridDisposition.columns, gridDisposition.rows); // 1. Update CSS 'grid-template-areas'
+    getGridWidthAndHeightStyle(gridDisposition.columns, gridDisposition.rows); // 2. Update CSS 'width' et 'height'
+    
     // Disparition bouton
     displayButtonChangeDispo.value = false;
-    // Disparition modal et fo nd qui va avec : A FAIRE
+    // Disparition modal et fond qui va avec : A FAIRE
     
   }
 
@@ -514,8 +495,15 @@
     } else { // ...sinon...
       newGame(); 
 
-      // Pour déterminer le nb de lignes et colonnes de la grille de cartes
-      goodDispoGridCards();
+      // Pour déterminer le nb de lignes et colonnes de la grille de cartes en fonction de l'orientation de l'écran
+      const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(getOrientation());
+      gridDisposition.rows = rows;
+      gridDisposition.columns = columns;
+      // Calcul largeur/hauteur grille
+      getGridWidthAndHeightStyle(columns, rows);
+      // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
+      getGridTemplateAreasStyle(columns, rows);
+
 
       nbPlayers = players.value.length;
       if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
@@ -747,13 +735,12 @@
 :deep(.msg-disposition-cartes) {
   display: block;
   font-family: 'Yeseva One', cursive;
-  font-size: clamp(20px, 3.5vmin, 60px);
-  line-height: clamp(20px, 4.5vmin, 100px);
-  width: min(70vw, 900px);
-
+  font-size: clamp(20px, 3vmin, 60px);
+  line-height: clamp(20px, 4vmin, 100px);
+  width: min(70vw, 700px);
   padding: 5.5vmin 4.5vmin;
   background-color: rgba(255, 255, 255, 0.9);
-  color: #FF2136;
+  color: #64008B;
   border-radius: 10px;
   box-shadow: 0 20px 30px rgba(0,0,0,0.3);
 }
