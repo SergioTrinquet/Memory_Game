@@ -83,13 +83,7 @@ export default createStore({
               { scale: [0, 1], opacity: [0, 1], rotate: '2turn', duration: 1200, endDelay: 1500 },
               { scale: 3, opacity: 0, duration: 400 }
             ]
-          },
-          {
-            nom: 'messageChangeDispo',
-            animations: [ 
-              { opacity: [0.2, 1],  scale: [0.4, 1], duration: 900, endDelay: 60000 }
-            ]
-          },
+          }
         ]
     }
   },
