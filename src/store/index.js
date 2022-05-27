@@ -5,11 +5,6 @@ export default createStore({
     return {
         max_nb_players: 3,
         max_flipping_time_sec: 4,
-        /* option_nb_pairs: [
-          { nb_pairs: 6, dispo_columns: 4, dispo_rows: 3 }, 
-          { nb_pairs: 10, dispo_columns: 5, dispo_rows: 4 },
-          { nb_pairs: 15, dispo_columns: 6, dispo_rows: 5 }
-        ], */
         option_nb_pairs: [
           { nb_pairs: 6, 
             dispos: [
@@ -84,7 +79,14 @@ export default createStore({
               { scale: 3, opacity: 0, duration: 400 }
             ]
           }
-        ]
+        ],
+        grid_disposition: { 
+          rows: 0, 
+          columns: 0 
+        },
+
+        //display_template: false //TEST
+
     }
   },
 
@@ -100,7 +102,18 @@ export default createStore({
     },
     SET_TIME_DISPLAY_CARD(state, payload) {
       state.time_display_card = payload;
-    }
+    },
+    SET_GRID_DISPOSITION(state, payload) {
+      let obj = {};
+      if('rows' in payload) obj = {...obj, rows: payload.rows};
+      if('columns' in payload) obj = {...obj, columns: payload.columns};
+      state.grid_disposition = obj;
+    },
+
+    // TEST
+    /* SET_DISPLAY_TEMPLATE(state, payload) {
+      state.display_template = payload;
+    } */
   },
 
 
@@ -119,7 +132,7 @@ export default createStore({
     getMessageAnimationByName: (state) => (id) => {
       const obj = state.animation_message.find(a => a.nom == id);
       //console.log("Getter", obj.animations); //TEST
-//if(typeof obj == "undefined") { console.log("obj est 'undefined !!!'") } //TEST
+      //if(typeof obj == "undefined") { console.log("obj est 'undefined !!!'") } //TEST
 
       return {
         nom: obj.nom,
@@ -127,7 +140,6 @@ export default createStore({
       }
       
     },
-
     getSelectedNbPairOfCardsData: (state) => (orientation) => {
       const data = state.option_nb_pairs.find(o => o.nb_pairs == state.nb_pair_of_cards);
       const orientationDispo = data.dispos.find(d => d.orientation == orientation);
@@ -136,9 +148,8 @@ export default createStore({
         columns: orientationDispo.dispo.columns, 
         rows: orientationDispo.dispo.rows 
       }
-    }
+    },
     
   }
-
 
 })
