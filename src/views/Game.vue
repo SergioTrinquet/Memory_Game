@@ -66,7 +66,7 @@
     >
       <div 
         class="msg-disposition-cartes" 
-        :class="displayMsgInfoChangeDispo ?  'is-displayed': ''"
+        :class="displayButtonChangeDispo && displayMsgInfoChangeDispo ?  'is-displayed': ''"
       >
         <p>Pour une meilleure expérience, vous pouvez changer la disposition des cartes en cliquant sur le bouton ci-dessous afin d'avoir un affichage qui s'adapte au mieux aux dimensions de votre écran.</p>
         <p>Sachez cependant que cela peut perturber le(s) joueur(s), le but du jeu étant de mémoriser l'emplacement des cartes.</p>
@@ -372,7 +372,7 @@
 
   const getOrientation = () =>  (window.matchMedia("(min-aspect-ratio:1/1)").matches) ? "paysage" : "portrait"
 
-  function getGridRowsAndColumsProposition() {
+  function getGridRowsAndColumnsProposition() {
     const orientation = getOrientation();
 
     // Prevoir cas changement orientation mobile/tablette
@@ -461,7 +461,7 @@
     // Appel fonction que qd event 'resize' s'arrête pour des raisons de performance
     clearTimeout(sto);
     sto = setTimeout(() => { 
-        getGridRowsAndColumsProposition(); 
+        getGridRowsAndColumnsProposition(); 
         // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
         getGridWidthAndHeightStyle(gridDisposition.columns, gridDisposition.rows);
       }, 500);
@@ -695,64 +695,72 @@
 
 .wrapper-bt-change-disposition {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   bottom: 5vh;
   flex-direction: column;
-  /* display: none; */
-
-  display: flex;pointer-events: none; opacity: 0;
+  align-items: center;
+  display: flex;
+  
+  pointer-events: none; 
+  opacity: 0;
 }
 .wrapper-bt-change-disposition.is-displayed {
-  /* display: flex; */
-
-  pointer-events:initial; opacity: 1;
+  pointer-events: initial;
+  opacity: 1;
 }
 .bt-change-disposition,
 .msg-disposition-cartes {
   background-color: #fff;
   color: #64008B;
   border-radius: 5px;
+}
+.bt-change-disposition,
+.msg-disposition-cartes,
+.bt-close-msg {
   font-size: clamp(18px, 3.2vw, 22px);
 }
 .bt-change-disposition {
-  padding: 4px 20px;
+  padding: max(1vh, 4px) 20px;
   border: none;
   box-shadow: 0px 6px 8px rgba(0,0,0,0.3);
+  width: min(80vw, 400px);
 
   /* Pour transition qd apparait */
-  transition: 0.5s all ease-in-out;
+  transition: 0.5s transform ease-in-out, 0.5s opacity ease-in-out;
   transform: translateY(20px);
   opacity: 0;
-  /**/
 }
-/* Pour transition qd apparait */
+
 .wrapper-bt-change-disposition.is-displayed .bt-change-disposition {
   transform: translateY(0);
   opacity: 1;
 }
-/**/
 
 /* :deep(.msg-disposition-cartes) */
 .msg-disposition-cartes {
   line-height: clamp(20px, 4vmin, 400px);
-  width: min(70vw, 700px);
+  width: min(80vw, 700px);
   padding: 5.5vmin 4.5vmin;
   box-shadow: 0px 6px 8px rgba(0,0,0,0.3), 0 0 0px 100vh rgba(0, 0, 0, 0.5);
   margin-bottom: 60px;
   text-align: center;
-  display: none;
+
+  /* Pour transition qd apparait */
+  transition: 0.5s transform ease-in-out 0.5s, 0.5s opacity ease-in-out 0.5s;
+  transform: translateY(-20px);
+  opacity: 0;
 }
 .msg-disposition-cartes::after {
   content: "";
   position: absolute;
-  bottom: 65px;
+  bottom: 0;
   width: 0;
   height: 0;
   border-style: solid;
   border-width: 30px 25px 0 25px;
   border-color: #fff transparent transparent transparent;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 100%);
 }
 .msg-disposition-cartes > * {
   font-family: 'Yeseva One', cursive;
@@ -763,7 +771,11 @@
 }
 .msg-disposition-cartes.is-displayed,
 .msg-disposition-cartes .bt-close-msg {
-  display: block;
+  /* display: block; */
+
+  /* Pour transition qd apparait */
+  transform: translateY(0);
+  opacity: 1;
 }
 .msg-disposition-cartes .bt-close-msg {
   margin: 15px auto 0 auto;
