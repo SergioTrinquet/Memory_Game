@@ -60,6 +60,7 @@
     <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
     <Transition name="fade">
         <ButtonChangeCardsDisposition 
+          :grid-dispo-proposition="gridDispositionProposition"
           @disposition-changed="onDispositionChanged" 
           v-if="displayComponentButtonChangeCardsDisposition"
         />
@@ -344,7 +345,7 @@
   /* FIN TEST: NVELLE VERSION */
 
 
-  const gridDisposition = computed(() => store.state.grid_disposition)
+  const gridDisposition = reactive({  rows: 0, columns: 0 })
   const gridDimensions = reactive({ width: 0, height: 0 })  
   const gridTemplateAreasStyle = ref([])
 
@@ -353,10 +354,10 @@
   // Attributs de style de la grille
   const styleContainer = computed(() => {
     return {
-        'grid-template-columns': `repeat(${gridDisposition.value.columns}, minmax(0, 1fr))`,
-        'grid-template-rows': `repeat(${gridDisposition.value.rows}, minmax(0, 1fr))`,
+        'grid-template-columns': `repeat(${gridDisposition.columns}, minmax(0, 1fr))`,
+        'grid-template-rows': `repeat(${gridDisposition.rows}, minmax(0, 1fr))`,
         'grid-template-areas': gridTemplateAreasStyle.value,
-        'aspect-ratio': `${gridDisposition.value.columns} / ${gridDisposition.value.rows}`,
+        'aspect-ratio': `${gridDisposition.columns} / ${gridDisposition.rows}`,
         // Solution n°1 qui fonctionne mais pas top visuellement
         //'height': '70vh'
         // Solution n°2
@@ -368,9 +369,10 @@
 
 
   // Pour générer les areas de la prop. 'grid-template-areas'
-  function getGridTemplateAreasStyle() {
-    const columns = gridDisposition.value.columns;
-    const rows = gridDisposition.value.rows;
+  function setGridTemplateAreasStyle() {
+    const columns = gridDisposition.columns;
+    const rows = gridDisposition.rows;
+
     let valAttributeGTA = [];
     let k = 1;
     for(var i = 1; i <= rows; i++) {
@@ -385,9 +387,9 @@
   }
 
 
-  function getGridWidthAndHeightStyle() {
-    const columns = gridDisposition.value.columns;
-    const rows = gridDisposition.value.rows;
+  function setGridWidthAndHeightStyle() {
+    const columns = gridDisposition.columns;
+    const rows = gridDisposition.rows;
 
     // Affectation variables servant à déterminer largeur ou hauteur de la grille de cartes afin que celle-ci ne déborde jamais de l'écran :
     // Détermination du point de bascule entre hauteur fixe / largeur auto, et largeur fixe / hauteur auto.
@@ -411,10 +413,11 @@
   }
 
 
-  //// 30/05 //// 
-  const gridDisposition_Prop = computed(() => store.state.grid_disposition_prop)
+
+  const gridDispositionProposition = reactive({ rows: 0, columns: 0  })
   let lastValOrientation = "" 
-  function getGridRowsAndColumnsProposition() {
+
+  function setGridRowsAndColumnsProposition() {
         const orientation = getOrientation();
 
         // Prevoir cas changement orientation mobile/tablette
@@ -426,15 +429,16 @@
         } */
         
         if(orientation !== lastValOrientation) { // Si changement orientation...
-            // Récup nb lignes et colonnes de la grid en fct° de l'orientation de l'écran
+            // Récup nb lignes et colonnes idéals de la grid en fct° de l'orientation de l'écran
             const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(orientation);
-            store.commit('SET_GRID_DISPOSITION_PROP', { columns, rows });
+            // Affectation de ces données à variable 'gridDispositionProposition'
+            setGridDisposition({ columns, rows }, gridDispositionProposition);
+
             // Affichage bouton pour demander à l'utilisateur s'il veut changer la dispo des cartes
-            displayComponentButtonChangeCardsDisposition.value = (gridDisposition_Prop.value.rows !== gridDisposition.value.rows) ? true : false;
+            displayComponentButtonChangeCardsDisposition.value = (gridDispositionProposition.rows !== gridDisposition.rows) ? true : false;
         }
         lastValOrientation = orientation;
     }
-  //// Fin 30/05 ////
 
  
   let sto = null;
@@ -442,32 +446,25 @@
     // Appel fonction que qd event 'resize' s'arrête pour des raisons de performance
     clearTimeout(sto);
     sto = setTimeout(() =>{ 
-      getGridRowsAndColumnsProposition();
-      getGridWidthAndHeightStyle()  // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
+      setGridRowsAndColumnsProposition();
+      setGridWidthAndHeightStyle()  // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
     }, 500); 
   })
 
 
   // Appelé qd click sur bt ds composant enfant pour changer disposition des cartes
   function onDispositionChanged() {   
-    // MAJ données gridDisposition
-    store.commit('SET_GRID_DISPOSITION', gridDisposition_Prop.value);
-        
-    getGridTemplateAreasStyle(); // 1. Update CSS 'grid-template-areas'
-    getGridWidthAndHeightStyle(); // 2. Update CSS 'width' et 'height'
-    
+    setGridDisposition(gridDispositionProposition, gridDisposition); // MAJ données gridDisposition       
+    setGridTemplateAreasStyle(); // 1. Update CSS 'grid-template-areas'
+    setGridWidthAndHeightStyle(); // 2. Update CSS 'width' et 'height'
     displayComponentButtonChangeCardsDisposition.value = false; // Disparition composant bouton
   }
 
-  /////////////////
-  /* const gridDisposition = reactive({  rows: 0, columns: 0 })
-  function setGridDisposition(gridDispo) {
-      let obj = {};
-      if('rows' in gridDispo) obj = {...obj, rows: gridDispo.rows};
-      if('columns' in gridDispo) obj = {...obj, columns: gridDispo.columns};
-      state.grid_disposition = obj;
-  } */
-  /////////////////
+
+  function setGridDisposition(gridDispoFrom, gridDispoTo) {
+      if('rows' in gridDispoFrom) gridDispoTo.rows = gridDispoFrom.rows;
+      if('columns' in gridDispoFrom) gridDispoTo.columns = gridDispoFrom.columns;
+  }
 
 
   onMounted(() => {
@@ -476,22 +473,25 @@
     } else { // ...sinon...
       newGame(); 
 
-      // Récup. données pour affichage de la grille de cartes : Pour déterminer le nb de lignes et colonnes de la grille de cartes en fonction de l'orientation de l'écran
+      // Affichage grille de cartes : Pour déterminer le nb de lignes/colonnes 
+      // de la grille de cartes en fonction de l'orientation de l'écran
       const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(getOrientation());
-      store.commit('SET_GRID_DISPOSITION', { rows, columns });
-      getGridWidthAndHeightStyle(); // Calcul largeur/hauteur grille
-      getGridTemplateAreasStyle(); // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
+      setGridDisposition({ rows, columns }, gridDisposition);
+
+      setGridWidthAndHeightStyle(); // Calcul largeur/hauteur grille
+      setGridTemplateAreasStyle(); // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
 
 
       nbPlayers = players.value.length;
       if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
 
+      // Msg d'intro
       contentMsg.value = [
           { text: "3", duration: 0.7, animationName: "countdown" },
           { text: "2", duration: 0.7, animationName: "countdown" },
           { text: "1", duration: 0.7, animationName: "countdown" },
           { text: "Go!", duration: 1, animationName: "countdown" }
-        ] // Msg d'intro
+        ]
     }
   });
 </script>

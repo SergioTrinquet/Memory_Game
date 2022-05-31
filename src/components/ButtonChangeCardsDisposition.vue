@@ -6,7 +6,7 @@
         >
             <p>Pour une meilleure expérience, vous pouvez changer la disposition des cartes en cliquant sur le bouton ci-dessous afin d'avoir un affichage qui s'adapte au mieux aux dimensions de votre écran.</p>
             <p>Sachez cependant que cela peut perturber le(s) joueur(s), le but du jeu étant de mémoriser l'emplacement des cartes.</p>
-            <button class="bt-close-msg" @click="displayMsgInfo = false">J'ai compris !</button>
+            <button class="bt-close-msg" @click="closeMsgInfo">J'ai compris !</button>
         </div>
 
         <!-- <div>Changer la disposition des cartes</div> -->
@@ -21,20 +21,21 @@
 </template>
 
 <script setup>
-    import { computed, /* reactive,  */ref, defineEmits } from 'vue'
+    import { computed, defineEmits, defineProps } from 'vue'
+
     import { useStore } from 'vuex'
+    const store = useStore();
 
-    const store = useStore()
+    const prop = defineProps({ gridDispoProposition: Object })
 
-    /* const gridDisposition_Prop = reactive({ rows: 0, columns: 0 }) */    
-    const gridDisposition_Prop = computed(() => store.state.grid_disposition_prop)
-
-    const displayMsgInfo = ref(true)
+    const displayMsgInfo = computed(() => store.state.msg_bt_change_dispo_cards)
     
-
     // Libellé bouton
-    const rowsColumnsGridCards = computed(() => `${gridDisposition_Prop.value.rows} lignes X ${gridDisposition_Prop.value.columns} colonnes`)
+    const rowsColumnsGridCards = computed(() => `${prop.gridDispoProposition.rows} lignes X ${prop.gridDispoProposition.columns} colonnes`)
 
+    function closeMsgInfo() {
+        store.commit('SET_DISPLAY_MSG_BT_CHANGE_DISPO_CARDS', false)
+    }
 
     // Qd click bouton pour changer la disposition des cartes lorsque redimentionnement écran / chgmt orientation mobile
     const emit = defineEmits(['dispositionChanged']);
@@ -91,7 +92,7 @@
         text-align: center;
         /* Pour transition qd apparait */
         opacity: 0;
-        animation: fadeInFromTop 0.5s ease-in-out 0.8s forwards;
+        animation: fadeInFromTop 0.6s ease-in-out 0.7s forwards;
     }
     @keyframes fadeInFromTop {
         0% { 
@@ -118,7 +119,7 @@
 
     .msg-disposition-cartes.hidden {
         /* display: none; */
-        animation: fadeInFromTop 0.5s ease-in-out backwards;
+        animation: fadeInFromTop 0s ease-in-out backwards;
     }
 
     .msg-disposition-cartes > * {

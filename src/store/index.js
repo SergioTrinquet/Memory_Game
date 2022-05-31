@@ -80,17 +80,7 @@ export default createStore({
             ]
           }
         ],
-        grid_disposition: { 
-          rows: 0, 
-          columns: 0 
-        },
-
-        // TEST
-        grid_disposition_prop: { 
-          rows: 0, 
-          columns: 0 
-        },
-
+        msg_bt_change_dispo_cards: true
     }
   },
 
@@ -107,21 +97,9 @@ export default createStore({
     SET_TIME_DISPLAY_CARD(state, payload) {
       state.time_display_card = payload;
     },
-    SET_GRID_DISPOSITION(state, payload) {
-      let obj = {};
-      if('rows' in payload) obj = {...obj, rows: payload.rows};
-      if('columns' in payload) obj = {...obj, columns: payload.columns};
-      state.grid_disposition = obj;
-    },
-
-    // TEST
-    SET_GRID_DISPOSITION_PROP(state, payload) {
-      let obj = {};
-      if('rows' in payload) obj = {...obj, rows: payload.rows};
-      if('columns' in payload) obj = {...obj, columns: payload.columns};
-      state.grid_disposition_prop = obj;
-    },
-
+    SET_DISPLAY_MSG_BT_CHANGE_DISPO_CARDS(state, payload) {
+      state.msg_bt_change_dispo_cards = payload;
+    }
 
   },
 
