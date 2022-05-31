@@ -85,7 +85,11 @@ export default createStore({
           columns: 0 
         },
 
-        //display_template: false //TEST
+        // TEST
+        grid_disposition_prop: { 
+          rows: 0, 
+          columns: 0 
+        },
 
     }
   },
@@ -111,9 +115,14 @@ export default createStore({
     },
 
     // TEST
-    /* SET_DISPLAY_TEMPLATE(state, payload) {
-      state.display_template = payload;
-    } */
+    SET_GRID_DISPOSITION_PROP(state, payload) {
+      let obj = {};
+      if('rows' in payload) obj = {...obj, rows: payload.rows};
+      if('columns' in payload) obj = {...obj, columns: payload.columns};
+      state.grid_disposition_prop = obj;
+    },
+
+
   },
 
 

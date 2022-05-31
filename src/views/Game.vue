@@ -58,13 +58,12 @@
 
 
     <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
-    <!-- <ButtonChangeCardsDisposition 
-      @disposition-changed="onDispositionChanged" 
-  v-if="displayTemplate"
-    /> -->
-    <ButtonChangeCardsDisposition 
-      @disposition-changed="onDispositionChanged" 
-    />
+    <Transition name="fade">
+        <ButtonChangeCardsDisposition 
+          @disposition-changed="onDispositionChanged" 
+          v-if="displayComponentButtonChangeCardsDisposition"
+        />
+    </Transition>
 
   </div>
 
@@ -80,9 +79,8 @@
 
   import JSConfetti from 'js-confetti'
 
-  //import ButtonChangeCardsDisposition from '@/components/ButtonChangeCardsDisposition.vue'  LE CHARGER EN ASYNC
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
-  /* TEST */ //const displayTemplate = computed(() => store.state.display_template)
+  const displayComponentButtonChangeCardsDisposition = ref(false)
 
   const store = useStore();
   const router = useRouter();
@@ -412,19 +410,64 @@
     gridDimensions.height = height_cardsGrid;
   }
 
+
+  //// 30/05 //// 
+  const gridDisposition_Prop = computed(() => store.state.grid_disposition_prop)
+  let lastValOrientation = "" 
+  function getGridRowsAndColumnsProposition() {
+        const orientation = getOrientation();
+
+        // Prevoir cas changement orientation mobile/tablette
+        /* if(window.matchMedia("(hover:hover)").matches) {
+            console.log("Ordi"); //TEST
+        } else {
+        console.log("Mobile/Tablette"); //TEST
+        //if(window.matchMedia("orientation: portrait").matches) { }
+        } */
+        
+        if(orientation !== lastValOrientation) { // Si changement orientation...
+            // Récup nb lignes et colonnes de la grid en fct° de l'orientation de l'écran
+            const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(orientation);
+            store.commit('SET_GRID_DISPOSITION_PROP', { columns, rows });
+            // Affichage bouton pour demander à l'utilisateur s'il veut changer la dispo des cartes
+            displayComponentButtonChangeCardsDisposition.value = (gridDisposition_Prop.value.rows !== gridDisposition.value.rows) ? true : false;
+        }
+        lastValOrientation = orientation;
+    }
+  //// Fin 30/05 ////
+
  
   let sto = null;
   window.addEventListener("resize", () => {
     // Appel fonction que qd event 'resize' s'arrête pour des raisons de performance
     clearTimeout(sto);
-    sto = setTimeout(getGridWidthAndHeightStyle, 500); // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
+    sto = setTimeout(() =>{ 
+      getGridRowsAndColumnsProposition();
+      getGridWidthAndHeightStyle()  // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
+    }, 500); 
   })
 
+
   // Appelé qd click sur bt ds composant enfant pour changer disposition des cartes
-  function onDispositionChanged() {
+  function onDispositionChanged() {   
+    // MAJ données gridDisposition
+    store.commit('SET_GRID_DISPOSITION', gridDisposition_Prop.value);
+        
     getGridTemplateAreasStyle(); // 1. Update CSS 'grid-template-areas'
     getGridWidthAndHeightStyle(); // 2. Update CSS 'width' et 'height'
+    
+    displayComponentButtonChangeCardsDisposition.value = false; // Disparition composant bouton
   }
+
+  /////////////////
+  /* const gridDisposition = reactive({  rows: 0, columns: 0 })
+  function setGridDisposition(gridDispo) {
+      let obj = {};
+      if('rows' in gridDispo) obj = {...obj, rows: gridDispo.rows};
+      if('columns' in gridDispo) obj = {...obj, columns: gridDispo.columns};
+      state.grid_disposition = obj;
+  } */
+  /////////////////
 
 
   onMounted(() => {
@@ -633,4 +676,15 @@
   margin: calc(var(--margin-header) * -1) 0 0 0;
   padding: 1vw;
 }
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 </style>
