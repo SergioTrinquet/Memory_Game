@@ -119,7 +119,21 @@
 
     .msg-disposition-cartes.hidden {
         /* display: none; */
-        animation: fadeInFromTop 0s ease-in-out backwards;
+        animation: fadeOut 0.5s ease-in-out forwards;
+    }
+    @keyframes fadeOut {
+        0% { 
+            transform: translateY(0);
+            opacity: 1; 
+        }
+        99% {
+            transform: translateY(20px);
+            opacity: 0; 
+        }
+        100% { 
+            transform: translateY(-100vh);
+            opacity: 0; 
+        }
     }
 
     .msg-disposition-cartes > * {
