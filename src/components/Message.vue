@@ -4,7 +4,6 @@
         :class="{ display: localMsg.length > 0 }"
         @click="clearMsg"
     >
-        <!-- <div class="contentMessage">{{ localMsg }}</div> -->
         <div class="contentMessage" v-html="localMsg"></div>
     </div>
 </template>
@@ -48,8 +47,6 @@
     })
     const msg = computed(() => props.content)
     let localMsg = ref("");
-
-
 
 
     watch(msg, (val) => {
