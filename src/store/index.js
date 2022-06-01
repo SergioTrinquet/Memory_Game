@@ -55,6 +55,12 @@ export default createStore({
             ]
           },
           {
+            nom: 'tooLate',
+            animations: [ 
+              { opacity: [0.2, 1], rotate: ["-35deg", "0deg"], duration: 700, endDelay: 1200 }
+            ]
+          },
+          {
             nom: 'fail',
             animations: [ 
               { opacity: [0.2, 1], translateY: ["-100vh", "0vh"], duration: 700, endDelay: 700 }
@@ -80,7 +86,7 @@ export default createStore({
             ]
           }
         ],
-        msg_bt_change_dispo_cards: true
+        msg_bt_change_dispo_cards: true,
     }
   },
 
@@ -99,8 +105,7 @@ export default createStore({
     },
     SET_DISPLAY_MSG_BT_CHANGE_DISPO_CARDS(state, payload) {
       state.msg_bt_change_dispo_cards = payload;
-    }
-
+    },
   },
 
 
