@@ -1,7 +1,7 @@
 <template>
-  <div class="countdown">
-    {{ countdown }}
-</div>
+    <div class="msgCountdown">
+        Plus que <span class="countdown">{{ countdown }}</span> sec. pour choisir ta 2eme carte
+    </div>
 </template>
 
 <script setup>
@@ -14,28 +14,11 @@
 
     const emit = defineEmits(['countdownOver'])
 
-    /* const props = defineProps({ 
-            abort: Boolean 
-        })
-    watch(
-        () => props.abort, 
-        (val) => { 
-            //console.log("Watch dans composant 'Countdown'", "start >> " + val.start, "abort >> " + val.abort) //TEST
-            console.log("Watch sur 'prop.abort' ds composant 'Countdown'", val) //TEST
-            if(val.abort) {
-                display.value = false
-                stopCountdown()
-            }
-        }
-    ) */
-
-
     let ct = null;
     const startCountdown = () => { ct = setInterval(decrease, 1000) };
     const stopCountdown = () => clearInterval(ct);
 
     function decrease() {
-        //console.log("Appelé ttes les sec."); //TEST
         if(countdown.value > 0) {
             countdown.value -= 1
         } else {
@@ -50,14 +33,17 @@
 </script>
 
 <style>
-    .countdown {
+    .msgCountdown {
         position: fixed;
         top: 100px;
         color: #fff;
-        font-weight: bold;
         width: 100vw;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .countdown {
+        font-weight: bold;
+        margin: 0 1vw;
     }
 </style>
