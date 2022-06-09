@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, defineEmits/* , defineProps, watch */ , onMounted, onUnmounted} from 'vue'
+    import { ref, computed, defineEmits, onMounted, onUnmounted} from 'vue'
     import { useStore } from 'vuex'
 
     const store = useStore()
