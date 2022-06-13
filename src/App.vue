@@ -44,7 +44,8 @@ html, body {
   height: 100%;
 }
 
-button {
+button, 
+button > span {
   font-family: 'Yeseva One', cursive;
   font-size: 3vw;
   cursor: pointer;
