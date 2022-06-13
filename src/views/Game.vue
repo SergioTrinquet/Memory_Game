@@ -19,16 +19,15 @@
        </div>
     </div>
 
-    
-    <div class="nb-tours" v-show="turns > 0">
-      {{ nbPlayedTurns }}: {{ turns }}
-    </div>
-    
     <template v-slot:btn-rejouer>
       <button @click="replay">Rejouer avec les mêmes paramètres</button>
     </template>
   </Header> 
 
+  <NbTurnsPlayed 
+    v-if="turns > 0"
+    :nbTurns="turns"  
+  />
 
   <Countdown
     v-if="displayCountdown"
@@ -81,7 +80,7 @@
   import Message from '@/components/Message.vue'
 
   import { useStore } from 'vuex'
-  import { ref, reactive, computed, onMounted, defineAsyncComponent } from 'vue'
+  import { ref, reactive, computed, onMounted, defineAsyncComponent/* , nextTick */ } from 'vue'
   import { useRouter } from 'vue-router'
 
   import JSConfetti from 'js-confetti'
@@ -90,6 +89,7 @@
   const displayComponentButtonChangeCardsDisposition = ref(false)
 
   const Countdown = defineAsyncComponent(() => import(/* webpackChunkName: "CountDown" */ '@/components/CountDown.vue'))
+  const NbTurnsPlayed = defineAsyncComponent(() => import(/* webpackChunkName: "NbTurnsPlayed" */ '@/components/NbTurnsPlayed.vue'))
 
   const store = useStore();
   const router = useRouter();
@@ -159,11 +159,6 @@
   const turns = ref(0);
 
   const delayDisplayMenu = 5000;
-  
-  const nbPlayedTurns = computed(() => {
-    const pluriel = (turns.value > 1) ? "s" : ""
-    return `Tour${pluriel} joué${pluriel}`
-  })
 
 
   const displayCountdown = ref(false)
@@ -193,71 +188,9 @@
         const idx_CardsFlippedPerTurn = cardsFlippedPerTurn.map(c => c.idx);  //console.log("idx_CardsFlippedPerTurn", idx_CardsFlippedPerTurn); //TEST
         // Check si cartes identiques ou pas 
         if([...new Set(idx_CardsFlippedPerTurn)].length == 1) { // ...Si les 2 cartes retournées identiques
-          
-          /* 
-          let text = "",
-            animationName = undefined;
-          
-          setTimeout((cards) => {
-            cards.forEach(c => {
-              document.querySelector(`.flip-card[data-order="${c.order}"]`).classList.add("found"); // Marqueur comme quoi trouvées
-            });
-
-            players.value[idxPlayer].score += 1; // Incrémentation score
-
-             // Message personnalisé qd coups gagnants successifs
-            successiveFoundPairsPerPlayer++;
-            const msgPart = getWordsForMsg(successiveFoundPairsPerPlayer);
-            
-
-            foundPairs += 1; // Nb de paires trouvées par l'ensemble des joueurs ou le joueur
-           
-            if(foundPairs == selectedNbPairOfCards.value) { // Si ttes les paires sont trouvées...
-              text = msgEndOfTheGame(turns.value);
-              setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
-              animationName = 'winner';
-              displayConfettis();
-            } else { //...Sinon si jeu pas encore fini
-              text = `!! ${msgPart} ${players.value[idxPlayer].nom.toUpperCase()} !!`;
-              animationName = 'success';
-            }
-            contentMsg.value = { text, animationName };
-
-            reinit();
-          }, 
-          1500, 
-          cardsFlippedPerTurn) */
-
-          flipCardsSuccess(); // TEST
-
+          flipCardsSuccess();
         } else {  // ...Sinon...
-
-          /* setTimeout((cards) => {
-            cards.forEach(c => {
-              document.querySelector(`.flip-card[data-order="${c.order}"]`).classList.toggle("flipped"); // ...On retourne à nouveau les cartes
-            });
-
-            successiveFoundPairsPerPlayer = 0;
-
-            contentMsg.value = [{ text: "😬 Raté!", animationName: 'fail' }];
-            if(nbPlayers > 1) { // Quand plusieurs joueurs...
-              players.value[idxPlayer].turn = false;
-              idxPlayer += 1;
-              if(idxPlayer > nbPlayers - 1) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
-              
-              players.value[idxPlayer].turn = true;
-              contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' });
-            } 
-
-            // TEST : A VIRER //contentMsg.value = [{ text, animationName }, { text: "text 2", animationName }, { text: "text 3", animationName }];
-
-            reinit();
-
-          }, 
-          1500, 
-          cardsFlippedPerTurn) */
-
-          flipCardsFailing(); //TEST
+          flipCardsFailing();
         }
         
       }
@@ -271,15 +204,19 @@
   }
 
 
-  //////// TEST ///////
+
   function flipCardsFailing() {
-    setTimeout((cards) => {
+    setTimeout(/* async */ (cards) => {
         cards.forEach(c => {
           document.querySelector(`.flip-card[data-order="${c.order}"]`).classList.toggle("flipped"); // ...On retourne à nouveau les cartes
         });
 
         successiveFoundPairsPerPlayer = 0;
-        contentMsg.value = [{ text: "😬 Raté!", animationName: 'fail' }];
+
+        contentMsg.value = [{ text: "😬 Raté!", animationName: 'fail' }]; // Ancienne version
+        /* await nextTick() */
+        /* let allMsgs = [];// Nvelle version
+        allMsgs.push({ text: "😬 Raté!", animationName: 'fail' }); // Nvelle version */
 
         if(nbPlayers > 1) { // Quand plusieurs joueurs...
           players.value[idxPlayer].turn = false;
@@ -287,8 +224,13 @@
           if(idxPlayer > nbPlayers - 1) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
           
           players.value[idxPlayer].turn = true;
-          contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' });
+          contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' }); // Ancienne version
+          //allMsgs.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' }); // Nvelle version
+        
+          //contentMsg.value = [{ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' }];
         } 
+
+        //contentMsg.value = allMsgs; // Nvelle version
 
         reinit();
       }, 
@@ -331,7 +273,6 @@
     1500, 
     cardsFlippedPerTurn)
   }
-  /////// FIN TEST ////////
 
 
   // Réinitialisation après chaque tour d'un joueur
@@ -403,7 +344,12 @@
     contentMsg.value = { 
       text: `Trop tard ${players.value[idxPlayer].nom}`, 
       animationName: 'tooLate' 
-    };
+    }; // Ancienne version
+  /* allMsgs.push({ 
+      text: `Trop tard ${players.value[idxPlayer].nom}`, 
+      animationName: 'tooLate' 
+    }); */ // Nvelle version
+
     flipCardsFailing();
     turns.value += 1; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
     displayCountdown.value = false;
@@ -753,19 +699,6 @@
   color: black;
 }
 
-.nb-tours {
-  font-size: clamp(17px, 3vmin, 24px);
-  line-height: 2.5vh;
-  width: clamp(45px, 10vw, 130px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background-color: var(--color-3);
-  margin: calc(var(--margin-header) * -1) 0 0 0;
-  padding: 1vw;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -775,5 +708,4 @@
 .fade-leave-to {
   opacity: 0;
 }
-
 </style>
