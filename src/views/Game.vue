@@ -32,13 +32,15 @@
   
   
 
-  <div class="global-cards"   style="flex-direction: column;">   <!-- <button @click="displayConfettis">Confettis</button> --> <!-- TEST -->
+  <div class="global-cards">   <!-- <button @click="displayConfettis">Confettis</button> --> <!-- TEST -->
 
-    <div style="height: 5vh;">
-    <Countdown
-      v-if="displayCountdown"
-      @countdown-over="onCountdownOver"
-    />
+    <div class="wrapper-countdown">
+      <Transition name="fade-and-slide">
+        <Countdown
+          v-if="displayCountdown"
+          @countdown-over="onCountdownOver"
+        />
+      </Transition>
     </div>
 
     <div 
@@ -586,8 +588,13 @@
   line-height: 3vh;
 }
 
+.wrapper-countdown {
+  height: 5vh;
+}
+
 .global-cards {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -710,9 +717,18 @@
 .fade-leave-active {
   transition: opacity 0.5s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.fade-and-slide-enter-active,
+.fade-and-slide-leave-active {
+  transition: all 0.5s ease;
+}
+.fade-and-slide-enter-from,
+.fade-and-slide-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>
