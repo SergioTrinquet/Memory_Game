@@ -22,7 +22,7 @@
         right: var(--margin-header);
         height: 10vh;
         font-size: clamp(17px, 3vmin, 24px);
-        line-height: 2.5vh;
+        line-height: max(18px, 3.3vmin);
         width: var(--width-nb-tours);
         display: flex;
         justify-content: center;
