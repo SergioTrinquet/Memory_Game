@@ -34,8 +34,6 @@
 
 <style>
     .msgCountdown {
-        position: fixed;
-        top: 100px;
         color: #fff;
         width: 100vw;
         display: flex;
@@ -45,5 +43,8 @@
     .countdown {
         font-weight: bold;
         margin: 0 1vw;
+
+        text-shadow: 2px 3px rgba(0,0,0,1);
+        transform: scale(1.2);
     }
 </style>

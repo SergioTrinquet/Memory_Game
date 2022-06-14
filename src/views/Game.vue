@@ -29,13 +29,17 @@
     :nbTurns="turns"  
   />
 
-  <Countdown
-    v-if="displayCountdown"
-    @countdown-over="onCountdownOver"
-  />
+  
   
 
-  <div class="global-cards">   <!-- <button @click="displayConfettis">Confettis</button> --> <!-- TEST -->
+  <div class="global-cards"   style="flex-direction: column;">   <!-- <button @click="displayConfettis">Confettis</button> --> <!-- TEST -->
+
+    <div style="height: 5vh;">
+    <Countdown
+      v-if="displayCountdown"
+      @countdown-over="onCountdownOver"
+    />
+    </div>
 
     <div 
       class="cards-grid" 
@@ -537,6 +541,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: var(--width-nb-tours);
+    /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
+    margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 .player > div {
   display: flex;

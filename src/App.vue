@@ -17,6 +17,8 @@ export default {
   --bg-menu: #AC00EF;
   --margin-header: 14px;
   --color-3: #00b4e0;
+  --width-icons-menu: clamp(35px, 3vw, 45px);
+  --width-nb-tours: clamp(45px, 10vw, 130px);
 }
 
 * {

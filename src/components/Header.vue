@@ -100,7 +100,7 @@ button:hover {
 #iconMenu,
 #closeMenu {
     cursor: pointer;
-    font-size: clamp(35px, 3vw, 45px);
+    font-size: var(--width-icons-menu);
 }
 #iconMenu {
     top: 20px;
