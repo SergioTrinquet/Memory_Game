@@ -43,8 +43,7 @@
     .countdown {
         font-weight: bold;
         margin: 0 1vw;
-
-        text-shadow: 2px 3px rgba(0,0,0,1);
+        text-shadow: 2px 3px rgb(111, 0, 153);
         transform: scale(1.2);
     }
 </style>
