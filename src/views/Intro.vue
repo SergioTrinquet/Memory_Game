@@ -87,7 +87,7 @@ button {
     align-items: center; 
     justify-content: center;
     width: 70%;
-    transition: color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 button > span.libelle { 
     /* position: absolute; */ 
@@ -109,6 +109,7 @@ button > span.bg {
 }
 button:hover {
     color: #fff;
+    text-shadow: 0 2px rgba(0,0,0,0.3);
 }
 button:hover > span.bg {
     left: 0%;
