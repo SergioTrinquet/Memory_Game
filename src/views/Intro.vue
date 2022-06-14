@@ -77,6 +77,7 @@
 button {
     cursor: pointer;
     background-color: rgb(241, 237, 0);
+    color: #000;
     border-radius: 5px;
     border-width: 0;
     padding: 2vmin 2vmin;
@@ -86,6 +87,7 @@ button {
     align-items: center; 
     justify-content: center;
     width: 70%;
+    transition: color 0.3s ease-in-out;
 }
 button > span.libelle { 
     /* position: absolute; */ 
@@ -99,11 +101,11 @@ button > span.bg {
     height: 100%;
     background-color: var(--color-3);
     top: 0;
-    left: 100%;
+    left: -100%;
     position: absolute;
     z-index: 0;
     opacity: 0.8;
-    transition: all 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out;
 }
 button:hover {
     color: #fff;
