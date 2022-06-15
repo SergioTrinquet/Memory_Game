@@ -11,11 +11,13 @@
                 <slot name="btn-rejouer"></slot>
             </div>
         </teleport>
-        <font-awesome-icon 
-            icon="bars"
-            id="iconMenu" 
-            @click="toggleMenu" 
-        />
+        <div class="wrapper-icon-menu">
+            <font-awesome-icon 
+                icon="bars"
+                id="iconMenu" 
+                @click="toggleMenu" 
+            />
+        </div>
         <div class="content">
             <slot />
         </div>
@@ -106,6 +108,24 @@ button:hover {
     top: 20px;
     left: 20px;
     margin-right: var(--margin-header);
+}
+.wrapper-icon-menu {
+    display: flex;
+    flex-direction: column;
+}
+.wrapper-icon-menu::after {
+    content: "MENU";
+    font-weight: bold;
+    font-size: clamp(15px, 1.2vw, 18px);
+    position: absolute;
+    font-family: monospace;
+    transform: translateY(15px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.wrapper-icon-menu:hover::after {
+    opacity: 1;
+    transform: translateY(clamp(35px, 5.5vh, 45px));
 }
 #closeMenu {
     position: absolute;
