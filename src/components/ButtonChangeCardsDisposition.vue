@@ -48,7 +48,7 @@
     .wrapper-bt-change-disposition {
         position: absolute;
         z-index: 1;
-        bottom: 5vh;
+        bottom: var(--space-bottom-bt-change-disposition);
         flex-direction: column;
         align-items: center;
         display: flex;
@@ -62,7 +62,7 @@
     .bt-change-disposition,
     .msg-disposition-cartes,
     .bt-close-msg {
-        font-size: clamp(18px, 3.2vw, 22px);
+        font-size: clamp(16px, 2.3vmax, 22px);
     }
     .bt-change-disposition {
         padding: max(1vh, 4px) 20px;
@@ -74,7 +74,7 @@
     }
     @keyframes fadeInFromBottom {
         0% { 
-            transform: translateY(20px);
+            transform: translateY(var(--space-bottom-bt-change-disposition));
             opacity: 0; 
         }
         100% { 
@@ -118,10 +118,10 @@
     }
 
     .msg-disposition-cartes.hidden {
-        /* display: none; */
-        animation: fadeOut 0.5s ease-in-out forwards;
+        display: none;
+        /* animation: fadeOut 0.5s ease-in-out forwards; */
     }
-    @keyframes fadeOut {
+/*     @keyframes fadeOut {
         0% { 
             transform: translateY(0);
             opacity: 1; 
@@ -134,7 +134,7 @@
             transform: translateY(-100vh);
             opacity: 0; 
         }
-    }
+    } */
 
     .msg-disposition-cartes > * {
         font-family: 'Yeseva One', cursive;
