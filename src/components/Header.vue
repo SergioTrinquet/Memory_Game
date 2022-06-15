@@ -12,11 +12,12 @@
             </div>
         </teleport>
         <div class="wrapper-icon-menu">
-            <font-awesome-icon 
-                icon="bars"
-                id="icon-menu" 
-                @click="toggleMenu" 
-            />
+            <div @click="toggleMenu" >
+                <font-awesome-icon 
+                    icon="bars"
+                    id="icon-menu" 
+                />
+            </div>
         </div>
         <div class="content">
             <slot />
@@ -112,11 +113,11 @@ button:hover {
     left: 20px;
     margin-right: var(--margin-header);
 }
-.wrapper-icon-menu {
+.wrapper-icon-menu > div {
     display: flex;
     flex-direction: column;
 }
-.wrapper-icon-menu::after {
+.wrapper-icon-menu > div::after {
     content: "MENU";
     font-weight: bold;
     font-size: clamp(15px, 1.2vw, 18px);
@@ -126,7 +127,7 @@ button:hover {
     opacity: 0;
     transition: all 0.3s ease;
 }
-.wrapper-icon-menu:hover::after {
+.wrapper-icon-menu:hover > div::after {
     opacity: 1;
     transform: translateY(clamp(35px, 5.5vh, 45px));
 }
