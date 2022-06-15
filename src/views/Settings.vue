@@ -5,7 +5,7 @@
     
     <!-- Nombre de joueurs -->
     <Modal :show="selectedModal[0]">
-      <div class="selectionNbPlayers">
+      <div class="selection-nb-players">
         <div>Sélectionnez le nombre de joueurs</div>
         <select 
           v-model="nbOfPlayers"
@@ -13,11 +13,11 @@
         >
           <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }}</option>
         </select>
-        <div v-if="errorSelectNbPlayers" class="msgError">Veuillez sélectionner une valeur.</div>
+        <div v-if="errorSelectNbPlayers" class="msg-error">Veuillez sélectionner une valeur.</div>
       </div>
 <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->
       <div>
-        <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn_joueur">
+        <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
           <label for="joueur">Joueur {{ idx }}</label>
           <div>
             <input 
@@ -26,7 +26,7 @@
               v-model="inputsPlayers[idx - 1]"
               :class="{ 'error': msgErrorInputsPlayers[idx - 1] != '' }" 
             /> 
-            <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msgError">{{ msgErrorInputsPlayers[idx - 1] }}</div>
+            <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
           </div>
         </div> 
       </div>
@@ -47,7 +47,7 @@
       >
         <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
       </select>
-      <div v-if="errorSelectNbPair" class="msgError">Veuillez sélectionner une valeur.</div>
+      <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
 
       <div class="buttons" data-order="1">
         <Button libelle="Précédent" @click="stepBack" />
@@ -87,7 +87,7 @@
           >
           <span>15</span>
         </div>
-        <div class="resultSeconds">{{ timeDisplayCard }} <span>secondes</span></div>
+        <div class="result-seconds">{{ timeDisplayCard }} <span>secondes</span></div>
       </div>
 
       <div class="buttons" data-order="3">
@@ -258,22 +258,22 @@ select option {
   color: #fff;
   border-radius: 50%;
 }
-.selectionNbPlayers {
+.selection-nb-players {
   text-align: center;
 }
-.lgn_joueur {
+.lgn-joueur {
   padding: 1.7vh 0;
   display: flex;
 }
-.lgn_joueur label {
+.lgn-joueur label {
   margin: 0 10px 0 0;
 }
-.lgn_joueur input.error,
+.lgn-joueur input.error,
 select.error {
-  border: solid 2px red;
+  border: solid 2px var(--color-error);
 }
-.msgError {
-  color: red;
+.msg-error {
+  color: var(--color-error);
   position: absolute;
 }
 .buttons {
@@ -290,7 +290,7 @@ select.error {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #9400CD;
 }
-.resultSeconds {
+.result-seconds {
   text-align: center;
 }
 

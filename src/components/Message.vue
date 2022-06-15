@@ -4,7 +4,7 @@
         :class="{ display: localMsg.length > 0 }"
         @click="clearMsg"
     >
-        <div class="contentMessage" v-html="localMsg"></div>
+        <div class="content-message" v-html="localMsg"></div>
     </div>
 </template>
 
@@ -94,7 +94,7 @@
             // Anime.js
             //let tl = anime.timeline({
              tl = anime.timeline({
-                targets: '.contentMessage',
+                targets: '.content-message',
                 begin: (anim) => console.log("Animation commencée", anim.began), // TEST
                 complete: (anim) => { 
                     console.log("Animation terminée", anim.completed); // TEST
@@ -140,7 +140,7 @@
                     tl.finished.then(() => { 
                         console.log("Animation finished !!!"); //TEST
                         localMsg.value = "";
-                        document.querySelector('.contentMessage').removeAttribute('style');
+                        document.querySelector('.content-message').removeAttribute('style');
                     })
                 } /* else {
                     throw "Libellé d'animation de texte pas présente"
@@ -181,7 +181,7 @@
     justify-content: center;
     align-items: center;
 }
-.message > .contentMessage {
+.message > .content-message {
     color: #fff;
     font-family: 'Yeseva One', cursive;
     font-size: clamp(20px, 8vmin, 100px);

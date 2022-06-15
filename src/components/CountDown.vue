@@ -1,5 +1,5 @@
 <template>
-    <div class="msgCountdown">
+    <div class="msg-countdown">
         Plus que <span class="countdown">{{ countdown }}</span> sec. pour choisir ta 2eme carte
     </div>
 </template>
@@ -33,7 +33,7 @@
 </script>
 
 <style>
-    .msgCountdown {
+    .msg-countdown {
         color: #fff;
         width: 100vw;
         display: flex;

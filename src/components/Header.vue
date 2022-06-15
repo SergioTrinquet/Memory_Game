@@ -4,7 +4,7 @@
             <div id="menu" :class="{ 'display': display }">
                 <font-awesome-icon 
                     icon="xmark" 
-                    id="closeMenu" 
+                    id="close-menu" 
                     @click="toggleMenu"
                 />
                 <button @click="goToAccueil">Accueil</button>
@@ -14,7 +14,7 @@
         <div class="wrapper-icon-menu">
             <font-awesome-icon 
                 icon="bars"
-                id="iconMenu" 
+                id="icon-menu" 
                 @click="toggleMenu" 
             />
         </div>
@@ -66,6 +66,9 @@
 .content {
     flex-grow: 1;
     display: flex;
+    margin-right: var(--width-nb-tours);
+    /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
+    margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 button,
 :slotted(button) {
@@ -99,12 +102,12 @@ button:hover {
 #menu.display {
     top: 0;
 }
-#iconMenu,
-#closeMenu {
+#icon-menu,
+#close-menu {
     cursor: pointer;
     font-size: var(--width-icons-menu);
 }
-#iconMenu {
+#icon-menu {
     top: 20px;
     left: 20px;
     margin-right: var(--margin-header);
@@ -127,18 +130,18 @@ button:hover {
     opacity: 1;
     transform: translateY(clamp(35px, 5.5vh, 45px));
 }
-#closeMenu {
+#close-menu {
     position: absolute;
     top: 3vh;
     right: 3vh;
     transition: transform 0.3s ease-in-out;
 }
-#closeMenu::before {
+#close-menu::before {
     content: "Fermer";
     position: absolute;
 
 }
-#closeMenu:hover {
+#close-menu:hover {
     transform: rotate(180deg);
 }
 </style>
