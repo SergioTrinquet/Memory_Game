@@ -541,13 +541,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: var(--width-nb-tours);
-    /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
-    margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 .player > div {
   display: flex;
-  padding: 10px;
+  padding: min(1.2vmin, 10px);
 }
 .player.playing > div {
   border: dashed 3px #fff;
