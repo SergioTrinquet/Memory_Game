@@ -1,8 +1,9 @@
 <template>
-    <div class="content">
+    <div class="content">   
+                <!-- <div class="carre-test"></div> --><!-- TEST -->
         <div class="carre"></div>
-        <div class="contentTxt">
-            <div class="txtIntro">Bienvenue dans le jeu<br />du Memory !</div>
+        <div class="content-txt">
+            <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
             <button @click="goToSettings">
                 <span class="libelle">Commencez</span>
                 <span class="bg"></span>
@@ -26,7 +27,7 @@
 
     /* onMounted(() => {
         anime({
-            targets: '.txtIntro',
+            targets: '.txt-intro',
             translateX: 500,
             duration: 3000
         })
@@ -47,26 +48,37 @@
     z-index: 1;
     opacity: 0.4;
     background-color: #fff;
-    width: 40vmin;
+    width: max(150px, 40vmin);
     aspect-ratio: 1 / 1;
     transform: rotate(45deg);
     animation:  4s ease infinite squareRotation;
 }
+
+/* .carre-test {
+    content: "";
+    position: fixed;
+    z-index: 0;
+    background-color: rgb(229, 255, 0);
+    width: 40vmin;
+    aspect-ratio: 1 / 1;
+    transform: rotate(5deg);
+} */
+
 @keyframes squareRotation {
     80% { transform: rotate(45deg); }
     100% { transform: rotate(135deg); }
 }
-.contentTxt {
+.content-txt {
     position: absolute;
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 30vmin;
+    height: max(160px,30vmin);
 }
-.txtIntro {
-    font-size: 7vmin;
+.txt-intro {
+    font-size: max(30px, 7vmin);
     text-align: center;
     /* font-family: 'Abril Fatface', cursive;
     font-family: 'Caveat Brush', cursive;
@@ -92,7 +104,7 @@ button {
 button > span.libelle { 
     /* position: absolute; */ 
     z-index:2;
-    font-size: 4vmin;
+    font-size: max(24px, 4vmin);
     font-weight: bold;
 }
 button > span.bg {
