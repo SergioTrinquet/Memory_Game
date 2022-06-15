@@ -19,6 +19,7 @@ export default {
   --color-3: #00b4e0;
   --width-icons-menu: clamp(35px, 3vw, 45px);
   --width-nb-tours: clamp(45px, 10vw, 130px);
+  --space-bottom-bt-change-disposition: 3vh;
 }
 
 * {
