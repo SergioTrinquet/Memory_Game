@@ -1,12 +1,14 @@
 <template>
   <Header /> 
   <div class="modals">
-    <div class="etapes">{{ modalDone }} / 4 <!-- | {{ selectedModal }} --></div>
+    <div class="etapes">
+      <div>{{ modalDone }} / 4</div>
+    </div>
     
     <!-- Nombre de joueurs -->
     <Modal :show="selectedModal[0]">
       <div class="selection-nb-players">
-        <div>Sélectionnez le nombre de joueurs</div>
+        <div class="legend">Sélectionnez le nombre de joueurs</div>
         <select 
           v-model="nbOfPlayers"
           :class="{ 'error': errorSelectNbPlayers }"
@@ -18,7 +20,7 @@
 <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->
       <div>
         <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-          <label for="joueur">Joueur {{ idx }}</label>
+          <label for="joueur" class="legend">Joueur {{ idx }}</label>
           <div>
             <input 
               type="text" name="joueur" 
@@ -31,7 +33,7 @@
         </div> 
       </div>
 
-      <div class="buttons" data-order="0">
+      <div class="buttons" data-order="0" style="width: auto;">
         <Button libelle="Suivant" @click="recordNbPlayers" />
       </div>
     </Modal>
@@ -39,7 +41,7 @@
 
     <!-- Nombre de paires -->
     <Modal :show="selectedModal[1]">
-      <div>Combien de paires identiques</div>
+      <div class="legend">Combien de paires identiques</div>
 
       <select 
         v-model="nbPairOfCards" 
@@ -58,7 +60,7 @@
 
     <!-- Sélection du thème -->
     <Modal :show="selectedModal[2]">
-      <div>Choisissez un thème</div>
+      <div class="legend">Choisissez un thème</div>
       <select 
         v-model="theme"
         :class="{ 'error': errorTheme }"
@@ -75,7 +77,7 @@
 
 
     <Modal :show="selectedModal[3]">
-      <div>Laps de temps max. entre l'appartion des 2 cartes</div>
+      <div class="legend">Laps de temps max. entre l'appartion des 2 cartes</div>
       <div>
         <div class="range">
           <span>3</span>
@@ -247,17 +249,40 @@
   align-items: center;
   min-height: 100%;
   color: rgb(255, 79, 112);
+  color: rgb(255, 143, 164);
 }
 select option {
   color: rgb(255, 79, 112);
+  color: rgb(255, 143, 164);
 }
 .etapes {
-  padding: 2vh;
-  color: rgb(241, 237, 0);
-  background-color: rgb(241, 237, 0);
-  color: #fff;
-  border-radius: 50%;
+  padding: max(35px, 5vmin);
+  z-index: 1;
+  transform: rotate(45deg) translate(max(24.5px, 3.5vmin), max(24.5px, 3.5vmin));
+  background-color: rgb(255, 143, 164);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 0 4px #9c00d9;
 }
+.etapes > div {
+  position: absolute;
+  z-index: 1;
+  color: #f7f7f7;
+  transform: rotate(-45deg);
+  font-family: 'Yeseva One', cursive;
+  width: 10vw;
+  text-align: center;
+  text-shadow: 0 2px 0px rgba(153, 0, 213, 0.6);
+  letter-spacing: -0.05em;
+  min-width: 70px;
+}
+
+.legend {
+  font-size: clamp(26px, 6vmin, 38px);
+  line-height: clamp(26px, 6vmin, 38px);
+}
+
 .selection-nb-players {
   text-align: center;
 }

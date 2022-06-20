@@ -42,6 +42,7 @@
     justify-content: center;
     align-items: center;
     font-size: 5vmin;
+    padding: 3vmax;
 }
 .carre {
     position: fixed;
@@ -71,11 +72,6 @@
 .content-txt {
     position: absolute;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: max(160px,30vmin);
 }
 .txt-intro {
     font-size: max(30px, 7vmin);
@@ -93,6 +89,7 @@ button {
     border-radius: 5px;
     border-width: 0;
     padding: 2vmin 2vmin;
+    margin: 4vh auto 0 auto;
     position: relative;
     overflow: hidden;
     display: flex; 
