@@ -53,7 +53,7 @@
         :data-idx="idxCards[i]"
       >
         <div class="flip-card-inner">
-          <div class="flip-card-front" @click="flip">
+          <!-- <div class="flip-card-front" @click="flip"> --><div class="flip-card-front" v-touch:tap="flip">
             <!-- <div>{{ i + 1 }}</div> --><div>{{ idxCards[i] }}</div>
           </div>
           <div 
@@ -535,7 +535,7 @@
   });
 </script>
 
-<style scoped >
+<style scoped lang="scss">
 .player {
     flex-grow: 1;
     display: flex;
