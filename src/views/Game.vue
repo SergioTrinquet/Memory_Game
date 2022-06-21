@@ -676,6 +676,11 @@
 .flip-card.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
+
+.flip-card.flipped .flip-card-front {
+  pointer-events: none;
+}
+
 .flip-card-front, 
 .flip-card-back {
   position: absolute;
