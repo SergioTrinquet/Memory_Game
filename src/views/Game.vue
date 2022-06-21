@@ -53,7 +53,7 @@
         :data-idx="idxCards[i]"
       >
         <div class="flip-card-inner">
-          <!-- <div class="flip-card-front" @click="flip"> --><div class="flip-card-front" v-touch:tap="flip">
+          <div class="flip-card-front" @click="flip"><!-- <div class="flip-card-front" v-touch:tap="flip"> -->
             <!-- <div>{{ i + 1 }}</div> --><div>{{ idxCards[i] }}</div>
           </div>
           <div 
