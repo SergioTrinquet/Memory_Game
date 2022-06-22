@@ -37,15 +37,18 @@ body {
   padding: 0;
 }
 
-html, body {
+/* html, body {
   height: 100%;
 }
-
+ */
 html {
   border: solid 4px rgb(251, 255, 0); 
+  height: -webkit-fill-available;
 }
 body {
   border: solid 2px rgb(255, 0, 0); 
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 #app {
