@@ -42,9 +42,9 @@ html, body {
 }
 
 html {
-  border: solid 3px rgb(251, 255, 0); 
+  border: solid 4px rgb(251, 255, 0); 
 }
-html {
+body {
   border: solid 2px rgb(255, 0, 0); 
 }
 
