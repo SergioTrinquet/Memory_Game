@@ -62,7 +62,6 @@ body {
 
 /* Ajouté le 22/06/2022 */
 #app {
-  height: 100vh;
   border: solid 2px rgb(48, 255, 48);
 }
 /* FIN Ajout le 22/06/2022 */
