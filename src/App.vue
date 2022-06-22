@@ -37,20 +37,22 @@ body {
   padding: 0;
 }
 
-/* html, body {
+html, body {
   height: 100%;
-} */
+
+  overflow: hidden;
+}
 
 /* Ajouté le 22/06/2022 */
-html {
+/* html {
   border: solid 4px rgb(251, 255, 0); 
   height: -webkit-fill-available;
 }
 body {
   border: solid 2px rgb(255, 0, 0); 
-  /* min-height: 100vh; */ height: 100vh;
+  height: 100vh;
   height: -webkit-fill-available;
-}
+} */
 /* FIN Ajout le 22/06/2022 */
 
 #app {
