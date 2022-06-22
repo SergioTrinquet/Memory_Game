@@ -68,7 +68,7 @@ body {
   position: fixed;
   -webkit-overflow-scrolling: touch;
 
-  border: 0; outline: 0; /* overflow: hidden; */ /* border: solid 2px yellow; */ 
+  border: 0; /* outline: 0; */ /* overflow: hidden; */ 
 }
 /* FIN Ajout le 22/06/2022 */
 
