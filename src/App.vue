@@ -38,10 +38,10 @@ body {
 }
 
 /* Fonctionne !! A garder */
-/* html, body {
+html, body {
   height: 100%;
-  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ /*
-} */
+  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
+}
 /* FIN */
 
 
@@ -57,16 +57,15 @@ body {
   height: -webkit-fill-available;
 } */
 /* V2 */
-html {
-  width: 100%;
+/* html {
+  height: 100%; 
   overflow: hidden;
 }
 body {
   height: 100%;  
-  width: 100%;
   position: fixed;
   -webkit-overflow-scrolling: touch;
-}
+} */
 /* FIN Ajout le 22/06/2022 */
 
 #app {
