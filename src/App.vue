@@ -40,11 +40,7 @@ body {
 html, body {
   height: 100%;
 
-  overflow: hidden;
-  /* position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%; */
+  /* overflow: hidden; */
 }
 
 /* Ajouté le 22/06/2022 */
