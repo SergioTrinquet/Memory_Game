@@ -42,10 +42,10 @@ html, body {
 }
 
 html {
-  border: solid 1px rgb(251, 255, 0); 
+  border: solid 3px rgb(251, 255, 0); 
 }
 html {
-  border: solid 1px #fff; 
+  border: solid 2px rgb(255, 0, 0); 
 }
 
 #app {
