@@ -37,10 +37,10 @@ body {
   padding: 0;
 }
 
-/* html, body {
+html, body {
   height: 100%;
 }
- */
+
 html {
   border: solid 4px rgb(251, 255, 0); 
   height: -webkit-fill-available;
