@@ -67,6 +67,8 @@ body {
   width: 100%;
   position: fixed;
   -webkit-overflow-scrolling: touch;
+
+  border:0;outline: 0; overflow: hidden;
 }
 /* FIN Ajout le 22/06/2022 */
 
@@ -80,7 +82,6 @@ body {
 /* Ajouté le 22/06/2022 */
 #app {
   border: solid 2px rgb(48, 255, 48);
-  overflow: hidden; position: fixed; width: 100%;
 }
 /* FIN Ajout le 22/06/2022 */
 
