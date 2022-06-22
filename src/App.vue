@@ -68,7 +68,7 @@ body {
   position: fixed;
   -webkit-overflow-scrolling: touch;
 
-  border:0;outline: 0; overflow: hidden; border: solid 2px yellow; background: linear-gradient(0deg, rgba(100,0,139,1) 16vh, rgba(184,0,255,1) 100vh); 
+  border:0;outline: 0; overflow: hidden; border: solid 2px yellow; /* background: linear-gradient(0deg, rgba(100,0,139,1) 16vh, rgba(184,0,255,1) 100vh); */ 
 }
 /* FIN Ajout le 22/06/2022 */
 
