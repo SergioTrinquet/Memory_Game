@@ -49,7 +49,7 @@ html {
 body {
   border: solid 2px rgb(255, 0, 0); 
   /* min-height: 100vh; */ height: 100vh;
-  min-height: -webkit-fill-available;
+  height: -webkit-fill-available;
 }
 /* FIN Ajout le 22/06/2022 */
 
