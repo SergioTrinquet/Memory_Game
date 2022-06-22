@@ -37,10 +37,10 @@ body {
   padding: 0;
 }
 
+/* Fonctionne !! A garder */
 html, body {
   height: 100%;
-
-  /* overflow: hidden; */
+  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */
 }
 
 /* Ajouté le 22/06/2022 */
@@ -53,6 +53,17 @@ body {
   height: 100vh;
   height: -webkit-fill-available;
 } */
+html {
+  width: 100%;
+  overflow: hidden;
+}
+body {
+  height: 100%;  
+  width: 100%;
+  position: fixed;
+  /* overflow-y: scroll; */
+  -webkit-overflow-scrolling: touch;
+}
 /* FIN Ajout le 22/06/2022 */
 
 #app {
