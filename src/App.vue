@@ -37,10 +37,11 @@ body {
   padding: 0;
 }
 
-html, body {
+/* html, body {
   height: 100%;
-}
+} */
 
+/* Ajouté le 22/06/2022 */
 html {
   border: solid 4px rgb(251, 255, 0); 
   height: -webkit-fill-available;
@@ -50,6 +51,7 @@ body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
 }
+/* FIN Ajout le 22/06/2022 */
 
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; 
@@ -57,6 +59,12 @@ body {
   -moz-osx-font-smoothing: grayscale;*/
   height: 100%;
 }
+
+/* Ajouté le 22/06/2022 */
+#app {
+  height: 100vh;
+}
+/* FIN Ajout le 22/06/2022 */
 
 button, 
 button > span {
