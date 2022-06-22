@@ -41,6 +41,13 @@ html, body {
   height: 100%;
 }
 
+html {
+  border: solid 1px rgb(251, 255, 0); 
+}
+html {
+  border: solid 1px #fff; 
+}
+
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; 
   -webkit-font-smoothing: antialiased;
