@@ -41,7 +41,6 @@ body {
 html, body {
   height: 100%;
   overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
-  position: fixed; width: 100%; margin: 0; padding: 0;
 }
 /* FIN */
 
