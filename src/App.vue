@@ -80,7 +80,7 @@ body {
 /* Ajouté le 22/06/2022 */
 #app {
   border: solid 2px rgb(48, 255, 48);
-  overflow: hidden;
+  overflow: hidden; position: fixed; width: 100%;
 }
 /* FIN Ajout le 22/06/2022 */
 
