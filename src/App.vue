@@ -38,10 +38,13 @@ body {
 }
 
 /* Fonctionne !! A garder */
-html, body {
+/* html, body {
   height: 100%;
   overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */
-}
+} */
+/* FIN */
+
+
 
 /* Ajouté le 22/06/2022 */
 /* html {
@@ -53,6 +56,7 @@ body {
   height: 100vh;
   height: -webkit-fill-available;
 } */
+/* V2 */
 html {
   width: 100%;
   overflow: hidden;
@@ -61,7 +65,6 @@ body {
   height: 100%;  
   width: 100%;
   position: fixed;
-  /* overflow-y: scroll; */
   -webkit-overflow-scrolling: touch;
 }
 /* FIN Ajout le 22/06/2022 */
