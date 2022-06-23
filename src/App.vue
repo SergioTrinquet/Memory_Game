@@ -37,7 +37,7 @@ body {
   padding: 0;
 }
 
-/* Fonctionne !! A garder */
+/* V1 - Fonctionne !! A garder */
 /* html, body {
   height: 100%;
   overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ /*
@@ -45,29 +45,17 @@ body {
 /* FIN */
 
 
-
-/* Ajouté le 22/06/2022 */
-/* html {
-  border: solid 4px rgb(251, 255, 0); 
-  height: -webkit-fill-available;
-}
-body {
-  border: solid 2px rgb(255, 0, 0); 
-  height: 100vh;
-  height: -webkit-fill-available;
-} */
-
-/* V2 - Permet aux éléments de se repositionner au centre après retrait/ajout de l'adress bar */
-html {
+/* Ajouté le 22/06/2022 - V2 */
+html, body {
   height: 100%; 
+}
+html {
   overflow: hidden;
 }
-body {
-  height: 100%;  
+body { 
   width: 100%;
   position: fixed;
   -webkit-overflow-scrolling: touch;
-
   /* border: 0; */ /* outline: 0; */ /* overflow: hidden; */ 
 }
 /* FIN Ajout le 22/06/2022 */
@@ -77,13 +65,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;*/
   height: 100%;
-}
 
-/* Ajouté le 22/06/2022 */
-#app {
-  border: solid 2px rgb(48, 255, 48);
+  border: solid 2px rgb(48, 255, 48); /* Pour test */
 }
-/* FIN Ajout le 22/06/2022 */
 
 button, 
 button > span {
