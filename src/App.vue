@@ -38,14 +38,14 @@ body {
 }
 
 /* V1 - Fonctionne !! */
-/* html, body {
+html, body {
   height: 100%;
   overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ /*
-} */
+}
 /* FIN */
 
 /* V2 - Fonctionne !! */
-html, body {
+/* html, body {
   height: 100%; 
 }
 html {
@@ -55,8 +55,8 @@ body {
   width: 100%;
   position: fixed;
   -webkit-overflow-scrolling: touch;
-  /* border: 0; outline: 0; overflow: hidden; */ 
-}
+  /* border: 0; outline: 0; overflow: hidden; */ /*
+} */
 /* FIN V2 */
 
 #app {
