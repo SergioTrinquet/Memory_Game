@@ -40,7 +40,7 @@ body {
 /* V1 - Fonctionne !! */
 html, body {
   height: 100%;
-  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ /*
+  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
 }
 /* FIN */
 
