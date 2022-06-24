@@ -57,26 +57,28 @@
     const delayFlipBothCards = delayFlipSecondCard * 2
 
     function flipCards() {
-        setInterval(() => {
-            // On retourne la 1ere carte (celle de gauche)
-            flipFrontCard(idxImgCard1, cardToFlip1)
+        flipCardsOnce()
+        setInterval(flipCardsOnce, interval)
+    }
 
-            // On retourne la 2eme carte (celle de droite) 2 sec. plus tard...
-            setTimeout(() => {
-                flipFrontCard(idxImgCard2, cardToFlip2)
+    function flipCardsOnce() {
+        // On retourne la 1ere carte (celle de gauche)
+        flipFrontCard(idxImgCard1, cardToFlip1)
 
-                // ...Et on Affiche le point gagné qd les 2 cartes sont identiques
-                animationScore.value = false
-                if(idxImgCard1.value === idxImgCard2.value) animationScore.value = true
-            }, delayFlipSecondCard)
+        // On retourne la 2eme carte (celle de droite) 2 sec. plus tard...
+        setTimeout(() => {
+            flipFrontCard(idxImgCard2, cardToFlip2)
 
-            // On retourne les 2 cartes en même temps pour cacher le contenu au bout de 4 sec.
-            setTimeout(() => {
-                cardToFlip1.value = false
-                cardToFlip2.value = false
-            }, delayFlipBothCards)
+            // ...Et on Affiche le point gagné qd les 2 cartes sont identiques
+            animationScore.value = false
+            if(idxImgCard1.value === idxImgCard2.value) animationScore.value = true
+        }, delayFlipSecondCard)
 
-        }, interval)
+        // On retourne les 2 cartes en même temps pour cacher le contenu au bout de 4 sec.
+        setTimeout(() => {
+            cardToFlip1.value = false
+            cardToFlip2.value = false
+        }, delayFlipBothCards)
     }
 
     // Chargement image carte
@@ -176,7 +178,7 @@ button {
     justify-content: center;
     width: 70%;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 1vmin 2vmin rgba(0,0,0,0.3);
+    box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
 }
 button > span.libelle { 
     /* position: absolute; */ 
