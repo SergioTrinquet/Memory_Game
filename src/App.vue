@@ -37,15 +37,14 @@ body {
   padding: 0;
 }
 
-/* V1 - Fonctionne !! A garder */
+/* V1 - Fonctionne !! */
 /* html, body {
   height: 100%;
   overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ /*
 } */
 /* FIN */
 
-
-/* Ajouté le 22/06/2022 - V2 */
+/* V2 - Fonctionne !! */
 html, body {
   height: 100%; 
 }
@@ -56,9 +55,9 @@ body {
   width: 100%;
   position: fixed;
   -webkit-overflow-scrolling: touch;
-  /* border: 0; */ /* outline: 0; */ /* overflow: hidden; */ 
+  /* border: 0; outline: 0; overflow: hidden; */ 
 }
-/* FIN Ajout le 22/06/2022 */
+/* FIN V2 */
 
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; 
@@ -66,7 +65,7 @@ body {
   -moz-osx-font-smoothing: grayscale;*/
   height: 100%;
 
-  border: solid 2px rgb(48, 255, 48); /* Pour test */
+  /* border: solid 2px rgb(48, 255, 48); */ /* Pour test */
 }
 
 button, 
