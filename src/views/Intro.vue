@@ -303,8 +303,8 @@ button:hover > span.bg {
     animation: fadeInUp 1s ease-out 1.5s backwards;
 }
 @keyframes fadeInUp {
-    0% { opacity: 1; scale:0 }
-    20% { opacity: 1; scale:1 }
+    0% { opacity: 1; transform: scale(0) }
+    20% { opacity: 1; transform: scale(1) }
     50% { opacity: 1; }
     100% {
         opacity: 0;
