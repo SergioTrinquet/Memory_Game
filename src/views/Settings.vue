@@ -263,7 +263,8 @@ select option {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 0 4px #9c00d9;
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.3);
+  border-radius: max(7px, 1.5vmin);
 }
 .etapes > div {
   position: absolute;
