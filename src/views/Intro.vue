@@ -57,11 +57,6 @@
     const delayFlipBothCards = delayFlipSecondCard * 2
 
     function flipCards() {
-        flipCardsOnce()
-        setInterval(flipCardsOnce, interval)
-    }
-
-    function flipCardsOnce() {
         // On retourne la 1ere carte (celle de gauche)
         flipFrontCard(idxImgCard1, cardToFlip1)
 
@@ -95,7 +90,9 @@
     }
 
     onMounted(() => {
-        flipCards() // Animation cartes
+        // Animation cartes
+        flipCards()
+        setInterval(flipCards, interval)
 
         /* anime({
             targets: '.txt-intro',
