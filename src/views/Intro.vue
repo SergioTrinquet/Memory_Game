@@ -3,20 +3,16 @@
 
         <div class="score" :class="animationScore ? 'anim' : ''">+1</div>
         <div class="wrapper-card first">
-            <div class="flip-card" :class="cardToFlip1 ? 'flipped' : ''">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front"></div>
-                    <div class="flip-card-back" :style="loadImg(idxImgCard1)"></div>
-                </div>
-            </div>
+            <Card 
+                :idxCards="idxImgCard1"  
+                :stateCards="cardState1"
+            />
         </div>
         <div class="wrapper-card last">
-            <div class="flip-card" :class="cardToFlip2 ? 'flipped' : ''">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front"></div>
-                    <div class="flip-card-back" :style="loadImg(idxImgCard2)"></div>
-                </div>
-            </div>
+            <Card 
+                :idxCards="idxImgCard2"  
+                :stateCards="cardState2"
+            />
         </div>
 
         <div class="carre-test"></div><!-- TEST -->
@@ -32,6 +28,7 @@
 </template>
 
 <script setup>
+    import Card from '@/components/Card.vue'
     import { onMounted, ref } from 'vue'  
     /* import anime from 'animejs/lib/anime.es.js'; */
 
@@ -45,8 +42,8 @@
 
     // Gestion cartes qui tournent
     let i = 0
-    const cardToFlip1 = ref(false)
-    const cardToFlip2 = ref(false)
+    const cardState1 = ref(0)
+    const cardState2 = ref(0)
     const idxImgs = [[1, 5], [3, 3], [2, 4], [3, 5], [10, 10], [13, 14]] // Indexs pris au hasard des images de fruits
     const flattenIdxImgs = idxImgs.flat()
     const idxImgCard1 = ref(1)
@@ -58,11 +55,11 @@
 
     function flipCards() {
         // On retourne la 1ere carte (celle de gauche)
-        flipFrontCard(idxImgCard1, cardToFlip1)
+        flipFrontCard(idxImgCard1, cardState1)
 
         // On retourne la 2eme carte (celle de droite) 2 sec. plus tard...
         setTimeout(() => {
-            flipFrontCard(idxImgCard2, cardToFlip2)
+            flipFrontCard(idxImgCard2, cardState2)
 
             // ...Et on Affiche le point gagné qd les 2 cartes sont identiques
             animationScore.value = false
@@ -71,21 +68,16 @@
 
         // On retourne les 2 cartes en même temps pour cacher le contenu au bout de 4 sec.
         setTimeout(() => {
-            cardToFlip1.value = false
-            cardToFlip2.value = false
+            cardState1.value = 0
+            cardState2.value = 0
         }, delayFlipBothCards)
     }
 
-    // Chargement image carte
-    function loadImg(i) {
-        const path = require(`@/assets/imgs/fruits/fr_${i}.png`);
-        return { 'background-image': `url(${path})` };
-    } 
 
     function flipFrontCard(idxImg, card) {
         if(i >= flattenIdxImgs.length) i = 0
-        idxImg.value = flattenIdxImgs[i]
-        card.value = true
+        idxImg.value = flattenIdxImgs[i] - 1
+        card.value = 1
         i++
     }
 
@@ -286,7 +278,6 @@ button:hover > span.bg {
   transform: translate(-50%, -50%);
   color: black;
 }
-
 
 .score {
     position: absolute;
