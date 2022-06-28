@@ -19,15 +19,25 @@
         <div class="carre"></div>
         <div class="content-txt">
             <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
-            <button @click="goToSettings">
-                <span class="libelle">Commencez</span>
-                <span class="bg"></span>
-            </button>
+            <BaseButton 
+                @click="goToSettings"
+                :hover="{ backgroundColor: 'yellow', color: '#000' }" 
+                fontSize="max(24px, 4vmin)"
+                rounded
+            >Commencez</BaseButton>
+            <!-- <BaseButton 
+                @click="goToSettings"
+                :outline="'yellow'" 
+                :hover="{ backgroundColor: 'yellow', color: '#AC00EF' }" 
+                rounded
+            >Commencez</BaseButton> -->
+            
         </div>
     </div>
 </template>
 
 <script setup>
+    import BaseButton from '@/components/base/BaseButton.vue'
     import Card from '@/components/Card.vue'
     import { onMounted, ref } from 'vue'  
     /* import anime from 'animejs/lib/anime.es.js'; */
@@ -152,46 +162,17 @@
     text-shadow: 0 5px 2px rgba(0,0,0,0.4);
 }
 button {
-    cursor: pointer;
     background-color: rgb(255, 143, 164);
     text-shadow: 0 2px 1px #aa5767;
     color: #fff;
-    border-radius: 5px;
-    border-width: 0;
-    padding: 2vmin 2vmin;
     margin: 6vmin auto 0 auto;
-    position: relative;
-    overflow: hidden;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
     width: 70%;
-    transition: all 0.3s ease-in-out;
     box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
-}
-button > span.libelle { 
-    /* position: absolute; */ 
-    z-index:2;
-    font-size: max(24px, 4vmin);
     font-weight: bold;
-}
-button > span.bg {
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-color: rgb(241, 237, 0);
-    top: 0;
-    left: -100%;
-    position: absolute;
-    z-index: 0;
-    transition: left 0.3s ease-in-out;
 }
 button:hover {
     color: #000;
     text-shadow: 0 2px 1px #f1ed00
-}
-button:hover > span.bg {
-    left: 0%;
 }
 
 
