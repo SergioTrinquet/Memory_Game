@@ -118,7 +118,7 @@
   const router = useRouter();
 
   
-  const contentMsg = ref(null); // Message
+  const contentMsg = ref({ text: "", animationName: "" }); // Message
 
   const pl = computed(() => store.state.players); // Data joueurs saisies dans page 'Settings'
 
