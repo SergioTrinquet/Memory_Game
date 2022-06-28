@@ -41,24 +41,38 @@
       </Transition>
     </div>
 
+
+    <!-- ESSAI -->
     <div 
       class="cards-grid" 
       v-if="displayCardsGrid"
       :style="styleContainer"
     >
+      <Card 
+        :nbCards="nbCards" 
+        :idxCards="idxCards"  
+        :stateCards="cardsState" 
+        clickEvent  
+        @time-to-flip="flip"   
+      />
+    </div>
+    <!-- FIN ESSAI -->
 
-      <!-- <div class="flip-card"
-        v-for="(card, i) in nbCards" :key="i" 
-        :data-order="i"
-        :data-idx="idxCards[i]"
-      > -->
+
+    <!-- <div 
+      class="cards-grid" 
+      v-if="displayCardsGrid"
+      :style="styleContainer"
+    >
+
       <div class="flip-card"
         v-for="(card, i) in nbCards" :key="i" 
         :data-order="i"
       >
         <div class="flip-card-inner">
           <div class="flip-card-front" @click="flip">
-            <!-- <div>{{ i + 1 }}</div> --><div>{{ idxCards[i] }}</div>
+            --> <!-- <div>{{ i + 1 }}</div> --> <!--
+            <div>{{ idxCards[i] }}</div>
           </div>
           <div 
             class="flip-card-back" 
@@ -67,7 +81,7 @@
         </div>
       </div>
 
-    </div>
+    </div> -->
 
 
     <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
@@ -86,9 +100,10 @@
 <script setup>
   import Header from '@/components/Header.vue'
   import Message from '@/components/Message.vue'
+  import Card from '@/components/Card.vue'
 
   import { useStore } from 'vuex'
-  import { ref, reactive, computed, onMounted, defineAsyncComponent/* , nextTick */ } from 'vue'
+  import { ref, reactive, computed, onMounted, defineAsyncComponent } from 'vue'
   import { useRouter } from 'vue-router'
 
   import JSConfetti from 'js-confetti'
@@ -110,15 +125,33 @@
   const selectedNbPairOfCards = computed(() => store.state.nb_pair_of_cards);
   const nbCards = computed(() => selectedNbPairOfCards.value !== null ? parseInt(selectedNbPairOfCards.value) * 2 : 0 ); // Doit-on en faire un Getter dans Vuex ?
 
-  // Partie Theme
-  const selectedTheme = computed(() => store.state.theme);
+  const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
+
+
+/*   const selectedTheme = computed(() => store.state.theme);
   const prefix = computed(() => {
     const obj = store.state.option_themes.find(ot => ot.intitule == selectedTheme.value); 
     return (typeof obj !== "undefined") ? obj.prefix : "";
   });
-  //console.log("prefix", prefix.value); //TEST
+  // Chargement image carte
+  function loadImg(i) {
+    const path = require(`@/assets/imgs/${selectedTheme.value}/${prefix.value}_${parseInt(i + 1)}.png`);
+    return { 'background-image': `url(${path})` };
+  }  */
 
-  const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
+
+  //////////////////////
+  const setCardsInitialState = () => {
+      let arr = []
+      for(var i = 0; i < nbCards.value; i++) {
+          arr.push(0)
+      }
+      return arr
+  }
+  
+  const cardsState = ref([])
+  //////////////////////
+
 
     /* NVELLE VERSION */
   const players = ref([]); 
@@ -146,49 +179,36 @@
     
     return tempoArray
   }
-  //console.log("idxCards", idxCards.value); //TEST
-  
-
-  // Chargement image carte
-  function loadImg(i) {
-    const path = require(`@/assets/imgs/${selectedTheme.value}/${prefix.value}_${parseInt(i + 1)}.png`);
-    return { 'background-image': `url(${path})` };
-  } 
 
 
   // Gestion flip + score
-  const nbMaxFlipsPerTurn = 2;  // nb maximum de carte(s) qu'il est possible de retourner par tour et par joueur
+  const nbMaxFlipsPerTurn = 2,  // nb maximum de carte(s) qu'il est possible de retourner par tour et par joueur
+        delayDisplayMenu = 5000;
   let cardsFlippedPerTurn = [],
       nbFlipPlayer = 0,   // nb de carte(s) retournée(s) par joueur
       foundPairs = 0,   // nb de paires trouvées par l'ensemble des joueurs
       successiveFoundPairsPerPlayer = 0,
       jsConfetti = undefined;
-  const turns = ref(0);
+  const turns = ref(0),
+        displayCountdown = ref(false);
 
-  const delayDisplayMenu = 5000;
 
-
-  const displayCountdown = ref(false)
-
+  // Qd click sur coté verso d'une carte
   function flip(e) {
     nbFlipPlayer++;
   
     if(nbFlipPlayer <= nbMaxFlipsPerTurn) {
 
       const card = e.target.closest(".flip-card");
-      card.classList.toggle("flipped"); // On retourne la carte
+      const order = card.dataset.order;
+      cardsState.value[order] = 1 // On retourne la carte
 
-      const order = card.dataset.order; 
-      /* // Ancienne version
-      const idx = card.dataset.idx; 
-      cardsFlippedPerTurn.push({ "idx": idx, "order": order }); // Enregistrement idx et order de la carte */
       cardsFlippedPerTurn.push({ "idx": idxCards.value[order], "order": order }); // Enregistrement idx et order de la carte
 
       // Apparition Décompte secondes
       if(nbFlipPlayer == 1) displayCountdown.value = true
 
       if(nbFlipPlayer == nbMaxFlipsPerTurn) { // Si 2eme carte tournée...
-
         // On arrete le countdown si le délai max n'est pas dépassé
         displayCountdown.value = false
 
@@ -217,7 +237,7 @@
   function flipCardsFailing() {
     setTimeout((cards) => {
         cards.forEach(c => {
-          document.querySelector(`.flip-card[data-order="${c.order}"]`).classList.toggle("flipped"); // ...On retourne à nouveau les cartes
+          cardsState.value[c.order] = 0 // ...On retourne à nouveau les cartes
         });
 
         successiveFoundPairsPerPlayer = 0;
@@ -246,7 +266,7 @@
 
     setTimeout((cards) => {
       cards.forEach(c => {
-        document.querySelector(`.flip-card[data-order="${c.order}"]`).classList.add("found"); // Marqueur comme quoi trouvées
+        cardsState.value[c.order] = 2 // Code pour dire que paire trouvée
       });
 
       players.value[idxPlayer].score += 1; // Incrémentation score
@@ -340,27 +360,22 @@
     return msgResultatFinal;
   }
 
+
   // Qd player n'a pas cliqué sur 2eme carte à temps (avant fin du décompte)
   function onCountdownOver() {
     contentMsg.value = { 
       text: `Trop tard ${players.value[idxPlayer].nom}`, 
       animationName: 'tooLate' 
-    }; // Ancienne version
-  /* allMsgs.push({ 
-      text: `Trop tard ${players.value[idxPlayer].nom}`, 
-      animationName: 'tooLate' 
-    }); */ // Nvelle version
-
+    };
     flipCardsFailing();
     turns.value += 1; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
     displayCountdown.value = false;
   }
 
 
-  /* TEST: NVELLE VERSION */
+
   const displayMenu = ref(null);
   function replay() {
-    document.querySelectorAll(".flip-card").forEach(fc => fc.classList.remove("flipped", "found")); // On retourne les cartes et les marqueurs "founds"
     newGame(); // On réinitialise
     displayMenu.value = false; // On ferme le menu
   }
@@ -371,13 +386,12 @@
       // Réinitialisation variables locales
       players.value = pl.value.map(p => ({nom: p.nom, score: 0, turn: false}));
       idxPlayer = 0;
-      idxCards.value = setShuffledIdxCards(); //console.log(">>>>", idxCards.value); //TEST
+      idxCards.value = setShuffledIdxCards();
       foundPairs = 0;
       turns.value = 0;
       successiveFoundPairsPerPlayer = 0;
+      cardsState.value = setCardsInitialState() // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
   }
-  /* FIN TEST: NVELLE VERSION */
-
 
 
 
@@ -635,92 +649,7 @@
 .cards-grid > div:nth-child(29) { grid-area: div29; }
 .cards-grid > div:nth-child(30) { grid-area: div30; }
 
-.flip-card {
-  background-color: transparent;
-  perspective: 1000px;
-  width: 100%;
-  padding-top: 100%;
-  justify-self: center;
-  align-self: center;
-  position: relative; /* Vraiment utile ? */
-}
-.flip-card.found .flip-card-back::after {
-  display: inline-block;
-  content: "✔️"; 
-  font-size: min(5vw, 50px);
-  /* content: "trouvé !"; */
-  background-color: rgba(92, 3, 165, 0.4);
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.flip-card-inner {  
-  position: absolute;
-  z-index: 1;
-  top: 0%;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-}
-.flip-card.flipped .flip-card-inner {
-  transform: rotateY(180deg);
-}
 
-.flip-card.flipped .flip-card-front {
-  pointer-events: none;
-}
-
-.flip-card-front, 
-.flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  border-radius: 6px;
-}
-.flip-card-front {
-  cursor: pointer;
-  background-color: #f7ff1f;
-  box-shadow: 0 0 0 min(5px, 0.5vmax) #fff inset;
-}
-@media screen and (min-width: 801px) {
-    .flip-card-front {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 52 52'%3E%3Cpath fill='%23ed25ff' fill-opacity='0.82' d='M0 17.83V0h17.83a3 3 0 0 1-5.66 2H5.9A5 5 0 0 1 2 5.9v6.27a3 3 0 0 1-2 5.66zm0 18.34a3 3 0 0 1 2 5.66v6.27A5 5 0 0 1 5.9 52h6.27a3 3 0 0 1 5.66 0H0V36.17zM36.17 52a3 3 0 0 1 5.66 0h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 0 1 0-5.66V52H36.17zM0 31.93v-9.78a5 5 0 0 1 3.8.72l4.43-4.43a3 3 0 1 1 1.42 1.41L5.2 24.28a5 5 0 0 1 0 5.52l4.44 4.43a3 3 0 1 1-1.42 1.42L3.8 31.2a5 5 0 0 1-3.8.72zm52-14.1a3 3 0 0 1 0-5.66V5.9A5 5 0 0 1 48.1 2h-6.27a3 3 0 0 1-5.66-2H52v17.83zm0 14.1a4.97 4.97 0 0 1-1.72-.72l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1 0-5.52l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43c.53-.35 1.12-.6 1.72-.72v9.78zM22.15 0h9.78a5 5 0 0 1-.72 3.8l4.44 4.43a3 3 0 1 1-1.42 1.42L29.8 5.2a5 5 0 0 1-5.52 0l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1-.72-3.8zm0 52c.13-.6.37-1.19.72-1.72l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43a5 5 0 0 1 5.52 0l4.43-4.43a3 3 0 1 1 1.42 1.41l-4.44 4.43c.36.53.6 1.12.72 1.72h-9.78zm9.75-24a5 5 0 0 1-3.9 3.9v6.27a3 3 0 1 1-2 0V31.9a5 5 0 0 1-3.9-3.9h-6.27a3 3 0 1 1 0-2h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 1 1 2 0v6.27a5 5 0 0 1 3.9 3.9h6.27a3 3 0 1 1 0 2H31.9z'%3E%3C/path%3E%3C/svg%3E");
-    }
-}
-@media screen and (min-width: 501px) and (max-width: 800px) {
-    .flip-card-front {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 52 52'%3E%3Cpath fill='%23ed25ff' fill-opacity='0.82' d='M0 17.83V0h17.83a3 3 0 0 1-5.66 2H5.9A5 5 0 0 1 2 5.9v6.27a3 3 0 0 1-2 5.66zm0 18.34a3 3 0 0 1 2 5.66v6.27A5 5 0 0 1 5.9 52h6.27a3 3 0 0 1 5.66 0H0V36.17zM36.17 52a3 3 0 0 1 5.66 0h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 0 1 0-5.66V52H36.17zM0 31.93v-9.78a5 5 0 0 1 3.8.72l4.43-4.43a3 3 0 1 1 1.42 1.41L5.2 24.28a5 5 0 0 1 0 5.52l4.44 4.43a3 3 0 1 1-1.42 1.42L3.8 31.2a5 5 0 0 1-3.8.72zm52-14.1a3 3 0 0 1 0-5.66V5.9A5 5 0 0 1 48.1 2h-6.27a3 3 0 0 1-5.66-2H52v17.83zm0 14.1a4.97 4.97 0 0 1-1.72-.72l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1 0-5.52l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43c.53-.35 1.12-.6 1.72-.72v9.78zM22.15 0h9.78a5 5 0 0 1-.72 3.8l4.44 4.43a3 3 0 1 1-1.42 1.42L29.8 5.2a5 5 0 0 1-5.52 0l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1-.72-3.8zm0 52c.13-.6.37-1.19.72-1.72l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43a5 5 0 0 1 5.52 0l4.43-4.43a3 3 0 1 1 1.42 1.41l-4.44 4.43c.36.53.6 1.12.72 1.72h-9.78zm9.75-24a5 5 0 0 1-3.9 3.9v6.27a3 3 0 1 1-2 0V31.9a5 5 0 0 1-3.9-3.9h-6.27a3 3 0 1 1 0-2h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 1 1 2 0v6.27a5 5 0 0 1 3.9 3.9h6.27a3 3 0 1 1 0 2H31.9z'%3E%3C/path%3E%3C/svg%3E");
-    }
-}
-@media screen and (max-width: 500px) {
-    .flip-card-front {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 52 52'%3E%3Cpath fill='%23ed25ff' fill-opacity='0.82' d='M0 17.83V0h17.83a3 3 0 0 1-5.66 2H5.9A5 5 0 0 1 2 5.9v6.27a3 3 0 0 1-2 5.66zm0 18.34a3 3 0 0 1 2 5.66v6.27A5 5 0 0 1 5.9 52h6.27a3 3 0 0 1 5.66 0H0V36.17zM36.17 52a3 3 0 0 1 5.66 0h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 0 1 0-5.66V52H36.17zM0 31.93v-9.78a5 5 0 0 1 3.8.72l4.43-4.43a3 3 0 1 1 1.42 1.41L5.2 24.28a5 5 0 0 1 0 5.52l4.44 4.43a3 3 0 1 1-1.42 1.42L3.8 31.2a5 5 0 0 1-3.8.72zm52-14.1a3 3 0 0 1 0-5.66V5.9A5 5 0 0 1 48.1 2h-6.27a3 3 0 0 1-5.66-2H52v17.83zm0 14.1a4.97 4.97 0 0 1-1.72-.72l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1 0-5.52l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43c.53-.35 1.12-.6 1.72-.72v9.78zM22.15 0h9.78a5 5 0 0 1-.72 3.8l4.44 4.43a3 3 0 1 1-1.42 1.42L29.8 5.2a5 5 0 0 1-5.52 0l-4.43 4.44a3 3 0 1 1-1.41-1.42l4.43-4.43a5 5 0 0 1-.72-3.8zm0 52c.13-.6.37-1.19.72-1.72l-4.43-4.43a3 3 0 1 1 1.41-1.41l4.43 4.43a5 5 0 0 1 5.52 0l4.43-4.43a3 3 0 1 1 1.42 1.41l-4.44 4.43c.36.53.6 1.12.72 1.72h-9.78zm9.75-24a5 5 0 0 1-3.9 3.9v6.27a3 3 0 1 1-2 0V31.9a5 5 0 0 1-3.9-3.9h-6.27a3 3 0 1 1 0-2h6.27a5 5 0 0 1 3.9-3.9v-6.27a3 3 0 1 1 2 0v6.27a5 5 0 0 1 3.9 3.9h6.27a3 3 0 1 1 0 2H31.9z'%3E%3C/path%3E%3C/svg%3E");
-    }
-}
-
-.flip-card-back {
-  background-color: #bbb;
-  transform: rotateY(180deg);
-  background-size: cover;
-}
-
-.flip-card-front > div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: black;
-}
 
 .fade-enter-active,
 .fade-leave-active {
