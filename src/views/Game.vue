@@ -20,7 +20,16 @@
     </div>
 
     <template v-slot:btn-rejouer>
-      <button @click="replay">Rejouer avec les mêmes paramètres</button>
+      <!-- <button @click="replay">Rejouer avec les mêmes paramètres</button> -->
+      <BaseButton 
+          @click="replay" 
+          :outline="'#AC00EF'" 
+          :hover="{ backgroundColor: '#AC00EF', color: '#fff' }" 
+          rounded
+      >
+          Rejouer avec les mêmes paramètres
+      </BaseButton>
+
     </template>
   </Header> 
 
@@ -41,8 +50,6 @@
       </Transition>
     </div>
 
-
-    <!-- ESSAI -->
     <div 
       class="cards-grid" 
       v-if="displayCardsGrid"
@@ -56,33 +63,6 @@
         @time-to-flip="flip"   
       />
     </div>
-    <!-- FIN ESSAI -->
-
-
-    <!-- <div 
-      class="cards-grid" 
-      v-if="displayCardsGrid"
-      :style="styleContainer"
-    >
-
-      <div class="flip-card"
-        v-for="(card, i) in nbCards" :key="i" 
-        :data-order="i"
-      >
-        <div class="flip-card-inner">
-          <div class="flip-card-front" @click="flip">
-            --> <!-- <div>{{ i + 1 }}</div> --> <!--
-            <div>{{ idxCards[i] }}</div>
-          </div>
-          <div 
-            class="flip-card-back" 
-            :style="loadImg(idxCards[i])"
-          ></div>
-        </div>
-      </div>
-
-    </div> -->
-
 
     <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
     <Transition name="fade">
@@ -94,10 +74,10 @@
     </Transition>
 
   </div>
-
 </template>
 
 <script setup>
+  import BaseButton from '@/components/base/BaseButton.vue'
   import Header from '@/components/Header.vue'
   import Message from '@/components/Message.vue'
   import Card from '@/components/Card.vue'
@@ -119,28 +99,15 @@
 
   
   const contentMsg = ref({ text: "", animationName: "" }); // Message
+  const cardsState = ref([])
 
-  const pl = computed(() => store.state.players); // Data joueurs saisies dans page 'Settings'
-
+  const pl = computed(() => store.state.players); // Data joueurs saisis dans page 'Settings'
   const selectedNbPairOfCards = computed(() => store.state.nb_pair_of_cards);
   const nbCards = computed(() => selectedNbPairOfCards.value !== null ? parseInt(selectedNbPairOfCards.value) * 2 : 0 ); // Doit-on en faire un Getter dans Vuex ?
-
   const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
 
 
-/*   const selectedTheme = computed(() => store.state.theme);
-  const prefix = computed(() => {
-    const obj = store.state.option_themes.find(ot => ot.intitule == selectedTheme.value); 
-    return (typeof obj !== "undefined") ? obj.prefix : "";
-  });
-  // Chargement image carte
-  function loadImg(i) {
-    const path = require(`@/assets/imgs/${selectedTheme.value}/${prefix.value}_${parseInt(i + 1)}.png`);
-    return { 'background-image': `url(${path})` };
-  }  */
 
-
-  //////////////////////
   const setCardsInitialState = () => {
       let arr = []
       for(var i = 0; i < nbCards.value; i++) {
@@ -149,9 +116,6 @@
       return arr
   }
   
-  const cardsState = ref([])
-  //////////////////////
-
 
     /* NVELLE VERSION */
   const players = ref([]); 
@@ -161,7 +125,7 @@
    /* FIN NVELLE VERSION */
 
 
-
+  // Mélange des cartes
   function setShuffledIdxCards() {
     let tempoArray = []
     // On rempli le tableau de paires d'index...
@@ -191,7 +155,6 @@
       jsConfetti = undefined;
   const turns = ref(0),
         displayCountdown = ref(false);
-
 
   // Qd click sur coté verso d'une carte
   function flip(e) {
