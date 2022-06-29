@@ -23,8 +23,8 @@
       <!-- <button @click="replay">Rejouer avec les mêmes paramètres</button> -->
       <BaseButton 
           @click="replay" 
-          :outline="'#AC00EF'" 
-          :hover="{ backgroundColor: '#AC00EF', color: '#fff' }" 
+          :outline="primaryColor" 
+          :hover="{ backgroundColor: primaryColor, color: '#fff' }" 
           rounded
       >
           Rejouer avec les mêmes paramètres
@@ -106,7 +106,7 @@
   const nbCards = computed(() => selectedNbPairOfCards.value !== null ? parseInt(selectedNbPairOfCards.value) * 2 : 0 ); // Doit-on en faire un Getter dans Vuex ?
   const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
 
-
+  const primaryColor = store.getters.getPrimaryColor
 
   const setCardsInitialState = () => {
       let arr = []
