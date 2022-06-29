@@ -7,7 +7,16 @@
                     id="close-menu" 
                     @click="toggleMenu"
                 />
-                <button @click="goToAccueil">Accueil</button>
+                
+                <BaseButton 
+                    @click="goToAccueil" 
+                    :outline="primaryColor" 
+                    :hover="{ backgroundColor: primaryColor, color: '#fff' }" 
+                    rounded
+                >
+                    Accueil
+                </BaseButton>
+                
                 <slot name="btn-rejouer"></slot>
             </div>
         </teleport>
@@ -26,14 +35,20 @@
 </template>
 
 <script setup>
+    import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
     import { ref, defineProps, defineEmits, watch } from 'vue'
+    import { useStore } from 'vuex'
+
+    const store = useStore()
+    const primaryColor = store.getters.getPrimaryColor
 
     // Redirection vers la page d'accueil q click sur bt 'Accueil'
     const router = useRouter();
     function goToAccueil() {
         router.push({ name: 'introduction' }) 
     }
+
 
     // Gestion affichage ou non du menu
     const display = ref(false);
@@ -73,17 +88,9 @@
 }
 button,
 :slotted(button) {
-    border-radius: 50px;
-    border: solid 3px var(--bg-menu);
-    color: var(--bg-menu);
-    background-color: transparent;
-    padding: 4px 15px;
-    transition: all 0.3s ease-in-out;
     font-size: clamp(18px, 3.5vw, 26px);
-}
-button:hover {
-    background-color: #fff;
-    color: var(--bg-menu);
+    margin: 2vh 0;
+    width: min(60%, 800px);
 }
 
 #menu {

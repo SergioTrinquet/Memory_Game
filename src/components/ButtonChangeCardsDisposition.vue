@@ -9,18 +9,20 @@
             <button class="bt-close-msg" @click="closeMsgInfo">J'ai compris !</button>
         </div>
 
-        <!-- <div>Changer la disposition des cartes</div> -->
-        <button 
-            class="bt-change-disposition" 
+        <BaseButton
+            class="bt-change-disposition"
             title="Changer la disposition"
             @click="changeDispositionCards" 
+            rounded
         >
             {{ rowsColumnsGridCards }}
-        </button>
+        </BaseButton>
     </div>
 </template>
 
 <script setup>
+    import BaseButton from '@/components/base/BaseButton.vue'
+    
     import { computed, defineEmits, defineProps } from 'vue'
 
     import { useStore } from 'vuex'
@@ -56,17 +58,15 @@
     .bt-change-disposition,
     .msg-disposition-cartes {
         background-color: #fff;
-        color: #64008B;
-        border-radius: 5px;
+        color: var(--primary-color-dark);
     }
     .bt-change-disposition,
     .msg-disposition-cartes,
     .bt-close-msg {
         font-size: clamp(16px, 2.3vmax, 22px);
     }
-    .bt-change-disposition {
+    button.bt-change-disposition {
         padding: max(1vh, 4px) 20px;
-        border: none;
         box-shadow: 0px 6px 8px rgba(0,0,0,0.3);
         width: min(80vw, 400px);
         animation: fadeInFromBottom 0.5s ease-in-out;
@@ -90,6 +90,7 @@
         box-shadow: 0px 6px 8px rgba(0,0,0,0.3), 0 0 0px 100vh rgba(0, 0, 0, 0.7);
         margin-bottom: 60px;
         text-align: center;
+        border-radius: 5px;
         /* Pour transition qd apparait */
         opacity: 0;
         animation: fadeInFromTop 0.6s ease-in-out 0.7s forwards;
@@ -119,22 +120,7 @@
 
     .msg-disposition-cartes.hidden {
         display: none;
-        /* animation: fadeOut 0.5s ease-in-out forwards; */
     }
-/*     @keyframes fadeOut {
-        0% { 
-            transform: translateY(0);
-            opacity: 1; 
-        }
-        99% {
-            transform: translateY(20px);
-            opacity: 0; 
-        }
-        100% { 
-            transform: translateY(-100vh);
-            opacity: 0; 
-        }
-    } */
 
     .msg-disposition-cartes > * {
         font-family: 'Yeseva One', cursive;
@@ -146,13 +132,13 @@
     .msg-disposition-cartes .bt-close-msg {
         margin: 15px auto 0 auto;
         border: none;
-        background-color: #64008b;
+        background-color: var(--primary-color-dark);
         color: #fff;
         padding: 1vh 3vw;
         border-radius: 8px;
         transition: 0.3s all ease-in-out;
     }
     .msg-disposition-cartes .bt-close-msg:hover {
-        background-color: #44005f;
+        background-color: var(--primary-color-darker);
     }
 </style>
