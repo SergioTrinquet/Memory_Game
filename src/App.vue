@@ -15,6 +15,8 @@ export default {
 
 :root {
   --bg-menu: #AC00EF;
+  --primary-color-dark: #64008B;
+  --primary-color-darker: #44005f;
   --margin-header: 14px;
   --color-3: #00b4e0;
   --color-error: red;
@@ -65,14 +67,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;*/
   height: 100%;
-
-  /* border: solid 2px rgb(48, 255, 48); */ /* Pour test */
 }
 
 button, 
 button > span {
   font-family: 'Yeseva One', cursive;
-  font-size: 3vw;
+  /* font-size: 3vw; */
   cursor: pointer;
 }
 
