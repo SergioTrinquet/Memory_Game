@@ -63,7 +63,7 @@ export default createStore({
           {
             nom: 'fail',
             animations: [ 
-              { opacity: [0.2, 1], translateY: ["-100vh", "0vh"], duration: 700, endDelay: 700 }
+              { opacity: [0.2, 1], translateY: ["-100vh", "0vh"], duration: 700, endDelay: 700/* , endDelay: 2700 */ }
             ]
           },
           {
@@ -141,6 +141,11 @@ export default createStore({
         rows: orientationDispo.dispo.rows 
       }
     },
+
+
+    getPrimaryColor () {
+      return getComputedStyle(document.documentElement).getPropertyValue('--bg-menu')
+    }
     
   }
 
