@@ -11,10 +11,6 @@
     import { defineProps, computed } from 'vue'
 
     const props = defineProps({
-        color: {
-            type: String,
-            required: false
-        },
         outline: {
             type: String,
             required: false
@@ -24,15 +20,14 @@
             required: false,
             validator(value) {
                 const val = Object.prototype.toString.call(value);
-                // Si objet...
-                if(val === '[object Object]') {
-                    if(!('color' in value && 'backgroundColor' in value)) {
-                        console.error("OBJET : Il manque la ou les propriétés 'color' et 'backgroundColor' à la prop passée !!", value)
+                if(val === '[object Object]') { // Si objet...
+                    if(!('color' in value) && !('backgroundColor' in value)) {
+                        console.error("Il n'y a ni la propriété 'color' ni la propriété 'backgroundColor' dans la prop passée !!", value)
                         return false
                     } else {
                         return true
                     }
-                } else {
+                } else { // ...sinon...
                     return false
                 }
             }
@@ -55,7 +50,9 @@
         return classes
     })
 
+    const CSSoutline = computed(() => (typeof props.outline == 'undefined') ? "unset" : props.outline)
     const CSSfontSize = computed(() => (typeof props.fontSize == 'undefined') ? "initial" : props.fontSize)
+    const CSShover = computed(() => (typeof props.hover == 'undefined') ? { color: "unset", backgroundColor: "unset" } : props.hover)
 </script>
 
 <style scoped>
@@ -74,8 +71,8 @@
     }
     button.bt.outline {
         border-width: 4px;
-        border-color: v-bind('props.outline');
-        color: v-bind('props.outline');
+        border-color: v-bind('CSSoutline');
+        color: v-bind('CSSoutline');
         background-color: transparent;
     }
     button.bt.rounded {
@@ -90,17 +87,17 @@
         content: "";
         width: 100%;
         height: 100%;
-        background-color: v-bind('props.hover.backgroundColor');
+        background-color: v-bind('CSShover.backgroundColor');
         top: 0;
         left: -100%;
         position: absolute;
         z-index: 0;
         transition: left 0.3s ease-in-out;
     }
-    button.bt:hover {
-        color: v-bind('props.hover.color');
+    button.bt.hover:hover {
+        color: v-bind('CSShover.color');
     }
-    button.bt:hover > .bg {
+    button.bt.hover:hover > .bg {
         left: 0%;
     }
 </style>
