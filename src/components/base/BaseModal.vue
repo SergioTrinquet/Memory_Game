@@ -20,7 +20,7 @@
         align-items: center;
         min-height: 50vh;
         width: min(70vw, 800px);
-        padding: 9vh 7vmin 4vh 7vmin;
+        padding: 9vh 7vmin 0vh 7vmin;
     }
     @media screen and (max-width: 700px) {
         .modal { width: 80vw; }
