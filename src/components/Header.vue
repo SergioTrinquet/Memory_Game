@@ -11,7 +11,7 @@
                 <BaseButton 
                     @click="goToAccueil" 
                     :outline="primaryColor" 
-                    :hover="{ backgroundColor: primaryColor, color: '#fff' }" 
+                    :hover-effect="{ backgroundColor: primaryColor, color: '#fff' }" 
                     rounded
                 >
                     Accueil

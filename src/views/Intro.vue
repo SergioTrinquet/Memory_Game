@@ -21,14 +21,14 @@
             <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
             <BaseButton 
                 @click="goToSettings"
-                :hover="{ backgroundColor: 'yellow', color: '#000' }" 
+                :hover-effect="{ backgroundColor: 'yellow', color: '#000' }" 
                 fontSize="max(24px, 4vmin)"
                 rounded
             >Commencez</BaseButton>
             <!-- <BaseButton 
                 @click="goToSettings"
                 :outline="'yellow'" 
-                :hover="{ backgroundColor: 'yellow', color: '#AC00EF' }" 
+                :hover-effect="{ backgroundColor: 'yellow', color: '#AC00EF' }" 
                 rounded
             >Commencez</BaseButton> -->
             

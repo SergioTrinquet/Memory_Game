@@ -24,7 +24,7 @@
       <BaseButton 
           @click="replay" 
           :outline="primaryColor" 
-          :hover="{ backgroundColor: primaryColor, color: '#fff' }" 
+          :hover-effect="{ backgroundColor: primaryColor, color: '#fff' }" 
           rounded
       >
           Rejouer avec les mêmes paramètres
