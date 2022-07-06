@@ -81,13 +81,16 @@ select,
 option,
 .msg-error {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-size: clamp(12px, 3vw, 17px);
+  font-size: clamp(14px, 3vw, 17px);
+
+  
 }
 input, 
 select {
   border: 0;
   background-color: #e9e9e9;
-  padding: 8px 15px;
-  border-radius: 5px;
+  padding: 1vh 2vh;
+  border-radius: 4px;
+  font-size:clamp(17px, 3vmin, 20px);
 }
 </style>
