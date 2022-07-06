@@ -9,32 +9,37 @@
     <Modal :show="selectedModal[0]">
       <div class="selection-nb-players">
         <div class="legend">Sélectionnez le nombre de joueurs</div>
-        <select 
-          v-model="nbOfPlayers"
-          :class="{ 'error': errorSelectNbPlayers }"
-        >
+        <select v-model="nbOfPlayers"> 
           <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }}</option>
         </select>
-        <div v-if="errorSelectNbPlayers" class="msg-error">Veuillez sélectionner une valeur.</div>
       </div>
-<!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->
+<!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
       <div>
         <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-          <label for="joueur" class="legend">Joueur {{ idx }}</label>
-          <div>
+          <label for="joueur" class="legend">joueur {{ idx }}</label>
+          <div class="input-joueur-wrapper">
             <input 
               type="text" name="joueur" 
               placeholder="Entrer un nom/pseudo" 
               v-model="inputsPlayers[idx - 1]"
-              :class="{ 'error': msgErrorInputsPlayers[idx - 1] != '' }" 
+              :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
             /> 
             <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
           </div>
         </div> 
       </div>
 
-      <div class="buttons" data-order="0" style="width: auto;">
-        <Button libelle="Suivant" @click="recordNbPlayers" />
+      <div class="buttons" data-order="0">
+        <BaseButton
+          @click="recordNbPlayers"
+          class="bt-navigation"
+          rounded
+        >
+          Suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+          </template>
+        </BaseButton>
       </div>
     </Modal>
 
@@ -43,35 +48,83 @@
     <Modal :show="selectedModal[1]">
       <div class="legend">Combien de paires identiques</div>
 
-      <select 
-        v-model="nbPairOfCards" 
-        :class="{ 'error': errorSelectNbPair }"
-      >
-        <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
-      </select>
-      <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
+      <div class="select-settings-wrapper">
+        <select 
+          v-model="nbPairOfCards" 
+          :class="{ 'error': errorSelectNbPair }"
+        >
+          <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
+        </select>
+        <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
+      </div>
 
       <div class="buttons" data-order="1">
-        <Button libelle="Précédent" @click="stepBack" />
-        <Button libelle="Suivant" @click="recordNbPairs" />
+        <BaseButton
+          @click="stepBack"
+          class="bt-navigation br"
+          rounded-left rounded
+          text-align-right
+          :hover-effect="{ backgroundColor: '#03a5cc', color: '#fff' }"
+        >
+          précédent 
+          <template v-slot:icon-left>
+            <font-awesome-icon icon="arrow-left" class="icon-left" />
+          </template>
+        </BaseButton>
+        <BaseButton
+          @click="recordNbPairs"
+          class="bt-navigation"
+          rounded-right
+          text-align-left
+        >
+          suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+          </template>
+        </BaseButton>
       </div>
+
     </Modal>
 
 
     <!-- Sélection du thème -->
     <Modal :show="selectedModal[2]">
       <div class="legend">Choisissez un thème</div>
-      <select 
-        v-model="theme"
-        :class="{ 'error': errorTheme }"
-      >
-        <option v-for="theme in optionThemes" :key="theme">{{ theme }}</option>
-      </select>
+      <div class="select-settings-wrapper">
+        <select 
+          v-model="theme"
+          :class="{ 'error': errorTheme }"
+        >
+          <option v-for="theme in optionThemes" :key="theme">{{ theme }}</option>
+        </select>
+        <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
+      </div>
 
       <div class="buttons" data-order="2">
-        <Button libelle="Précédent" @click="stepBack" />
-        <Button libelle="Suivant" @click="recordTheme" />
+        <BaseButton
+          @click="stepBack"
+          class="bt-navigation br"
+          rounded-left rounded
+          text-align-right
+        >
+          précédent 
+          <template v-slot:icon-left>
+            <font-awesome-icon icon="arrow-left" class="icon-left" />
+          </template>
+        </BaseButton>
+        <BaseButton
+          @click="recordTheme"
+          class="bt-navigation"
+          rounded-right
+          text-align-left
+        >
+          suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+          </template>
+        </BaseButton>
       </div>
+
     </Modal>
 
 
@@ -93,8 +146,28 @@
       </div>
 
       <div class="buttons" data-order="3">
-        <Button libelle="Précédent" @click="stepBack" />
-        <Button libelle="Suivant" @click="recordTimeVisibleCard" />
+        <BaseButton
+          @click="stepBack"
+          class="bt-navigation br"
+          rounded-left
+          text-align-right
+        >
+          précédent 
+          <template v-slot:icon-left>
+            <font-awesome-icon icon="arrow-left" class="icon-left" />
+          </template>
+        </BaseButton>
+        <BaseButton
+          @click="recordTimeVisibleCard"
+          class="bt-navigation"
+          rounded-right
+          text-align-left
+        >
+          suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+          </template>
+        </BaseButton>
       </div>
     </Modal> 
    
@@ -105,18 +178,17 @@
 <script setup>
   import Header from '@/components/Header.vue'
   import Modal from '@/components/base/BaseModal.vue'
-  import Button from '@/components/base/baseButtonSettings.vue'
+  import BaseButton from '@/components/base/BaseButton.vue'
 
   import { useStore } from 'vuex'
   import { ref, computed, watch } from 'vue'
   import { useRouter } from 'vue-router'
 
   let selectedModal = ref([true, false, false, false]);
-  let nbOfPlayers = ref(0);
+  let nbOfPlayers = ref(1);
   let nbPairOfCards = ref(null);
   let modalDone = ref(1);
-  let inputsPlayers = ref([]);
-  let errorSelectNbPlayers = ref(false);
+  let inputsPlayers = ref([""]);
   let msgErrorInputsPlayers = ref([]);
   let errorSelectNbPair = ref(false);
   let theme = ref(null);
@@ -127,7 +199,6 @@
   const router = useRouter();
   
   const maxNbPlayers = computed(() => store.state.max_nb_players);
-  //const optionNbPairs = computed(() => store.state.option_nb_pairs);
   const optionNbPairs = computed(() => store.state.option_nb_pairs.map(p => p.nb_pairs));
   const optionThemes = computed(() => store.state.option_themes.map(t => t.intitule));
   const objPlayer = computed(() => store.state.player);
@@ -139,27 +210,24 @@
 
   // 1ere fenêtre modale
   function recordNbPlayers(e) {
-    if(inputsPlayers.value.length == 0) {
-      errorSelectNbPlayers.value = true;
-      return false;
-    }
-
     let playersArray = [];
+
+    // Gestion msgs d'erreurs
+    inputsPlayers.value.forEach((input, i) => {
+      msgErrorInputsPlayers.value.splice(i, 1, "");  // On réinitie: Suppress° du texte d'erreur
+      if(!!(input.trim()) == false) {  // Erreur qd champ est vide
+        msgErrorInputsPlayers.value.splice(i, 1, "Veuillez remplir ce champ!"); // Si champ vide: Affichage texte d'erreur
+      } else if(!!(/^[0-9a-z_-]+$/i.test(input.trim())) == false) { // Erreur qd saisie contient un autre caractère qu'une elttre, un chiffre, un _ ou un -
+        msgErrorInputsPlayers.value.splice(i, 1, "Lettres, chiffres, _ ou - uniquement!")
+      } else if(input.length < 2 || input.length > 10) { // Erreur qd pas assez ou trop de caractères
+        msgErrorInputsPlayers.value.splice(i, 1, "Entre 2 et 10 caractères")
+      }
+    })
 
     // Pour savoir si ts les champs de saisie sont remplis ou pas
     const allInputsFilled = inputsPlayers.value.every(input => !!(input.trim()));  
-    //console.log("allInputsFilled", allInputsFilled); //TEST
     // Check saisies dupliquées ou pas
     const findDuplicates = inputsPlayers.value.filter((item, idx) => inputsPlayers.value.indexOf(item) !== idx)
-    //console.log("findDuplicates", findDuplicates); //TEST
-
-    
-    // Gestion msg d'erreur qd chp(s) de saisie vide
-    inputsPlayers.value.forEach((input, i) => {
-      msgErrorInputsPlayers.value.splice(i, 1, "");  // On réinitie: Suppress° du texte d'erreur
-      if(!!(input.trim()) == false) msgErrorInputsPlayers.value.splice(i, 1, "Veuillez remplir ce champ!"); // Si champ vide: Affichage texte d'erreur
-    })
-
     // Gestion msg d'erreur qd saisies identiques
     if(allInputsFilled) {
       findDuplicates.forEach(duplicate => {
@@ -167,9 +235,12 @@
         msgErrorInputsPlayers.value.splice(idxError, 1, "Nom déjà saisi!");
       })
     }
+
+    // Check si msg d'erreurs existent
+    const isMsgsError = msgErrorInputsPlayers.value.some(msg => msg !== "");
       
     // Si pas d'erreur(s) de saisie...  
-    if(allInputsFilled && findDuplicates.length == 0) {
+    if(!isMsgsError) {
       inputsPlayers.value.forEach(input => {
         let joueur = { ...objPlayer };
         joueur.nom = input.trim();
@@ -187,7 +258,7 @@
   function recordNbPairs(e) {
     if(!!nbPairOfCards.value != false) {
       errorSelectNbPair.value = false;
-      store.commit('SET_NB_PAIR_OF_CARDS', nbPairOfCards.value);  // Ajout enregistremnt dans var. du store 'nb_pair_of_cards'
+      store.commit('SET_NB_PAIR_OF_CARDS', nbPairOfCards.value);  // Ajout enregistrement dans var. du store 'nb_pair_of_cards'
       moveTowardsModal(e, 1);
     } else {
       errorSelectNbPair.value = true;
@@ -226,18 +297,21 @@
   
   // Pour mettre à jour 'inputsPlayers' qd sélect° nb de joueurs
   watch(nbOfPlayers, (val) => {
-    errorSelectNbPlayers.value = false; // Réinitialisation
 
-    let newArray = [];
+    let upToDateInputsPlayers = [],
+        upToDateMsgErrors = [];
     for(var i=0; i < parseInt(val); i++) {
-      var content = !!inputsPlayers.value[i] == false ? "" : inputsPlayers.value[i];
-      newArray.push(content);
-      // Affectat° tableau msg d'erreurs
-      msgErrorInputsPlayers.value.push("");
-    }
-    //console.log(newArray); //TEST
+      // Affectat° tableau saisie champ nom des joueurs
+      let content = !!inputsPlayers.value[i] == false ? "" : inputsPlayers.value[i];
+      upToDateInputsPlayers.push(content);
 
-    inputsPlayers.value = [...newArray];
+      // Affectat° tableau msg d'erreurs
+      let msgError = !!msgErrorInputsPlayers.value[i] == false ? "" : msgErrorInputsPlayers.value[i];
+      upToDateMsgErrors.push(msgError);
+    }
+
+    inputsPlayers.value = [...upToDateInputsPlayers];
+    msgErrorInputsPlayers.value = [...upToDateMsgErrors];
   });  
 </script>
 
@@ -253,7 +327,7 @@
 }
 select option {
   color: rgb(255, 79, 112);
-  color: rgb(255, 143, 164);
+  /* color: rgb(255, 143, 164); */
 }
 .etapes {
   padding: max(35px, 5vmin);
@@ -287,25 +361,55 @@ select option {
 .selection-nb-players {
   text-align: center;
 }
+.selection-nb-players select {
+  margin: 1vmin 0 0 0;
+}
 .lgn-joueur {
   padding: 1.7vh 0;
   display: flex;
 }
+@media screen and (max-width: 480px) {
+  .lgn-joueur {
+    align-items: center;
+    flex-direction: column;
+    padding: 1.1vmin 0;
+  }
+  .lgn-joueur input[type="text"] {
+    text-align: center;
+  }
+}
 .lgn-joueur label {
   margin: 0 10px 0 0;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+.input-joueur-wrapper {
+  position: relative;
 }
 .lgn-joueur input.error,
 select.error {
-  border: solid 2px var(--color-error);
+  /* border: solid 2px var(--color-error); */
+  box-shadow: inset 0 0 0 2px var(--color-error);
 }
 .msg-error {
   color: var(--color-error);
   position: absolute;
+  width: 100%;
+  text-align: center;
 }
+
+.select-settings-wrapper {
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
 .buttons {
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 100%;
+  justify-content: center;
 }
 .range {
   display: flex;
@@ -355,4 +459,28 @@ input[type="range"]::-webkit-slider-runnable-track  {
   background: transparent;
 } */
 
+
+button.bt-navigation {
+  background-color: var(--color-3);
+  color: #fff;
+  transform: translateY(3vh);
+  height: 6vh;
+  width: max(160px, 40%);
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.3);
+  font-size: clamp(20px, 2.5vw, 28px)
+}
+button.bt-navigation.br {
+  border-right: solid 1px #fff;
+}
+.icon-left,
+.icon-right {
+  position: absolute;
+  z-index: 1;
+}
+.icon-left {
+  left: 12px;
+}
+.icon-right {
+  right: 12px;
+}
 </style>
