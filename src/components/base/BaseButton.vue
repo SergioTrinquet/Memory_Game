@@ -1,9 +1,11 @@
 <template>
   <button class="bt" :class="CSS">
-      <span class="libelle">
-          <slot />
-      </span>
-      <span class="bg"></span>
+    <slot name="icon-left"></slot>
+    <span class="libelle" :class="textAlign">
+        <slot />
+    </span>
+    <slot name="icon-right"></slot>
+    <span class="bg"></span>
   </button>
 </template>
 
@@ -15,7 +17,7 @@
             type: String,
             required: false
         },
-        hover: {
+        hoverEffect: {
             type:  Object,
             required: false,
             validator(value) {
@@ -36,8 +38,24 @@
             type: Boolean,
             required: false 
         },
+        roundedRight: {
+            type: Boolean,
+            required: false 
+        },
+        roundedLeft: {
+            type: Boolean,
+            required: false 
+        },
         fontSize: {
             type: String,
+            required: false 
+        },
+        textAlignLeft: {
+            type: Boolean,
+            required: false 
+        },
+        textAlignRight: {
+            type: Boolean,
             required: false 
         }
     })
@@ -45,14 +63,23 @@
     const CSS = computed(() => {
         let classes = "";
         if(props.outline) classes += "outline "
-        if(props.hover) classes += "hover "
+        if(props.hoverEffect) classes += "hover "
+        if(props.roundedRight) classes += "rounded-right "
+        if(props.roundedLeft) classes += "rounded-left "
         if(props.rounded) classes += "rounded "
+        return classes
+    })
+
+    const textAlign = computed(() => {
+        let classes = "";
+        if(props.textAlignLeft) classes = "text-align-left "
+        if(props.textAlignRight) classes = "text-align-right "
         return classes
     })
 
     const CSSoutline = computed(() => (typeof props.outline == 'undefined') ? "unset" : props.outline)
     const CSSfontSize = computed(() => (typeof props.fontSize == 'undefined') ? "initial" : props.fontSize)
-    const CSShover = computed(() => (typeof props.hover == 'undefined') ? { color: "unset", backgroundColor: "unset" } : props.hover)
+    const CSShover = computed(() => (typeof props.hoverEffect == 'undefined') ? { color: "unset", backgroundColor: "unset" } : props.hoverEffect)
 </script>
 
 <style scoped>
@@ -78,10 +105,28 @@
     button.bt.rounded {
         border-radius: 100vh;
     }
+    button.bt.rounded-right {
+        border-radius: 100vh;
+        border-top-left-radius: 0; 
+        border-bottom-left-radius: 0;
+    }
+    button.bt.rounded-left {
+        border-radius: 100vh;
+        border-top-right-radius: 0; 
+        border-bottom-right-radius: 0;
+    }
+    
     button > .libelle { 
         /* position: absolute; */ 
         z-index:2;
         font-size: v-bind('CSSfontSize');
+        width: 100%;
+    }
+    button > .libelle.text-align-left {
+        text-align: left;
+    }
+    button > .libelle.text-align-right {
+        text-align: right;
     }
     button.bt > .bg {
         content: "";
