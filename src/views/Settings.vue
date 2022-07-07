@@ -33,7 +33,7 @@
         <BaseButton
           @click="recordNbPlayers"
           class="bt-navigation"
-          rounded
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           Suivant 
           <template v-slot:icon-right>
@@ -46,6 +46,9 @@
 
     <!-- Nombre de paires -->
     <Modal :show="selectedModal[1]">
+
+<!-- <div class="modal-marge-top"></div> -->
+
       <div class="legend">Combien de paires identiques</div>
 
       <div class="select-settings-wrapper">
@@ -61,10 +64,9 @@
       <div class="buttons" data-order="1">
         <BaseButton
           @click="stepBack"
-          class="bt-navigation br"
-          rounded-left rounded
+          class="bt-navigation"
           text-align-right
-          :hover-effect="{ backgroundColor: '#03a5cc', color: '#fff' }"
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
         >
           précédent 
           <template v-slot:icon-left>
@@ -74,8 +76,8 @@
         <BaseButton
           @click="recordNbPairs"
           class="bt-navigation"
-          rounded-right
           text-align-left
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           suivant 
           <template v-slot:icon-right>
@@ -101,28 +103,31 @@
       </div>
 
       <div class="buttons" data-order="2">
+
         <BaseButton
           @click="stepBack"
-          class="bt-navigation br"
-          rounded-left rounded
+          class="bt-navigation"
           text-align-right
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
         >
           précédent 
           <template v-slot:icon-left>
             <font-awesome-icon icon="arrow-left" class="icon-left" />
           </template>
         </BaseButton>
+
         <BaseButton
           @click="recordTheme"
           class="bt-navigation"
-          rounded-right
           text-align-left
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           suivant 
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right"  class="icon-right" />
           </template>
         </BaseButton>
+
       </div>
 
     </Modal>
@@ -146,29 +151,33 @@
       </div>
 
       <div class="buttons" data-order="3">
+        
         <BaseButton
           @click="stepBack"
-          class="bt-navigation br"
-          rounded-left
+          class="bt-navigation"
           text-align-right
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
         >
           précédent 
           <template v-slot:icon-left>
             <font-awesome-icon icon="arrow-left" class="icon-left" />
           </template>
         </BaseButton>
+
         <BaseButton
           @click="recordTimeVisibleCard"
           class="bt-navigation"
-          rounded-right
           text-align-left
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           suivant 
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right"  class="icon-right" />
           </template>
         </BaseButton>
+
       </div>
+
     </Modal> 
    
 
@@ -203,6 +212,7 @@
   const optionThemes = computed(() => store.state.option_themes.map(t => t.intitule));
   const objPlayer = computed(() => store.state.player);
 
+  const colorHoverEffect = store.getters.getColorHoverEffectSettings
   
   function stepBack(e) {
     moveTowardsModal(e, -1);
@@ -325,9 +335,12 @@
   color: rgb(255, 79, 112);
   color: rgb(255, 143, 164);
 }
+:deep(.modal) {
+  box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3), inset 0 1.5vh rgba(255, 143, 164, 0.3);
+}
+
 select option {
   color: rgb(255, 79, 112);
-  /* color: rgb(255, 143, 164); */
 }
 .etapes {
   padding: max(35px, 5vmin);
@@ -377,6 +390,18 @@ select option {
   .lgn-joueur input[type="text"] {
     text-align: center;
   }
+
+  :deep(.libelle) {
+    display: none;
+  }
+  .bt-navigation :deep(.icon-left), 
+  .bt-navigation :deep(.icon-right) {
+    position: initial;
+    height: 1.4em;
+  }
+  /* button.bt-navigation {
+    width: 30%;
+  } */
 }
 .lgn-joueur label {
   margin: 0 10px 0 0;
@@ -389,7 +414,6 @@ select option {
 }
 .lgn-joueur input.error,
 select.error {
-  /* border: solid 2px var(--color-error); */
   box-shadow: inset 0 0 0 2px var(--color-error);
 }
 .msg-error {
@@ -410,6 +434,7 @@ select.error {
   flex-direction: row;
   width: 100%;
   justify-content: center;
+  padding: 3vh;
 }
 .range {
   display: flex;
@@ -461,16 +486,17 @@ input[type="range"]::-webkit-slider-runnable-track  {
 
 
 button.bt-navigation {
-  background-color: var(--color-3);
+  background-color: var(--color-tertiary);
   color: #fff;
-  transform: translateY(3vh);
   height: 6vh;
-  width: max(160px, 40%);
-  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.3);
-  font-size: clamp(20px, 2.5vw, 28px)
+  width: max(160px, 50%);
+  font-size: clamp(20px, 2.5vw, 28px);
 }
-button.bt-navigation.br {
-  border-right: solid 1px #fff;
+button.bt-navigation:first-child {
+  margin: 0 1.5vh 0 0;
+}
+button.bt-navigation:last-child {
+  margin: 0 0 0  1.5vh;
 }
 .icon-left,
 .icon-right {
