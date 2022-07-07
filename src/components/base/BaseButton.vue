@@ -15,16 +15,21 @@
     const props = defineProps({
         outline: {
             type: String,
-            required: false
+            required: false,
+            default: "unset"
         },
         hoverEffect: {
             type:  Object,
             required: false,
+            default: () => { return { color: "unset", backgroundColor: "unset" } },
             validator(value) {
                 const val = Object.prototype.toString.call(value);
                 if(val === '[object Object]') { // Si objet...
-                    if(!('color' in value) && !('backgroundColor' in value)) {
-                        console.error("Il n'y a ni la propriété 'color' ni la propriété 'backgroundColor' dans la prop passée !!", value)
+                    if(!('color' in value) && !('backgroundColor' in value) && !('fromRight' in value)) {
+                        console.error("Il n'y a ni la propriété 'color' ni la propriété 'backgroundColor', ni la propriété 'fromRight' dans la prop 'hover-effect' passée !!", value)
+                        return false
+                    } else if('fromRight' in value && value.fromRight !== true) {
+                        console.error("La propriété 'fromRight' de la prop 'hover-effect' n'a pas une valeur conforme. Elle doit être égale à true")
                         return false
                     } else {
                         return true
@@ -38,17 +43,10 @@
             type: Boolean,
             required: false 
         },
-        roundedRight: {
-            type: Boolean,
-            required: false 
-        },
-        roundedLeft: {
-            type: Boolean,
-            required: false 
-        },
         fontSize: {
             type: String,
-            required: false 
+            required: false,
+            default: 'initial'
         },
         textAlignLeft: {
             type: Boolean,
@@ -62,10 +60,9 @@
 
     const CSS = computed(() => {
         let classes = "";
-        if(props.outline) classes += "outline "
+        if(props.outline !== 'unset') classes += "outline "
         if(props.hoverEffect) classes += "hover "
-        if(props.roundedRight) classes += "rounded-right "
-        if(props.roundedLeft) classes += "rounded-left "
+        if(typeof props.hoverEffect !== 'undefined' && 'fromRight' in props.hoverEffect && props.hoverEffect.fromRight === true) classes += "hover-from-right "
         if(props.rounded) classes += "rounded "
         return classes
     })
@@ -76,10 +73,6 @@
         if(props.textAlignRight) classes = "text-align-right "
         return classes
     })
-
-    const CSSoutline = computed(() => (typeof props.outline == 'undefined') ? "unset" : props.outline)
-    const CSSfontSize = computed(() => (typeof props.fontSize == 'undefined') ? "initial" : props.fontSize)
-    const CSShover = computed(() => (typeof props.hoverEffect == 'undefined') ? { color: "unset", backgroundColor: "unset" } : props.hoverEffect)
 </script>
 
 <style scoped>
@@ -98,28 +91,18 @@
     }
     button.bt.outline {
         border-width: 4px;
-        border-color: v-bind('CSSoutline');
-        color: v-bind('CSSoutline');
+        border-color: v-bind('props.outline');
+        color: v-bind('props.outline');
         background-color: transparent;
     }
     button.bt.rounded {
         border-radius: 100vh;
     }
-    button.bt.rounded-right {
-        border-radius: 100vh;
-        border-top-left-radius: 0; 
-        border-bottom-left-radius: 0;
-    }
-    button.bt.rounded-left {
-        border-radius: 100vh;
-        border-top-right-radius: 0; 
-        border-bottom-right-radius: 0;
-    }
     
     button > .libelle { 
         /* position: absolute; */ 
         z-index:2;
-        font-size: v-bind('CSSfontSize');
+        font-size: v-bind('props.fontSize');
         width: 100%;
     }
     button > .libelle.text-align-left {
@@ -132,15 +115,18 @@
         content: "";
         width: 100%;
         height: 100%;
-        background-color: v-bind('CSShover.backgroundColor');
+        background-color: v-bind('props.hoverEffect.backgroundColor');
         top: 0;
         left: -100%;
         position: absolute;
         z-index: 0;
         transition: left 0.3s ease-in-out;
     }
+    button.bt.hover-from-right > .bg {
+        left: 100%;
+    }
     button.bt.hover:hover {
-        color: v-bind('CSShover.color');
+        color: v-bind('props.hoverEffect.color');
     }
     button.bt.hover:hover > .bg {
         left: 0%;
