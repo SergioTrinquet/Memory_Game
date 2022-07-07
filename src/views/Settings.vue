@@ -7,6 +7,7 @@
     
     <!-- Nombre de joueurs -->
     <Modal :show="selectedModal[0]">
+
       <div class="selection-nb-players">
         <div class="legend">Sélectionnez le nombre de joueurs</div>
         <select v-model="nbOfPlayers"> 
@@ -381,28 +382,6 @@ select option {
   padding: 1.7vh 0;
   display: flex;
 }
-@media screen and (max-width: 480px) {
-  .lgn-joueur {
-    align-items: center;
-    flex-direction: column;
-    padding: 1.1vmin 0;
-  }
-  .lgn-joueur input[type="text"] {
-    text-align: center;
-  }
-
-  :deep(.libelle) {
-    display: none;
-  }
-  .bt-navigation :deep(.icon-left), 
-  .bt-navigation :deep(.icon-right) {
-    position: initial;
-    height: 1.4em;
-  }
-  /* button.bt-navigation {
-    width: 30%;
-  } */
-}
 .lgn-joueur label {
   margin: 0 10px 0 0;
   display: flex;
@@ -508,5 +487,28 @@ button.bt-navigation:last-child {
 }
 .icon-right {
   right: 12px;
+}
+
+@media screen and (max-width: 480px) {
+  .lgn-joueur {
+    align-items: center;
+    flex-direction: column;
+    padding: 1.1vmin 0;
+  }
+  .lgn-joueur input[type="text"] {
+    text-align: center;
+  }
+
+  :deep(.libelle) {
+    display: none;
+  }
+  .bt-navigation :deep(.icon-left), 
+  .bt-navigation :deep(.icon-right) {
+    position: initial;
+    height: 1.4em;
+  }
+  button.bt-navigation {
+    width: 30% !important;
+  }
 }
 </style>
