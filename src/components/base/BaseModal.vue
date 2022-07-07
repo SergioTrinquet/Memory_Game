@@ -13,14 +13,14 @@
     .modal {
         background-color: #fff;
         border-radius: 4px;
-        box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3);
         display: none;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
         min-height: 50vh;
         width: min(70vw, 800px);
-        padding: 9vh 7vmin 0vh 7vmin;
+        box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3);
+        padding: 9vh 0 0 0;
     }
     @media screen and (max-width: 700px) {
         .modal { width: 80vw; }

@@ -89,8 +89,9 @@
 button,
 :slotted(button) {
     font-size: clamp(18px, 3.5vw, 26px);
+    font-weight: bold;
     margin: 2vh 0;
-    width: min(60%, 800px);
+    width: min(70%, 700px);
 }
 
 #menu {
@@ -141,7 +142,7 @@ button,
 #close-menu {
     position: absolute;
     top: 3vh;
-    right: 3vh;
+    left: 3vh;
     transition: transform 0.3s ease-in-out;
 }
 #close-menu::before {
