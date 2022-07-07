@@ -14,11 +14,12 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Yeseva+One&display=swap');
 
 :root {
-  --bg-menu: #AC00EF;
-  --primary-color-dark: #64008B;
-  --primary-color-darker: #44005f;
+  --color-primary: #AC00EF;
+  --color-primary-dark: #64008B;
+  --color-primary-darker: #44005f;
   --margin-header: 14px;
-  --color-3: #00b4e0;
+  --color-tertiary: #00b4e0;
+  --color-tertiary-dark: #028eb1;
   --color-error: red;
   --width-icons-menu: clamp(35px, 3vw, 45px);
   --width-nb-tours: clamp(45px, 10vw, 130px);
