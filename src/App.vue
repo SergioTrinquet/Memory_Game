@@ -11,12 +11,14 @@ export default {
 <style>
 /* @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bubblegum+Sans&family=Caveat+Brush&family=Concert+One&family=DM+Serif+Display&family=Dancing+Script:wght@600;700&family=Fredericka+the+Great&family=Grand+Hotel&family=Oleo+Script&family=Pacifico&family=Sniglet:wght@400;800&family=Yeseva+One&display=swap');
  */
-@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Yeseva+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap');
 
 :root {
+  --color-primary-light: #ab00ef67;
   --color-primary: #AC00EF;
-  --color-primary-dark: #64008B;
-  --color-primary-darker: #44005f;
+  --color-primary-dark-1: #8800BD;
+  --color-primary-dark-2: #64008B;
+  --color-primary-dark-3: #44005f;
   --margin-header: 14px;
   --color-tertiary: #00b4e0;
   --color-tertiary-dark: #028eb1;
@@ -29,7 +31,8 @@ export default {
 
 * {
     box-sizing: border-box;
-    font-family: 'Grand Hotel', cursive;
+    /* font-family: 'Grand Hotel', cursive; */
+    font-family: 'Yeseva One', cursive;
     /* font-family: 'Pacifico', cursive; */
     font-size: clamp(20px, 4vmin, 30px);
 }
@@ -72,8 +75,7 @@ body {
 
 button, 
 button > span {
-  font-family: 'Yeseva One', cursive;
-  /* font-size: 3vw; */
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
 }
 
@@ -81,10 +83,9 @@ input,
 select, 
 option,
 .msg-error {
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Poppins', sans-serif; 
   font-size: clamp(14px, 3vw, 17px);
-
-  
+  text-align: center;
 }
 input, 
 select {
@@ -94,4 +95,5 @@ select {
   border-radius: 4px;
   font-size:clamp(17px, 3vmin, 20px);
 }
+
 </style>
