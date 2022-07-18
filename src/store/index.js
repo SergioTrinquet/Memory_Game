@@ -63,7 +63,7 @@ export default createStore({
           {
             nom: 'fail',
             animations: [ 
-              { opacity: [0.2, 1], translateY: ["-100vh", "0vh"], duration: 700, endDelay: 700/* , endDelay: 2700 */ }
+              { opacity: [0.2, 1], translateY: ["-100vh", "0vh"], duration: 700/* , endDelay: 700 */, endDelay: 2700 }
             ]
           },
           {
@@ -144,7 +144,10 @@ export default createStore({
 
 
     getPrimaryColor () {
-      return getComputedStyle(document.documentElement).getPropertyValue('--bg-menu')
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-primary')
+    },
+    getColorHoverEffectSettings() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--color-primary-dark-1')
     }
     
   }
