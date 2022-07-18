@@ -7,9 +7,9 @@ import router from './router'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
-import { faArrowRight, faArrowLeft, faCheck, faBars, faXmark, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 /* add icons to the library */
-library.add(faArrowRight, faArrowLeft, faCheck, faBars, faXmark, faExclamationCircle)
+library.add(faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle)
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
