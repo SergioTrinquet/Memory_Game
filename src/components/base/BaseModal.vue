@@ -18,9 +18,9 @@
         justify-content: space-between;
         align-items: center;
         min-height: 50vh;
-        width: min(70vw, 800px);
+        width: min(70vw, 640px);
         box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3);
-        padding: 9vh 0 0 0;
+        padding: 0;
     }
     @media screen and (max-width: 700px) {
         .modal { width: 80vw; }
