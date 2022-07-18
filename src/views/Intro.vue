@@ -204,7 +204,8 @@ button:hover {
     font-size: 6vmax;
     color: rgb(61, 61, 61);
     text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
-    font-family: 'Yeseva One', cursive;
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 600;
     opacity: 0;
 }
 .score.anim {
