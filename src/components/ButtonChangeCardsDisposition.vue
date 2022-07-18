@@ -58,7 +58,7 @@
     .bt-change-disposition,
     .msg-disposition-cartes {
         background-color: #fff;
-        color: var(--color-primary-dark);
+        color: var(--color-primary-dark-2);
     }
     .bt-change-disposition,
     .msg-disposition-cartes,
@@ -132,13 +132,13 @@
     .msg-disposition-cartes .bt-close-msg {
         margin: 15px auto 0 auto;
         border: none;
-        background-color: var(--color-primary-dark);
+        background-color: var(--color-primary-dark-2);
         color: #fff;
         padding: 1vh 3vw;
         border-radius: 8px;
         transition: 0.3s all ease-in-out;
     }
     .msg-disposition-cartes .bt-close-msg:hover {
-        background-color: var(--color-primary-darker);
+        background-color: var(--color-primary-dark-3);
     }
 </style>
