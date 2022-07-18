@@ -2,43 +2,44 @@
   <Header /> 
   <div class="modals">
     <div class="etapes">
+      <div>étape</div>
       <div>{{ modalDone }} / 4</div>
     </div>
     
     <!-- Nombre de joueurs -->
-    <Modal :show="selectedModal[0]">
-
-      <div class="selection-nb-players">
-        <div class="legend">Sélectionnez le nombre de joueurs</div>
+    <Modal :show="selectedModal[0]">  
+      <div class="modal-legend">Sélectionnez le nombre de joueurs</div>
+      
+      <div class="modal-content" id="first-modal">
         <select v-model="nbOfPlayers"> 
-          <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }}</option>
+          <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
         </select>
-      </div>
-<!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
-      <div>
-        <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-          <label for="joueur" class="legend">joueur {{ idx }}</label>
-          <div class="input-joueur-wrapper">
-            <input 
-              type="text" name="joueur" 
-              placeholder="Entrer un nom/pseudo" 
-              v-model="inputsPlayers[idx - 1]"
-              :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
-            /> 
-            <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
-          </div>
-        </div> 
+  <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
+        <div class="wrapper-joueurs">
+          <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
+            <!-- <label for="joueur" class="modal-legend">joueur {{ idx }}</label> -->
+            <div class="input-joueur-wrapper">
+              <input 
+                type="text" name="joueur" 
+                :placeholder="'Nom du joueur ' + idx" 
+                v-model="inputsPlayers[idx - 1]"
+                :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
+              /> 
+              <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
+            </div>
+          </div> 
+        </div>
       </div>
 
-      <div class="buttons" data-order="0">
+      <div class="modal-buttons" data-order="0">
         <BaseButton
           @click="recordNbPlayers"
-          class="bt-navigation"
+          class="bt-navigation solo"
           :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           Suivant 
           <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
       </div>
@@ -48,9 +49,7 @@
     <!-- Nombre de paires -->
     <Modal :show="selectedModal[1]">
 
-<!-- <div class="modal-marge-top"></div> -->
-
-      <div class="legend">Combien de paires identiques</div>
+      <div class="modal-legend">Combien de paires identiques</div>
 
       <div class="select-settings-wrapper">
         <select 
@@ -61,8 +60,9 @@
         </select>
         <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
       </div>
+      
 
-      <div class="buttons" data-order="1">
+      <div class="modal-buttons" data-order="1">
         <BaseButton
           @click="stepBack"
           class="bt-navigation"
@@ -71,7 +71,7 @@
         >
           précédent 
           <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left" class="icon-left" />
+            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
           </template>
         </BaseButton>
         <BaseButton
@@ -82,7 +82,7 @@
         >
           suivant 
           <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
       </div>
@@ -92,7 +92,7 @@
 
     <!-- Sélection du thème -->
     <Modal :show="selectedModal[2]">
-      <div class="legend">Choisissez un thème</div>
+      <div class="modal-legend">Choisissez un thème</div>
       <div class="select-settings-wrapper">
         <select 
           v-model="theme"
@@ -103,7 +103,7 @@
         <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
       </div>
 
-      <div class="buttons" data-order="2">
+      <div class="modal-buttons" data-order="2">
 
         <BaseButton
           @click="stepBack"
@@ -113,7 +113,7 @@
         >
           précédent 
           <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left" class="icon-left" />
+            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
           </template>
         </BaseButton>
 
@@ -125,7 +125,7 @@
         >
           suivant 
           <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
 
@@ -136,7 +136,7 @@
 
 
     <Modal :show="selectedModal[3]">
-      <div class="legend">Laps de temps max. entre l'appartion des 2 cartes</div>
+      <div class="modal-legend">Laps de temps max. entre l'appartion des 2 cartes</div>
       <div>
         <div class="range">
           <span>3</span>
@@ -151,7 +151,7 @@
         <div class="result-seconds">{{ timeDisplayCard }} <span>secondes</span></div>
       </div>
 
-      <div class="buttons" data-order="3">
+      <div class="modal-buttons" data-order="3">
         
         <BaseButton
           @click="stepBack"
@@ -161,7 +161,7 @@
         >
           précédent 
           <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left" class="icon-left" />
+            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
           </template>
         </BaseButton>
 
@@ -173,7 +173,7 @@
         >
           suivant 
           <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right"  class="icon-right" />
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
 
@@ -195,7 +195,7 @@
   import { useRouter } from 'vue-router'
 
   let selectedModal = ref([true, false, false, false]);
-  let nbOfPlayers = ref(1);
+  let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
   let modalDone = ref(1);
   let inputsPlayers = ref([""]);
@@ -333,18 +333,17 @@
   justify-content: center;
   align-items: center;
   min-height: 100%;
-  color: rgb(255, 79, 112);
   color: rgb(255, 143, 164);
 }
-:deep(.modal) {
+/* :deep(.modal) {
   box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3), inset 0 1.5vh rgba(255, 143, 164, 0.3);
-}
+} */
 
-select option {
+/* select option {
   color: rgb(255, 79, 112);
-}
-.etapes {
-  padding: max(35px, 5vmin);
+} */
+/* .etapes {
+  padding: max(35px, 5vmin); padding: max(35px, 4vmin);
   z-index: 1;
   transform: rotate(45deg) translate(max(24.5px, 3.5vmin), max(24.5px, 3.5vmin));
   background-color: rgb(255, 143, 164);
@@ -359,24 +358,61 @@ select option {
   z-index: 1;
   color: #f7f7f7;
   transform: rotate(-45deg);
-  font-family: 'Yeseva One', cursive;
+  font-family: 'Poppins', sans-serif;
   width: 10vw;
   text-align: center;
   text-shadow: 0 2px 0px rgba(153, 0, 213, 0.6);
   letter-spacing: -0.05em;
   min-width: 70px;
-}
-
-.legend {
-  font-size: clamp(26px, 6vmin, 38px);
-  line-height: clamp(26px, 6vmin, 38px);
-}
-
-.selection-nb-players {
+} */
+.etapes {
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
   text-align: center;
+  position: absolute;
+  z-index: 1;
+  top: calc(25vh - 2.7em);
 }
-.selection-nb-players select {
-  margin: 1vmin 0 0 0;
+.etapes > div:first-child {
+
+}
+.etapes > div:last-child {
+
+}
+
+.modal-legend {
+  font-size: clamp(22px, 3.6vmin, 34px);
+  line-height: clamp(24px, 4vmin, 34px);
+  text-align: center;
+  border-bottom: dashed 2px var(--color-primary-light);
+}
+
+.select-settings-wrapper,
+.wrapper-joueurs,
+.input-joueur-wrapper,
+.modal-legend,
+.modal-content,
+.modal-buttons,
+.msg-error {
+  width: 100%;
+}
+
+.modal-legend,
+.modal-content,
+.modal-buttons {
+    padding: 3vh;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.wrapper-joueurs {
+  margin-top: 2.2vh;
 }
 .lgn-joueur {
   padding: 1.7vh 0;
@@ -391,6 +427,17 @@ select option {
 .input-joueur-wrapper {
   position: relative;
 }
+.input-joueur-wrapper input {
+  margin: 0 auto;
+  display: block;
+}
+select {
+  width: 30%;
+}
+#first-modal select,
+.input-joueur-wrapper input {
+  width: 50%;
+}
 .lgn-joueur input.error,
 select.error {
   box-shadow: inset 0 0 0 2px var(--color-error);
@@ -398,22 +445,18 @@ select.error {
 .msg-error {
   color: var(--color-error);
   position: absolute;
-  width: 100%;
-  text-align: center;
 }
 
 .select-settings-wrapper {
-  width: 100%;
   text-align: center;
   position: relative;
 }
 
-.buttons {
+.modal-buttons {
   display: flex;
   flex-direction: row;
-  width: 100%;
   justify-content: center;
-  padding: 3vh;
+  background-color: var(--color-primary-light);
 }
 .range {
   display: flex;
@@ -465,7 +508,8 @@ input[type="range"]::-webkit-slider-runnable-track  {
 
 
 button.bt-navigation {
-  background-color: var(--color-tertiary);
+  background-color: var(--color-tertiary); 
+  background-color: var(--color-primary);
   color: #fff;
   height: 6vh;
   width: max(160px, 50%);
@@ -477,16 +521,27 @@ button.bt-navigation:first-child {
 button.bt-navigation:last-child {
   margin: 0 0 0  1.5vh;
 }
+button.bt-navigation.solo {
+  margin: 0;
+}
 .icon-left,
 .icon-right {
   position: absolute;
   z-index: 1;
+  transition: transform 0.2s ease;
 }
 .icon-left {
-  left: 12px;
+  left: 3vw;
 }
 .icon-right {
-  right: 12px;
+  right: 3vw;
+}
+
+button.bt-navigation:hover .icon-left {
+  transform: translateX(-1vw);
+}
+button.bt-navigation:hover .icon-right {
+  transform: translateX(1vw);
 }
 
 @media screen and (max-width: 480px) {
@@ -506,9 +561,6 @@ button.bt-navigation:last-child {
   .bt-navigation :deep(.icon-right) {
     position: initial;
     height: 1.4em;
-  }
-  button.bt-navigation {
-    width: 30% !important;
   }
 }
 </style>
