@@ -51,31 +51,30 @@
     watch( 
         () => props.content, 
         (val) => {
-            console.log("watch sur 'props.content'", JSON.stringify(val)); //TEST
-            // displayMessage(val)
+            //console.log("watch sur 'props.content'", JSON.stringify(val)); //TEST
             queueMessages(val)
+
+            //TEST_queueMessages(val) // V2 : 05/07/2022
         }
     )
 
-    /////////////
-    // Pour chainer les messages sans que e dernier appelé ne 'affiche avant la fin du précédent
-    //let countCalls = 0;
+
+    /// V2 : Fonctionne ///
+    /* function TEST_queueMessages(val) {
+        let arr = [];
+        arr.push(val)
+        arr.reduce( async (previousPromise, nextID) => {  console.log(nextID)
+            await previousPromise
+            return displayMessage(nextID);
+        }, Promise.resolve())
+    } */
+    ///// Fin V2 /////
+
+    
+    // Pour chainer les messages sans que le dernier appelé ne s'affiche avant la fin du précédent
     let resolved = null;
     let P = null;
     async function queueMessages(val) {
-        // V1 : Fonctionne !!!
-        /* if(countCalls > 0) {
-            await P;
-            console.log("La promesse précédente est terminée....");
-        }
-        countCalls += 1; console.log("1 - countCalls", countCalls); //TEST
-        resolved = await displayMessage(val)
-        if(resolved == 'resolved') {
-            countCalls -= 1;    console.log("2 - countCalls", countCalls); //TEST
-            resolved = null
-        } */
-
-        // V2 : Fonctionne !!
         if(resolved !== null) {
             await P;
             console.log("La promesse précédente est terminée...."); // TEST
@@ -84,7 +83,7 @@
         resolved = await displayMessage(val)
         if(resolved == 'resolved') resolved = null
     }
-    /////////////
+    
 
     let tl;///
     async function displayMessage(val) {
