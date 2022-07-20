@@ -7,7 +7,7 @@
     </div>
     
     <!-- Nombre de joueurs -->
-    <Modal :show="selectedModal[0]">  
+    <Modal :show="selectedModal[0]" id="first-modal">  
       <div class="modal-legend">Sélectionnez le nombre de joueurs</div>
       
       <div class="modal-content" id="first-modal">
@@ -34,7 +34,7 @@
       <div class="modal-buttons" data-order="0">
         <BaseButton
           @click="recordNbPlayers"
-          class="bt-navigation solo"
+          class="bt-navigation"
           :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
         >
           Suivant 
@@ -326,7 +326,7 @@
   });  
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .modals {
   display: flex;
   flex-direction: column;
@@ -431,6 +431,10 @@
   margin: 0 auto;
   display: block;
 }
+::placeholder {
+  color: #6f6f6f;
+}
+
 select {
   width: 30%;
 }
@@ -461,14 +465,16 @@ select.error {
 .range {
   display: flex;
   justify-content: center;
+  font-size: min(3vmin, 24px);
 }
 .range span {
   margin: 0 8px;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  color: #9400CD;
+  font-family: 'Poppins', sans-serif; 
+  color: var(--color-primary);
 }
 .result-seconds {
   text-align: center;
+  margin-top: 1vh;
 }
 
 input[type="range"] {
@@ -521,9 +527,17 @@ button.bt-navigation:first-child {
 button.bt-navigation:last-child {
   margin: 0 0 0  1.5vh;
 }
-button.bt-navigation.solo {
-  margin: 0;
+
+#first-modal {
+  button.bt-navigation {
+    margin: 0;
+  }
+  input[type="text"], select {
+    width: max(160px, 50%);
+  }
 }
+
+
 .icon-left,
 .icon-right {
   position: absolute;
@@ -548,10 +562,11 @@ button.bt-navigation:hover .icon-right {
   .lgn-joueur {
     align-items: center;
     flex-direction: column;
-    padding: 1.1vmin 0;
-  }
-  .lgn-joueur input[type="text"] {
-    text-align: center;
+    padding: max(12px, 1.1vmin) 0;
+
+    input[type="text"] {
+      text-align: center;
+    }
   }
 
   :deep(.libelle) {

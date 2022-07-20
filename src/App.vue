@@ -84,16 +84,26 @@ select,
 option,
 .msg-error {
   font-family: 'Poppins', sans-serif; 
-  font-size: clamp(14px, 3vw, 17px);
   text-align: center;
 }
+option,
+.msg-error {
+  font-size: clamp(14px, 3vw, 17px);
+}
 input, 
+select {
+  font-size:clamp(17px, 3vmin, 20px);
+}
+input[type="text"], 
 select {
   border: 0;
   background-color: #e9e9e9;
   padding: 1vh 2vh;
   border-radius: 4px;
-  font-size:clamp(17px, 3vmin, 20px);
+}
+input[type="text"]:focus, 
+select:focus {
+  outline: 3px solid #dd98f9;
 }
 
 </style>
