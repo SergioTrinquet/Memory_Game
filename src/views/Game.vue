@@ -47,6 +47,9 @@
           v-if="displayCountdown"
           @countdown-over="onCountdownOver"
         />
+        <!-- <Countdown
+          @countdown-over="onCountdownOver"
+        /> -->
       </Transition>
     </div>
 
@@ -533,10 +536,15 @@
   border-radius: 30%;
   padding: 5px 12px;
   margin: 0 10px 0 0;
-  font-weight: bold;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
 }
 .player .number {
   color: rgb(241, 237, 0);
+
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: clamp(15px, 2.6vw, 22px);
 }
 .player .number.increase::after {
   animation: 1s ease-in plusOne;
@@ -558,7 +566,9 @@
 }
 
 .wrapper-countdown {
-  height: 5vh;
+  height: 6vh;
+  display: flex;
+  align-items: center;
 }
 
 .global-cards {
@@ -566,7 +576,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 100vh; */ height: 100%;
+  height: 100%;
 }
 
 .cards-grid {
@@ -581,7 +591,19 @@
   max-height: 70vh;
   max-width: min(80vw, 780px);
 }
-.cards-grid > div:first-child { grid-area: div1; }
+@media screen and (max-width: 480px) {
+  .cards-grid {
+    gap: 9px 9px;
+  }
+}
+
+$nbdivs: 30;
+@for $i from 1 through $nbdivs {
+  .cards-grid > div:nth-child(#{$i}) {
+    grid-area: div#{$i};
+  }
+}
+/* .cards-grid > div:first-child { grid-area: div1; }
 .cards-grid > div:nth-child(2) { grid-area: div2; }
 .cards-grid > div:nth-child(3) { grid-area: div3; }
 .cards-grid > div:nth-child(4) { grid-area: div4; }
@@ -611,7 +633,7 @@
 .cards-grid > div:nth-child(28) { grid-area: div28; }
 .cards-grid > div:nth-child(29) { grid-area: div29; }
 .cards-grid > div:nth-child(30) { grid-area: div30; }
-
+ */
 
 
 .fade-enter-active,
