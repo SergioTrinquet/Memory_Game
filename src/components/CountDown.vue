@@ -35,13 +35,16 @@
 <style>
     .msg-countdown {
         color: #fff;
-        width: 100vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 80vw;
+        text-align: center;
+        font-size: clamp(18px, 4vmin, 23px);
+        line-height: clamp(18px, 4vmin, 30px);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
     }
     .countdown {
-        font-weight: bold;
+        font-family: inherit;
+        font-weight: 800;
         margin: 0 1vw;
         text-shadow: 2px 3px rgb(111, 0, 153);
         transform: scale(1.2);
