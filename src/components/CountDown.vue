@@ -37,7 +37,7 @@
         color: #fff;
         width: 80vw;
         text-align: center;
-        font-size: clamp(18px, 4vmin, 23px);
+        font-size: clamp(16px, 3.8vmin, 23px);
         line-height: clamp(18px, 4vmin, 30px);
         font-family: 'Poppins', sans-serif;
         font-weight: 600;
