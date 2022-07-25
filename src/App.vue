@@ -27,6 +27,7 @@ export default {
   --width-nb-tours: clamp(45px, 10vw, 130px);
   --space-bottom-bt-change-disposition: 3vh;
   --topPositionElPgIntro: -56vmin;
+  --padding-modal-settings: 3vh;
 }
 
 * {
