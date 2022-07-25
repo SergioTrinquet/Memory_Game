@@ -55,7 +55,7 @@
     font-size: clamp(22px, 3.6vmin, 34px);
     line-height: clamp(24px, 4vmin, 34px);
     text-align: center;
-    border-bottom: dotted 4px var(--color-primary-light);
+    border-bottom: dotted min(4px, 0.5vmin) var(--color-primary-light);
 }
 .modal-legend,
 .modal-buttons {

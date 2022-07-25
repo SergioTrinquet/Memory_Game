@@ -517,6 +517,9 @@
 .msg-error {
   width: 100%;
 }
+.select-settings-wrapper .msg-error {
+  width: calc(100% - (2 * var(--padding-modal-settings)));
+}
 
 .modal-content {
   display: flex;
@@ -589,6 +592,7 @@ select.error {
 
 input[type="range"] {
   cursor: pointer;
+  font-size: clamp(9px, 3vmin, 20px);
 }
 
 /* input[type="range"] {
@@ -685,6 +689,10 @@ button.bt-navigation:hover .icon-right {
   .bt-navigation :deep(.icon-right) {
     position: initial;
     height: 1.4em;
+  }
+
+  select {
+    width: 60%;
   }
 }
 </style>
