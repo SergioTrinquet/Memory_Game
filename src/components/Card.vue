@@ -131,6 +131,12 @@
         backface-visibility: hidden;
         border-radius: 6px;
     }
+    @media screen and (max-width: 480px) {
+        .flip-card-front, 
+        .flip-card-back {
+            border-radius: 4px;
+        }
+    }
     .flip-card-front {
         cursor: pointer;
         background-color: #f7ff1f;
