@@ -1,23 +1,198 @@
 <template>
   <Header /> 
   <div class="modals">
-    <div class="etapes">
-      <div>étape</div>
-      <div>{{ modalDone }} / 4</div>
+
+  <!-- TEST -->
+  <!-- Nombre de joueurs -->
+  <CustomModal 
+    id="first-modal" 
+    data-order="0"
+    :show="selectedModal[0]" 
+    :legend="'Sélectionnez le nombre de joueurs'"
+    :current-modal="currentModal"
+  >
+    <div class="modal-content">
+          <select v-model="nbOfPlayers"> 
+            <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
+          </select>
+    <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
+          <div class="wrapper-joueurs">
+            <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
+              <div class="input-joueur-wrapper">
+                <input 
+                  type="text" name="joueur" 
+                  :placeholder="'Nom du joueur ' + idx" 
+                  v-model="inputsPlayers[idx - 1]"
+                  :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
+                /> 
+                <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
+              </div>
+            </div> 
+          </div>
     </div>
+
+    <template v-slot:buttons>
+      <BaseButton
+        @click="recordNbPlayers"
+        class="bt-navigation"
+        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+      >
+        Suivant 
+        <template v-slot:icon-right>
+          <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+        </template>
+      </BaseButton>
+    </template>
+  </CustomModal>
+
+   <!-- Nombre de paires -->
+   <CustomModal 
+    data-order="1"
+    :show="selectedModal[1]" 
+    :legend="'Combien de paires identiques'"
+    :current-modal="currentModal"
+  >
+      <div class="select-settings-wrapper">
+        <select 
+          v-model="nbPairOfCards" 
+          :class="{ 'error': errorSelectNbPair }"
+        >
+          <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
+        </select>
+        <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
+      </div>
+
+      <template v-slot:buttons>
+        <BaseButton
+          @click="stepBack"
+          class="bt-navigation"
+          text-align-right
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
+        >
+          précédent 
+          <template v-slot:icon-left>
+            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
+          </template>
+        </BaseButton>
+        <BaseButton
+          @click="recordNbPairs"
+          class="bt-navigation"
+          text-align-left
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+        >
+          suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+          </template>
+        </BaseButton>
+      </template>
+  </CustomModal>
+
+
+  <!-- Sélection du thème -->
+  <CustomModal 
+    data-order="2"
+    :show="selectedModal[2]" 
+    :legend="'Choisissez un thème'"
+    :current-modal="currentModal"
+  >
+    <div class="select-settings-wrapper">
+      <select 
+        v-model="theme"
+        :class="{ 'error': errorTheme }"
+      >
+        <option v-for="theme in optionThemes" :key="theme">{{ theme }}</option>
+      </select>
+      <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
+    </div>
+
+    <template v-slot:buttons>
+        <BaseButton
+          @click="stepBack"
+          class="bt-navigation"
+          text-align-right
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
+        >
+          précédent 
+          <template v-slot:icon-left>
+            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
+          </template>
+        </BaseButton>
+
+        <BaseButton
+          @click="recordTheme"
+          class="bt-navigation"
+          text-align-left
+          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+        >
+          suivant 
+          <template v-slot:icon-right>
+            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+          </template>
+        </BaseButton>
+    </template>
+  </CustomModal>
+
+  <!-- Laps de temps max. entre 2 cartes -->
+  <CustomModal 
+    data-order="3"
+    :show="selectedModal[3]" 
+    :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
+    :current-modal="currentModal"
+  >
+    <div>
+      <div class="range">
+        <span>3</span>
+        <input 
+          type="range" 
+          v-model="timeDisplayCard" 
+          min="3" max="15" 
+          step="1"
+        >
+        <span>15</span>
+      </div>
+      <div class="result-seconds">{{ timeDisplayCard }} secondes</div>
+    </div>    
+
+    <template v-slot:buttons>
+      <BaseButton
+        @click="stepBack"
+        class="bt-navigation"
+        text-align-right
+        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
+      >
+        précédent 
+        <template v-slot:icon-left>
+          <font-awesome-icon icon="arrow-left-long" class="icon-left" />
+        </template>
+      </BaseButton>
+
+      <BaseButton
+        @click="recordTimeVisibleCard"
+        class="bt-navigation"
+        text-align-left
+        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+      >
+        suivant 
+        <template v-slot:icon-right>
+          <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+        </template>
+      </BaseButton>
+    </template>
+  </CustomModal>
+  <!-- FIN TEST -->
+
     
     <!-- Nombre de joueurs -->
-    <Modal :show="selectedModal[0]" id="first-modal">  
+    <!-- <Modal :show="selectedModal[0]" id="first-modal">  
       <div class="modal-legend">Sélectionnez le nombre de joueurs</div>
       
-      <div class="modal-content" id="first-modal">
+      <div class="modal-content">
         <select v-model="nbOfPlayers"> 
           <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
         </select>
-  <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
         <div class="wrapper-joueurs">
           <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-            <!-- <label for="joueur" class="modal-legend">joueur {{ idx }}</label> -->
             <div class="input-joueur-wrapper">
               <input 
                 type="text" name="joueur" 
@@ -43,12 +218,11 @@
           </template>
         </BaseButton>
       </div>
-    </Modal>
+    </Modal> -->
 
 
     <!-- Nombre de paires -->
-    <Modal :show="selectedModal[1]">
-
+    <!-- <Modal :show="selectedModal[1]">
       <div class="modal-legend">Combien de paires identiques</div>
 
       <div class="select-settings-wrapper">
@@ -61,7 +235,6 @@
         <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
       </div>
       
-
       <div class="modal-buttons" data-order="1">
         <BaseButton
           @click="stepBack"
@@ -86,12 +259,11 @@
           </template>
         </BaseButton>
       </div>
-
-    </Modal>
+    </Modal> -->
 
 
     <!-- Sélection du thème -->
-    <Modal :show="selectedModal[2]">
+    <!-- <Modal :show="selectedModal[2]">
       <div class="modal-legend">Choisissez un thème</div>
       <div class="select-settings-wrapper">
         <select 
@@ -130,13 +302,12 @@
         </BaseButton>
 
       </div>
-
-    </Modal>
-
+    </Modal> -->
 
 
-    <Modal :show="selectedModal[3]">
-      <div class="modal-legend">Laps de temps max. entre l'appartion des 2 cartes</div>
+    <!-- Laps de temps max. entre 2 cartes -->
+    <!-- <Modal :show="selectedModal[3]">
+      <div class="modal-legend">Laps de temps max. entre l'apparition des 2 cartes</div>
       <div>
         <div class="range">
           <span>3</span>
@@ -148,7 +319,7 @@
           >
           <span>15</span>
         </div>
-        <div class="result-seconds">{{ timeDisplayCard }} <span>secondes</span></div>
+        <div class="result-seconds">{{ timeDisplayCard }} secondes</div>
       </div>
 
       <div class="modal-buttons" data-order="3">
@@ -178,8 +349,7 @@
         </BaseButton>
 
       </div>
-
-    </Modal> 
+    </Modal>  -->
    
 
   </div>
@@ -187,7 +357,8 @@
 
 <script setup>
   import Header from '@/components/Header.vue'
-  import Modal from '@/components/base/BaseModal.vue'
+  /* import Modal from '@/components/base/BaseModal.vue'  */   
+  import CustomModal from '@/components/CustomModal.vue'  
   import BaseButton from '@/components/base/BaseButton.vue'
 
   import { useStore } from 'vuex'
@@ -197,7 +368,7 @@
   let selectedModal = ref([true, false, false, false]);
   let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
-  let modalDone = ref(1);
+  let currentModal = ref(1);
   let inputsPlayers = ref([""]);
   let msgErrorInputsPlayers = ref([]);
   let errorSelectNbPair = ref(false);
@@ -303,7 +474,7 @@
     temp_selectedModal[newOrder] = true;
     selectedModal.value = [...temp_selectedModal];
     // Mise à jour n° de la modale
-    modalDone.value = (newOrder + 1);
+    currentModal.value = (newOrder + 1);
   }
   
   // Pour mettre à jour 'inputsPlayers' qd sélect° nb de joueurs
@@ -339,68 +510,12 @@
   box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3), inset 0 1.5vh rgba(255, 143, 164, 0.3);
 } */
 
-/* select option {
-  color: rgb(255, 79, 112);
-} */
-/* .etapes {
-  padding: max(35px, 5vmin); padding: max(35px, 4vmin);
-  z-index: 1;
-  transform: rotate(45deg) translate(max(24.5px, 3.5vmin), max(24.5px, 3.5vmin));
-  background-color: rgb(255, 143, 164);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.3);
-  border-radius: max(7px, 1.5vmin);
-}
-.etapes > div {
-  position: absolute;
-  z-index: 1;
-  color: #f7f7f7;
-  transform: rotate(-45deg);
-  font-family: 'Poppins', sans-serif;
-  width: 10vw;
-  text-align: center;
-  text-shadow: 0 2px 0px rgba(153, 0, 213, 0.6);
-  letter-spacing: -0.05em;
-  min-width: 70px;
-} */
-.etapes {
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
-  position: absolute;
-  z-index: 1;
-  top: calc(25vh - 2.7em);
-}
-.etapes > div:first-child {
-
-}
-.etapes > div:last-child {
-
-}
-
-.modal-legend {
-  font-size: clamp(22px, 3.6vmin, 34px);
-  line-height: clamp(24px, 4vmin, 34px);
-  text-align: center;
-  border-bottom: dashed 2px var(--color-primary-light);
-}
-
 .select-settings-wrapper,
 .wrapper-joueurs,
 .input-joueur-wrapper,
-.modal-legend,
 .modal-content,
-.modal-buttons,
 .msg-error {
   width: 100%;
-}
-
-.modal-legend,
-.modal-content,
-.modal-buttons {
-    padding: 3vh;
 }
 
 .modal-content {
@@ -409,6 +524,7 @@
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  padding: var(--padding-modal-settings);
 }
 
 .wrapper-joueurs {
@@ -436,12 +552,9 @@
 }
 
 select {
-  width: 30%;
+  width: 35%;
 }
-#first-modal select,
-.input-joueur-wrapper input {
-  width: 50%;
-}
+
 .lgn-joueur input.error,
 select.error {
   box-shadow: inset 0 0 0 2px var(--color-error);
@@ -454,14 +567,9 @@ select.error {
 .select-settings-wrapper {
   text-align: center;
   position: relative;
+  padding: 0 var(--padding-modal-settings);
 }
 
-.modal-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  background-color: var(--color-primary-light);
-}
 .range {
   display: flex;
   justify-content: center;
@@ -473,8 +581,10 @@ select.error {
   color: var(--color-primary);
 }
 .result-seconds {
+  font-family: 'Poppins', sans-serif; 
   text-align: center;
   margin-top: 1vh;
+  color: #dd98f9; color: var(--color-primary);
 }
 
 input[type="range"] {
@@ -514,7 +624,6 @@ input[type="range"]::-webkit-slider-runnable-track  {
 
 
 button.bt-navigation {
-  background-color: var(--color-tertiary); 
   background-color: var(--color-primary);
   color: #fff;
   height: 6vh;
