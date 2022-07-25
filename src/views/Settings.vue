@@ -626,7 +626,7 @@ input[type="range"]::-webkit-slider-runnable-track  {
 button.bt-navigation {
   background-color: var(--color-primary);
   color: #fff;
-  height: 6vh;
+  height: max(6vh, 34px);
   width: max(160px, 50%);
   font-size: clamp(20px, 2.5vw, 28px);
 }
