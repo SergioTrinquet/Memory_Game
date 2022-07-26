@@ -37,15 +37,15 @@
         color: #fff;
         width: 80vw;
         text-align: center;
-        font-size: clamp(16px, 3.3vmin, 23px);
-        line-height: clamp(18px, 3.6vmin, 23px);
+        font-size: clamp(16px, 3.3vmin, 21px);
+        line-height: clamp(18px, 3.6vmin, 21px);
         font-family: 'Poppins', sans-serif;
         font-weight: 600;
     }
     .countdown {
         font-family: inherit;
         font-weight: 800;
-        margin: 0 1vw;
+        margin: 0 0.2vw;
         text-shadow: 2px 3px rgb(111, 0, 153);
         transform: scale(1.2);
     }
