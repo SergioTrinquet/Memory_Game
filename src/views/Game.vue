@@ -8,7 +8,7 @@
     <div 
       v-for="(player, i) in players" :key="i" 
       class="player"
-      :class="{ 'playing': player.turn }"
+      :class="{ 'playing': player.turn, 'half': players.length == 2 ,'third': players.length == 3 }"
     >
       <div>
         <div class="score">{{ player.score }}</div>
@@ -20,7 +20,6 @@
     </div>
 
     <template v-slot:btn-rejouer>
-      <!-- <button @click="replay">Rejouer avec les mêmes paramètres</button> -->
       <BaseButton 
           @click="replay" 
           :outline="primaryColor" 
@@ -29,7 +28,6 @@
       >
           Rejouer avec les mêmes paramètres
       </BaseButton>
-
     </template>
   </Header> 
 
@@ -514,18 +512,18 @@
 
 <style scoped lang="scss">
 .player {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-width: 0;
 }
+.player.half { width: 50%; }
+.player.third { width: 33%; }
 .player > div {
   display: flex;
-  padding: min(1.2vmin, 10px);
+  padding: clamp(5px, 1vw, 10px);
 }
 .player.playing > div {
   border: dashed 3px #fff;
   border-radius: 6px;
+  max-width: fit-content;
 }
 .player .score {
   display: flex;
@@ -535,7 +533,7 @@
   color: #fff;
   border-radius: 30%;
   padding: 5px 12px;
-  margin: 0 10px 0 0;
+  margin: 0 min(2.5vw, 15px) 0 0;
   font-weight: 800;
   font-family: 'Poppins', sans-serif;
 }
@@ -558,11 +556,14 @@
   100% {  opacity: 1; margin-top: 0vh; transform: scale(2); }
 }
 .player .name {
-  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .nbName {
   line-height: 3vh;
+  min-width: 0;
 }
 
 .wrapper-countdown {

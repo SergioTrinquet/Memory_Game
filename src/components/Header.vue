@@ -80,18 +80,40 @@
     display: flex;
 }
 .content {
-    flex-grow: 1;
+    flex-grow: 1;   
+    min-width: 0;
     display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
     margin-right: var(--width-nb-tours);
     /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
     margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
-button,
-:slotted(button) {
+
+/* @media screen and (min-aspect-ratio: 2 / 1) {
+    .content {
+        background-color: #f00;
+
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        background-color: rgba(0,0,0,0.3);
+        top: 0;
+        right: 0;
+        height: 100%;
+        margin-right: 0;
+        width: 25vw;
+    }
+} */
+
+button.bt,
+:slotted(button.bt) {
     font-size: clamp(18px, 3.5vw, 26px);
     font-weight: bold;
     margin: 2vh 0;
     width: min(70%, 700px);
+    line-height: clamp(19px, 4.3vw, 26px);
+    padding: 3vmin 3vmin;
 }
 
 #menu {
