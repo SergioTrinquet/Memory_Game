@@ -140,7 +140,7 @@
     :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
     :current-modal="currentModal"
   >
-    <div>
+    <div class="range-settings-wrapper">
       <div class="range">
         <span>3</span>
         <input 
@@ -573,10 +573,17 @@ select.error {
   padding: 0 var(--padding-modal-settings);
 }
 
+.range-settings-wrapper {
+  width: 100%;
+  padding: 0 var(--padding-modal-settings);
+}
 .range {
   display: flex;
   justify-content: center;
+  align-items: center;
   font-size: min(3vmin, 24px);
+  margin: 0 auto;
+  width: 70%;
 }
 .range span {
   margin: 0 8px;
@@ -591,40 +598,36 @@ select.error {
 }
 
 input[type="range"] {
-  cursor: pointer;
-  font-size: clamp(9px, 3vmin, 20px);
-}
-
-/* input[type="range"] {
--webkit-appearance: none;
+  -webkit-appearance: none;
   padding: 0;                   
   font: inherit;              
   outline: none;
-  color: #9400CD;                 
-  opacity: .8;
-  background: #CCC;             
+  background: #e3dfdf;             
   box-sizing: border-box;    
   transition: opacity .2s;
   cursor: pointer;
+  border-radius: 20px;
+  height: clamp(8px, 1vmax, 12px);
+  width: 100%;
+  font-size: clamp(9px, 3vmin, 20px);
 }
-
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #ff4500;
+  background-color: #9400CD;
   cursor: ew-resize;
   box-shadow: 0 0 2px 0 #555;
   transition: background .3s ease-in-out;
 }
-
 input[type="range"]::-webkit-slider-runnable-track  {
   -webkit-appearance: none;
   box-shadow: none;
   border: none;
   background: transparent;
-} */
+}
+
 
 
 button.bt-navigation {
