@@ -42,14 +42,13 @@
     text-align: center;
     position: absolute;
     z-index: 1;
-    top: -2.7em;
-    top: -1.7em;
+    top: min(-38px, -1.4em);
 }
 .etapes * {
     color: #fff;
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
-    font-size: 20px;
+    font-size: min(5.2vmin, 20px);
 }
 .modal-legend {
     font-size: clamp(22px, 3.6vmin, 34px);

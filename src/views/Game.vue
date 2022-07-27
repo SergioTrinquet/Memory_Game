@@ -12,8 +12,8 @@
     >
       <div>
         <div class="score">{{ player.score }}</div>
-        <div class="nbName">
-          <div class="number">joueur {{ i + 1 }}</div>
+        <div class="number-and-name-player">
+          <div class="number">j<span class="number-optional-text">oueur</span> {{ i + 1 }}</div>
           <div class="name">{{ player.nom }}</div>
         </div>
        </div>
@@ -519,9 +519,10 @@
 .player > div {
   display: flex;
   padding: clamp(5px, 1vw, 10px);
+  margin: 0 2px;
 }
 .player.playing > div {
-  border: dashed 3px #fff;
+  outline: dashed 3px #fff;
   border-radius: 6px;
   max-width: fit-content;
 }
@@ -530,19 +531,37 @@
   align-items: center;
   justify-content: center;
   background-color: #F052D0;
+  background-color: #FF80E5;
   color: #fff;
-  border-radius: 30%;
+  border-radius: 10px;
   padding: 5px 12px;
-  margin: 0 min(2.5vw, 15px) 0 0;
+  margin: 0 min(2vw, 10px) 0 0;
+  min-width: 30px;
   font-weight: 800;
   font-family: 'Poppins', sans-serif;
+  text-shadow: 2px 2px #f7768c;
 }
 .player .number {
   color: rgb(241, 237, 0);
-
   font-family: 'Poppins', sans-serif;
   font-weight: 800;
   font-size: clamp(15px, 2.6vw, 22px);
+}
+.player .number .number-optional-text {
+  font-family: inherit;
+  font-size: inherit;
+}
+@media screen and (max-width: 480px) {
+  .player .number .number-optional-text {
+    width: 0px;
+    display: inline-flex;
+    overflow: hidden;
+    margin: 0 3px 0 0;
+  }
+  .player .number .number-optional-text::after {
+    content: ".";
+    position: absolute;
+  }
 }
 .player .number.increase::after {
   animation: 1s ease-in plusOne;
@@ -559,10 +578,11 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  height: clamp(18px, 3.8vmin, 28px);
 }
 
-.nbName {
-  line-height: 3vh;
+.number-and-name-player {
+  line-height: clamp(19px, 3.3vmin, 25px);
   min-width: 0;
 }
 

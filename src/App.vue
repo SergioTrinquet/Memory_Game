@@ -35,7 +35,7 @@ export default {
     /* font-family: 'Grand Hotel', cursive; */
     font-family: 'Yeseva One', cursive;
     /* font-family: 'Pacifico', cursive; */
-    font-size: clamp(20px, 4vmin, 30px);
+    font-size: clamp(16px, 4vmin, 28px);
 }
 body {
   background: rgb(100,0,139);
