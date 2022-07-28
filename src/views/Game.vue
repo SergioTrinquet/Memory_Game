@@ -31,11 +31,6 @@
     </template>
   </Header> 
 
-  <NbTurnsPlayed 
-    v-if="turns > 0"
-    :nbTurns="turns"  
-  />
-
 
   <div class="global-cards">   <!-- <button @click="displayConfettis">Confettis</button> --> <!-- TEST -->
 
@@ -63,7 +58,14 @@
         clickEvent  
         @time-to-flip="flip"   
       />
+
+      <!-- Juste dans .cards-grid parce que doit se situer en dessous, mais ne fait pas partie de la grid normalement -->
+      <NbTurnsPlayed 
+        v-if="turns > 0"
+        :nbTurns="turns"  
+      />
     </div>
+
 
     <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
     <Transition name="fade">
@@ -516,10 +518,14 @@
 }
 .player.half { width: 50%; }
 .player.third { width: 33%; }
+
 .player > div {
   display: flex;
   padding: clamp(5px, 1vw, 10px);
   margin: 0 2px;
+
+  /* margin: 0 auto;
+  max-width: fit-content; */
 }
 .player.playing > div {
   outline: dashed 3px #fff;
@@ -530,7 +536,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F052D0;
   background-color: #FF80E5;
   color: #fff;
   border-radius: 10px;
@@ -545,7 +550,7 @@
   color: rgb(241, 237, 0);
   font-family: 'Poppins', sans-serif;
   font-weight: 800;
-  font-size: clamp(15px, 2.6vw, 22px);
+  font-size: clamp(15px, 2.6vmin, 22px);
 }
 .player .number .number-optional-text {
   font-family: inherit;
@@ -601,7 +606,7 @@
 }
 
 .cards-grid {
-  border: dotted 1px #fff; /* TEST */
+  /* border: dotted 1px #fff; */ /* TEST */
   display: grid; 
   /* grid-template-columns: 1fr 1fr 1fr; 
   grid-template-rows: 1fr 1fr;
@@ -611,6 +616,8 @@
   gap: 10px 10px;
   max-height: 70vh;
   max-width: min(80vw, 780px);
+
+  position: relative;
 }
 @media screen and (max-width: 480px) {
   .cards-grid {
@@ -674,5 +681,22 @@ $nbdivs: 30;
 .fade-and-slide-leave-to {
   opacity: 0;
   transform: translateY(30px);
+}
+
+@media screen and (min-aspect-ratio: 2 / 1) {
+  .cards-grid,
+  :deep(.msg-countdown) {
+    transform: translateX(-8vw);
+  }
+  .player {
+    margin: 2vh 0;
+  }
+  .player.half,
+  .player.third { 
+      width: 80%; 
+  }
+  .player.playing > div {
+    max-width: none;
+  }
 }
 </style>
