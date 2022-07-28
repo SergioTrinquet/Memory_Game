@@ -21,12 +21,11 @@ export default {
   --color-primary-dark-3: #44005f;
   --margin-header: 14px;
   --color-tertiary: #00b4e0;
-  --color-tertiary-dark: #028eb1;
   --color-error: red;
   --width-icons-menu: clamp(35px, 3vw, 45px);
   --width-nb-tours: clamp(45px, 10vw, 130px);
   --space-bottom-bt-change-disposition: 3vh;
-  --topPositionElPgIntro: -56vmin;
+  --top-position-el-pg-intro: -56vmin;
   --padding-modal-settings: 3vh;
 }
 

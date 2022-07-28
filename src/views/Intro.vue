@@ -181,7 +181,7 @@ button:hover {
     width: 12vmin;
     height: 12vmin;
     transform: rotate(-15deg);
-    margin: var(--topPositionElPgIntro) 0 0 -14vmin;
+    margin: var(--top-position-el-pg-intro) 0 0 -14vmin;
     width: max(60px, 16vmin);
     height: max(60px, 16vmin);
 }
@@ -199,7 +199,7 @@ button:hover {
 
 .score {
     position: absolute;
-    margin: var(--topPositionElPgIntro) 0 0 0;
+    margin: var(--top-position-el-pg-intro) 0 0 0;
     z-index: 4;
     font-size: 6vmax;
     color: rgb(61, 61, 61);
