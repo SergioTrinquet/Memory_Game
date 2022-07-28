@@ -18,17 +18,11 @@
 <style>
     .nb-tours {
         position: absolute;
-        top: 0;
-        right: var(--margin-header);
-        height: 10vh;
-        font-size: clamp(17px, 3vmin, 24px);
-        line-height: max(18px, 3.3vmin);
-        width: var(--width-nb-tours);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        top: 100%;
+        width: 100%;
+        font-family: 'Poppins', sans-serif;
         text-align: center;
-        background-color: var(--color-tertiary);
-        padding: 1vw;
+        font-size: clamp(17px, 3vmin, 24px);
+        padding: 2vh 0 0 0;
     }
 </style>
