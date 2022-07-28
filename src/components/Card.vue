@@ -91,7 +91,7 @@
     .flip-card.found .flip-card-back::after {
         display: inline-block;
         content: "✔️"; 
-        font-size: min(5vw, 50px);
+        font-size: min(8vmin, 50px);
         /* content: "trouvé !"; */
         background-color: rgba(92, 3, 165, 0.4);
         position: absolute;
