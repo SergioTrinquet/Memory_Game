@@ -28,7 +28,7 @@
                 />
             </div>
         </div>
-        <div class="content">
+        <!-- <div class="content"> --><div class="content" v-if="slots.default">
             <slot />
         </div>
     </div>
@@ -37,7 +37,7 @@
 <script setup>
     import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
-    import { ref, defineProps, defineEmits, watch } from 'vue'
+    import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
     import { useStore } from 'vuex'
 
     const store = useStore()
@@ -54,6 +54,9 @@
     const display = ref(false);
     const props = defineProps({ displayMenu: Boolean }); 
     const emit = defineEmits(['onCloseMenu']);
+
+    // pour savoir si slot existe ou pas
+    const slots = useSlots()
     
     // Dans 1er argument du 'watch', valeur de la prop passée ds une getter function et non pas directement, sinon erreur.
     // Dans le watch : Affectat° de la valeur de la ref 'display' + emit pour réinitialisation de la prop dans le composant parent
@@ -85,15 +88,13 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
-    margin-right: var(--width-nb-tours);
+    /* margin-right: var(--width-nb-tours); */
     /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
     margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 
-/* @media screen and (min-aspect-ratio: 2 / 1) {
+@media screen and (min-aspect-ratio: 2 / 1) {
     .content {
-        background-color: #f00;
-
         flex-direction: column;
         align-items: center;
         position: fixed;
@@ -101,10 +102,12 @@
         top: 0;
         right: 0;
         height: 100%;
-        margin-right: 0;
-        width: 25vw;
+        margin: 0;
+        width: clamp(180px, 20vw, 300px);
+
+        justify-content: center;
     }
-} */
+}
 
 button.bt,
 :slotted(button.bt) {
@@ -159,7 +162,7 @@ button.bt,
 }
 .wrapper-icon-menu:hover > div::after {
     opacity: 1;
-    transform: translateY(clamp(35px, 5.5vh, 45px));
+    transform: translateY(clamp(35px, 5vmax, 45px));
 }
 #close-menu {
     position: absolute;
