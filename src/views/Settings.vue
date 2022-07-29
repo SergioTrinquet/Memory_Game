@@ -635,7 +635,7 @@ button.bt-navigation {
   color: #fff;
   height: max(6vh, 34px);
   width: max(160px, 50%);
-  font-size: clamp(20px, 2.5vw, 28px);
+  font-size: clamp(20px, 3.3vmin, 28px);
 }
 button.bt-navigation:first-child {
   margin: 0 1.5vh 0 0;

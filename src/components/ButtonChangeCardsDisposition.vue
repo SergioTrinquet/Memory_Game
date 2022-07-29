@@ -63,7 +63,7 @@
     .bt-change-disposition,
     .msg-disposition-cartes,
     .bt-close-msg {
-        font-size: clamp(16px, 2.3vmax, 22px);
+        font-size: clamp(15px, 2.8vmin, 22px);
     }
     button.bt-change-disposition {
         padding: max(1vh, 4px) 20px;
@@ -88,9 +88,9 @@
         width: min(80vw, 700px);
         padding: 5.5vmin 4.5vmin;
         box-shadow: 0px 6px 8px rgba(0,0,0,0.3), 0 0 0px 100vh rgba(0, 0, 0, 0.7);
-        margin-bottom: 60px;
+        margin-bottom: clamp(40px, 14vh ,60px);
         text-align: center;
-        border-radius: 5px;
+        border-radius: 22px;
         /* Pour transition qd apparait */
         opacity: 0;
         animation: fadeInFromTop 0.6s ease-in-out 0.7s forwards;
@@ -123,14 +123,14 @@
     }
 
     .msg-disposition-cartes > * {
-        font-family: 'Yeseva One', cursive;
+        font-family: 'Poppins', sans-serif;
     }
     .msg-disposition-cartes p {
         margin: 10px 0;
         font-size: inherit;
     }
     .msg-disposition-cartes .bt-close-msg {
-        margin: 15px auto 0 auto;
+        margin: min(2vh,15px) auto 0 auto;
         border: none;
         background-color: var(--color-primary-dark-2);
         color: #fff;

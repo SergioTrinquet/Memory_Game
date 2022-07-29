@@ -552,18 +552,18 @@
   font-weight: 800;
   font-size: clamp(15px, 2.6vmin, 22px);
 }
-.player .number .number-optional-text {
+.player .number-optional-text {
   font-family: inherit;
   font-size: inherit;
 }
 @media screen and (max-width: 480px) {
-  .player .number .number-optional-text {
+  .player.third .number-optional-text {
     width: 0px;
     display: inline-flex;
     overflow: hidden;
     margin: 0 3px 0 0;
   }
-  .player .number .number-optional-text::after {
+  .player.third .number-optional-text::after {
     content: ".";
     position: absolute;
   }
@@ -685,7 +685,8 @@ $nbdivs: 30;
 
 @media screen and (min-aspect-ratio: 2 / 1) {
   .cards-grid,
-  :deep(.msg-countdown) {
+  :deep(.msg-countdown),
+  :deep(.wrapper-bt-change-disposition) {
     transform: translateX(-8vw);
   }
   .player {
