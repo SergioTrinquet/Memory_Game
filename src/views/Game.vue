@@ -46,24 +46,28 @@
       </Transition>
     </div>
 
-    <div 
-      class="cards-grid" 
-      v-if="displayCardsGrid"
-      :style="styleContainer"
-    >
-      <Card 
-        :nbCards="nbCards" 
-        :idxCards="idxCards"  
-        :stateCards="cardsState" 
-        clickEvent  
-        @time-to-flip="flip"   
-      />
 
-      <!-- Juste dans .cards-grid parce que doit se situer en dessous, mais ne fait pas partie de la grid normalement -->
+    <div class="wrapper-cards-nb-turns">
+
+      <div 
+        class="cards-grid" 
+        v-if="displayCardsGrid"
+        :style="styleContainer"
+      >
+        <Card 
+          :nbCards="nbCards" 
+          :idxCards="idxCards"  
+          :stateCards="cardsState" 
+          clickEvent  
+          @time-to-flip="flip"   
+        />
+      </div>
+
       <NbTurnsPlayed 
         v-if="turns > 0"
         :nbTurns="turns"  
       />
+      
     </div>
 
 
@@ -208,7 +212,7 @@
 
         successiveFoundPairsPerPlayer = 0;
 
-        contentMsg.value = [{ text: "😬 Raté!", animationName: 'fail' }];
+        contentMsg.value = [{ text: "<span class='icon'>😬</span> Raté!", animationName: 'fail' }];
 
         if(nbPlayers > 1) { // Quand plusieurs joueurs...
           players.value[idxPlayer].turn = false;
@@ -616,8 +620,6 @@
   gap: 10px 10px;
   max-height: 70vh;
   max-width: min(80vw, 780px);
-
-  position: relative;
 }
 @media screen and (max-width: 480px) {
   .cards-grid {
@@ -637,31 +639,13 @@ $nbdivs: 30;
 .cards-grid > div:nth-child(4) { grid-area: div4; }
 .cards-grid > div:nth-child(5) { grid-area: div5; }
 .cards-grid > div:nth-child(6) { grid-area: div6; }
-.cards-grid > div:nth-child(7) { grid-area: div7; }
-.cards-grid > div:nth-child(8) { grid-area: div8; }
-.cards-grid > div:nth-child(9) { grid-area: div9; }
-.cards-grid > div:nth-child(10) { grid-area: div10; }
-.cards-grid > div:nth-child(11) { grid-area: div11; }
-.cards-grid > div:nth-child(12) { grid-area: div12; }
-.cards-grid > div:nth-child(13) { grid-area: div13; }
-.cards-grid > div:nth-child(14) { grid-area: div14; }
-.cards-grid > div:nth-child(15) { grid-area: div15; }
-.cards-grid > div:nth-child(16) { grid-area: div16; }
-.cards-grid > div:nth-child(17) { grid-area: div17; }
-.cards-grid > div:nth-child(18) { grid-area: div18; }
-.cards-grid > div:nth-child(19) { grid-area: div19; }
-.cards-grid > div:nth-child(20) { grid-area: div20; }
-.cards-grid > div:nth-child(21) { grid-area: div21; }
-.cards-grid > div:nth-child(22) { grid-area: div22; }
-.cards-grid > div:nth-child(23) { grid-area: div23; }
-.cards-grid > div:nth-child(24) { grid-area: div24; }
-.cards-grid > div:nth-child(25) { grid-area: div25; }
-.cards-grid > div:nth-child(26) { grid-area: div26; }
-.cards-grid > div:nth-child(27) { grid-area: div27; }
-.cards-grid > div:nth-child(28) { grid-area: div28; }
-.cards-grid > div:nth-child(29) { grid-area: div29; }
+...
 .cards-grid > div:nth-child(30) { grid-area: div30; }
  */
+
+ .wrapper-cards-nb-turns {
+  position: relative;
+ }
 
 
 .fade-enter-active,
@@ -683,7 +667,7 @@ $nbdivs: 30;
   transform: translateY(30px);
 }
 
-@media screen and (min-aspect-ratio: 2 / 1) {
+@media screen and (min-aspect-ratio: 2 / 1) and (max-height: 600px) {
   .cards-grid,
   :deep(.msg-countdown),
   :deep(.wrapper-bt-change-disposition) {
