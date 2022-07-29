@@ -184,8 +184,12 @@
     color: #fff;
     font-family: 'Yeseva One', cursive;
     font-size: clamp(20px, 8vmin, 100px);
-    text-shadow: 0 5px 30px rgba(0,0,0,0.4);
+    text-shadow: 0 5px 30px rgba(0, 0, 0, 0.4), 2px 2px 0 #000, 3px 3px 0 #000;
     text-align: center;
     max-width: 90vw;
+}
+:deep(.content-message .icon) {
+    font-size: inherit;
+    text-shadow: none;
 }
 </style>

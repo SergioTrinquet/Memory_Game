@@ -88,12 +88,11 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
-    /* margin-right: var(--width-nb-tours); */
     /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
     margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 
-@media screen and (min-aspect-ratio: 2 / 1) {
+@media screen and (min-aspect-ratio: 2 / 1) and (max-height: 600px) {
     .content {
         flex-direction: column;
         align-items: center;
@@ -104,7 +103,6 @@
         height: 100%;
         margin: 0;
         width: clamp(180px, 20vw, 300px);
-
         justify-content: center;
     }
 }
