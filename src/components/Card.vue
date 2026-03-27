@@ -5,12 +5,20 @@
         :class="cardState(i)"
     >
         <div class="flip-card-inner">
-          <div v-if="props.clickEvent" @click="emiFlip" class="flip-card-front"><div>{{ indexCards[i] }}</div></div>
-          <div v-else class="flip-card-front"><div>{{ indexCards[i] }}</div></div>
-          <div 
-            class="flip-card-back" 
-            :style="loadImg(indexCards[i])"
-          ></div>
+          <div v-if="props.clickEvent" @click="emiFlip" class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
+          <div v-else class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
+            <div class="flip-card-back">
+                <svg 
+                    :viewBox="getViewBox(indexCards[i])" 
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <image 
+                        :href="pathImg"
+                        :width="sizeImg"
+                        :height="sizeImg"
+                    />
+                </svg>
+            </div>
         </div>
     </div>
 </template>
@@ -60,16 +68,15 @@
     // Chargement image carte
     const store = useStore()
     const selectedTheme = computed(() => store.state.theme !== null ? store.state.theme : store.state.option_themes[0].intitule); // Soit on récpère le thème sélectionné par l'utilisateur, soit s'il n'y en a pas, on prend le 1er dans la liste des thèmes
-    const prefix = computed(() => {
-        const obj = store.state.option_themes.find(ot => ot.intitule == selectedTheme.value); 
-        return (typeof obj !== "undefined") ? obj.prefix : "";
-    });
-    
-    function loadImg(i) {
-        const path = require(`@/assets/imgs/${selectedTheme.value}/${prefix.value}_${parseInt(i + 1)}.png`);
-        return { 'background-image': `url(${path})` };
-    } 
-
+    const pathImg = require(`@/assets/imgs/${selectedTheme.value}/${selectedTheme.value}.svg`);
+    const sizeImg = 1024;
+    const cols = 4
+    const cellSize = sizeImg / cols;
+    function getViewBox(index) {
+        const x = (index % cols) * cellSize;
+        const y = Math.floor(index / cols) * cellSize;
+        return `${x} ${y} ${cellSize} ${cellSize}`;
+    }
 
     // Emit pour execut° fonction flip dans composant parent
     const emit = defineEmits(['timeToFlip'])
@@ -160,9 +167,13 @@
     }
 
     .flip-card-back {
-        background-color: #bbb;
+        background-color: #fff;
         transform: rotateY(180deg);
         background-size: cover;
+        svg {
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .flip-card-front > div {

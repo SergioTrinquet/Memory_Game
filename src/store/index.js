@@ -29,9 +29,10 @@ export default createStore({
         ],
 
         option_themes: [
-          { intitule: "fruits", prefix: "fr" }, 
-          { intitule: "noel", prefix: "no" }, 
-          { intitule: "theme 3", prefix: "th3" }
+          { intitule: "fruits" }, 
+          { intitule: "noel" }, 
+          { intitule: "halloween" },
+          { intitule: "fleurs" }
         ],
         nb_pair_of_cards: null,
         theme: null,
