@@ -32,7 +32,8 @@ export default createStore({
           { intitule: "fruits" }, 
           { intitule: "noel" }, 
           { intitule: "halloween" },
-          { intitule: "fleurs" }
+          { intitule: "fleurs" },
+          { intitule: "super-heros" }
         ],
         nb_pair_of_cards: null,
         theme: null,
