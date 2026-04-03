@@ -20,10 +20,6 @@ export default {
   --color-primary-dark-3: hsl(from var(--color-primary) h s calc(l - 28)); /* 19% */
   --color-tertiary: #f1ed00;
   --color-error: red;
-  --width-icons-menu: clamp(35px, 3vw, 45px);
-  --width-nb-tours: clamp(45px, 10vw, 130px);
-  --space-bottom-bt-change-disposition: 3vh;
-  --top-position-el-pg-intro: -56vmin;
   --padding-modal-settings: 3vh;
 }
 
@@ -34,39 +30,22 @@ export default {
     font-family: 'Yeseva One', cursive;
     font-size: clamp(16px, 4vmin, 28px);
 }
+
+html, 
+body, 
+#app {
+  height: 100%;
+}
+html, body {
+  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
+}
 body {
-  /* background: linear-gradient(0deg, hsl(283, 100%, 27%) 16%, hsl(283, 100%, 50%) 100%);  */
   background: center/cover no-repeat url('./assets/imgs/fond.svg'), linear-gradient(0deg, hsl(283, 100%, 40%) 16%, hsl(283, 100%, 40%) 100%);
   color: #fff;
   margin: 0;
   padding: 0;
 }
 
-/* V1 - Fonctionne !! */
-html, body {
-  height: 100%;
-  overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
-}
-/* FIN */
-
-/* V2 - Fonctionne !! */
-/* html, body {
-  height: 100%; 
-}
-html {
-  overflow: hidden;
-}
-body { 
-  width: 100%;
-  position: fixed;
-  -webkit-overflow-scrolling: touch;
-  /* border: 0; outline: 0; overflow: hidden; */ /*
-} */
-/* FIN V2 */
-
-#app {
-  height: 100%;
-}
 
 button, 
 button > span,
@@ -108,9 +87,8 @@ select {
   background-color: #e9e9e9;
   padding: 1vh 2vh;
   border-radius: 4px;
-}
-input[type="text"]:focus, 
-select:focus {
-  outline: 3px solid #dd98f9;
+  &:focus {
+    outline: 3px solid hsl(from var(--color-primary) h s calc(l + 35));
+  }
 }
 </style>
