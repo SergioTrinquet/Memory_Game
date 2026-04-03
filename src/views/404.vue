@@ -29,7 +29,7 @@
     margin: 0 0 4vh 0;
 }
 button {
-    background-color: rgb(241, 237, 0);
+    background-color: var(--color-tertiary);
     border-radius: 5px;
     border-width: 0;
     padding: 10px 2vw;
