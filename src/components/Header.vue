@@ -137,11 +137,7 @@ button.bt,
 #icon-menu,
 #close-menu {
     cursor: pointer;
-    font-size: var(--width-icons-menu);
-}
-#icon-menu {
-    top: 20px;
-    left: 20px;
+    font-size: clamp(35px, 3vw, 45px);
 }
 .wrapper-icon-menu > div {
     display: flex;
