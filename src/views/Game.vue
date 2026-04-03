@@ -36,13 +36,13 @@
 
     <div class="wrapper-countdown">
       <Transition name="fade-and-slide">
-        <!-- <Countdown
+        <Countdown
           v-if="displayCountdown"
           @countdown-over="onCountdownOver"
-        /> -->
-        <Countdown
-          @countdown-over="onCountdownOver"
         />
+        <!-- <Countdown
+          @countdown-over="onCountdownOver"
+        /> -->
       </Transition>
     </div>
 
