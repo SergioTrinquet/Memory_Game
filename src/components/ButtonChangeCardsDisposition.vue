@@ -48,6 +48,7 @@
 
 <style scoped>
     .wrapper-bt-change-disposition {
+        --space-bottom-bt-change-disposition: 3vh;
         position: absolute;
         z-index: 1;
         bottom: var(--space-bottom-bt-change-disposition);
