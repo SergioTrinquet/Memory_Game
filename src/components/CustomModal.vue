@@ -1,9 +1,5 @@
 <template>
-    <Modal :show="props.show" >
-        <!-- <div class="etapes">
-            <div>étape</div>
-            <div>{{ props.currentModal }} / 4</div>
-        </div> -->
+    <Modal :show="props.show">
         <div class="etapes">
             <div>étape {{ props.currentModal }} sur 4</div>
         </div>
@@ -46,15 +42,16 @@
 }
 .etapes * {
     color: #fff;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    font-size: min(5.2vmin, 20px);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: min(5.8vmin, 23px);
 }
 .modal-legend {
     font-size: clamp(22px, 3.6vmin, 34px);
     line-height: clamp(24px, 4vmin, 34px);
     text-align: center;
     border-bottom: dotted min(4px, 0.5vmin) var(--color-primary-light);
+    text-wrap: balance;
 }
 .modal-legend,
 .modal-buttons {

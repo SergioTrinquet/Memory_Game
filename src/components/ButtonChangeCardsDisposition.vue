@@ -63,7 +63,7 @@
     .bt-change-disposition,
     .msg-disposition-cartes,
     .bt-close-msg {
-        font-size: clamp(15px, 2.8vmin, 22px);
+        font-size: clamp(17px, 2.8vmin, 24px);
     }
     button.bt-change-disposition {
         padding: max(1vh, 4px) 20px;
@@ -84,7 +84,7 @@
     }
 
     .msg-disposition-cartes {
-        line-height: clamp(20px, 4vmin, 400px);
+        line-height: clamp(22px, 4vmin, 400px);
         width: min(80vw, 700px);
         padding: 5.5vmin 4.5vmin;
         box-shadow: 0px 6px 8px rgba(0,0,0,0.3), 0 0 0px 100vh rgba(0, 0, 0, 0.7);
@@ -123,7 +123,7 @@
     }
 
     .msg-disposition-cartes > * {
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Fredoka', sans-serif;
     }
     .msg-disposition-cartes p {
         margin: 10px 0;

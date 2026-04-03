@@ -8,7 +8,7 @@
     <div 
       v-for="(player, i) in players" :key="i" 
       class="player"
-      :class="{ 'playing': player.turn, 'half': players.length == 2 ,'third': players.length == 3 }"
+      :class="{ 'playing': player.turn, 'many': players.length > 1, 'three': players.length == 3 }"
     >
       <div>
         <div class="score">{{ player.score }}</div>
@@ -36,13 +36,13 @@
 
     <div class="wrapper-countdown">
       <Transition name="fade-and-slide">
-        <Countdown
+        <!-- <Countdown
           v-if="displayCountdown"
           @countdown-over="onCountdownOver"
-        />
-        <!-- <Countdown
-          @countdown-over="onCountdownOver"
         /> -->
+        <Countdown
+          @countdown-over="onCountdownOver"
+        />
       </Transition>
     </div>
 
@@ -520,16 +520,10 @@
 .player {
     min-width: 0;
 }
-.player.half { width: 50%; }
-.player.third { width: 33%; }
-
 .player > div {
   display: flex;
   padding: clamp(5px, 1vw, 10px);
   margin: 0 2px;
-
-  /* margin: 0 auto;
-  max-width: fit-content; */
 }
 .player.playing > div {
   outline: dashed 3px #fff;
@@ -546,31 +540,33 @@
   padding: 5px 12px;
   margin: 0 min(2vw, 10px) 0 0;
   min-width: 30px;
-  font-weight: 800;
-  font-family: 'Poppins', sans-serif;
   text-shadow: 2px 2px #f7768c;
+  font-family: 'Fredoka', sans serif;
+  font-weight: 500;
 }
 .player .number {
-  color: rgb(241, 237, 0);
-  font-family: 'Poppins', sans-serif;
-  font-weight: 800;
-  font-size: clamp(15px, 2.6vmin, 22px);
+  color: var(--color-tertiary);
+  font-family: 'Fredoka', sans serif;
+  font-weight: 500;
+  font-size: clamp(15px, 2.7vmin, 22px);
 }
 .player .number-optional-text {
   font-family: inherit;
   font-size: inherit;
 }
 @media screen and (max-width: 480px) {
-  .player.third .number-optional-text {
-    width: 0px;
-    display: inline-flex;
-    overflow: hidden;
-    margin: 0 3px 0 0;
-  }
-  .player.third .number-optional-text::after {
-    content: ".";
-    position: absolute;
-  }
+  .player.three {
+    .number-optional-text {
+      width: 0px;
+      display: inline-flex;
+      overflow: hidden;
+      margin: 0 3px 0 0;
+      &::after {
+        content: ".";
+        position: absolute;
+      }
+    }
+  } 
 }
 .player .number.increase::after {
   animation: 1s ease-in plusOne;
@@ -670,18 +666,18 @@ $nbdivs: 30;
 @media screen and (min-aspect-ratio: 2 / 1) and (max-height: 600px) {
   .cards-grid,
   :deep(.msg-countdown),
-  :deep(.wrapper-bt-change-disposition) {
+  :deep(.wrapper-bt-change-disposition),
+  :deep(.nb-tours) {
     transform: translateX(-8vw);
   }
   .player {
     margin: 2vh 0;
-  }
-  .player.half,
-  .player.third { 
+    &.many { 
       width: 80%; 
-  }
-  .player.playing > div {
-    max-width: none;
+    }
+    &.playing > div {
+      max-width: none;
+    }
   }
 }
 </style>

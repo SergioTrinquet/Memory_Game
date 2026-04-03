@@ -20,9 +20,9 @@
         position: absolute;
         top: 100%;
         width: 100%;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Fredoka', sans serif;
+        font-size: clamp(19px, 3.3vmin, 26px);
         text-align: center;
-        font-size: clamp(17px, 3vmin, 24px);
         padding: 2vh 0 0 0;
     }
 </style>

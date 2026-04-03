@@ -9,18 +9,16 @@ export default {
 </script>
 
 <style>
-/* @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bubblegum+Sans&family=Caveat+Brush&family=Concert+One&family=DM+Serif+Display&family=Dancing+Script:wght@600;700&family=Fredericka+the+Great&family=Grand+Hotel&family=Oleo+Script&family=Pacifico&family=Sniglet:wght@400;800&family=Yeseva+One&display=swap');
- */
-@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Story+Script&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap');
 
 :root {
-  --color-primary-light: #ab00ef67;
-  --color-primary: #AC00EF;
-  --color-primary-dark-1: #8800BD;
-  --color-primary-dark-2: #64008B;
-  --color-primary-dark-3: #44005f;
-  --margin-header: 14px;
-  --color-tertiary: #00b4e0;
+  --color-primary: hsl(283, 100%, 47%);
+  --color-primary-light: hsl(from var(--color-primary) h s l / 0.4);
+  --color-primary-dark-1: hsl(from var(--color-primary) h s calc(l - 10));  /* 37% */
+  --color-primary-dark-2: hsl(from var(--color-primary) h s calc(l - 20)); /* 27% */
+  --color-primary-dark-3: hsl(from var(--color-primary) h s calc(l - 28)); /* 19% */
+  --color-tertiary: #f1ed00;
   --color-error: red;
   --width-icons-menu: clamp(35px, 3vw, 45px);
   --width-nb-tours: clamp(45px, 10vw, 130px);
@@ -31,14 +29,14 @@ export default {
 
 * {
     box-sizing: border-box;
-    /* font-family: 'Grand Hotel', cursive; */
+    margin: 0; 
+    padding: 0;
     font-family: 'Yeseva One', cursive;
-    /* font-family: 'Pacifico', cursive; */
     font-size: clamp(16px, 4vmin, 28px);
 }
 body {
-  background: rgb(100,0,139);
-  background: linear-gradient(0deg, rgba(100,0,139,1) 16%, rgba(184,0,255,1) 100%); 
+  /* background: linear-gradient(0deg, hsl(283, 100%, 27%) 16%, hsl(283, 100%, 50%) 100%);  */
+  background: center/cover no-repeat url('./assets/imgs/fond.svg'), linear-gradient(0deg, hsl(283, 100%, 40%) 16%, hsl(283, 100%, 40%) 100%);
   color: #fff;
   margin: 0;
   padding: 0;
@@ -67,23 +65,33 @@ body {
 /* FIN V2 */
 
 #app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; 
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;*/
   height: 100%;
 }
 
 button, 
+button > span,
+input, 
+select, 
+option,
+.msg-error {
+  font-family: 'Fredoka', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+button, 
 button > span {
-  font-family: 'Poppins', sans-serif;
   cursor: pointer;
 }
+button > span { font-weight: unset; }
 
 input, 
 select, 
 option,
 .msg-error {
-  font-family: 'Poppins', sans-serif; 
   text-align: center;
 }
 option,
@@ -105,5 +113,4 @@ input[type="text"]:focus,
 select:focus {
   outline: 3px solid #dd98f9;
 }
-
 </style>

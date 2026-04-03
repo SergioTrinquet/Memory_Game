@@ -28,7 +28,7 @@
                 />
             </div>
         </div>
-        <!-- <div class="content"> --><div class="content" v-if="slots.default">
+        <div class="content" v-if="slots.default">
             <slot />
         </div>
     </div>
@@ -75,12 +75,14 @@
 
 <style scoped>
 .header {
+    --margin-header: 14px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     padding: var(--margin-header) var(--margin-header) 0 var(--margin-header);
     display: flex;
+    gap: clamp(3px, 3vw, 10px);
 }
 .content {
     flex-grow: 1;   
@@ -88,8 +90,6 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
-    /* Largeur encart bleu nb tours - largeur icone menu + ses margin droite et gauche */
-    margin-left: calc(var(--width-nb-tours) - (var(--width-icons-menu) + (var(--margin-header) * 2)));
 }
 
 @media screen and (min-aspect-ratio: 2 / 1) and (max-height: 600px) {
@@ -142,17 +142,19 @@ button.bt,
 #icon-menu {
     top: 20px;
     left: 20px;
-    margin-right: var(--margin-header);
 }
 .wrapper-icon-menu > div {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .wrapper-icon-menu > div::after {
     content: "MENU";
     font-weight: bold;
     font-size: clamp(15px, 1.2vw, 18px);
     position: absolute;
+    text-align: center;
+    width: 100%;
     font-family: monospace;
     transform: translateY(15px);
     opacity: 0;

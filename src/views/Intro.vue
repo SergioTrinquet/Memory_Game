@@ -21,17 +21,12 @@
             <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
             <BaseButton 
                 @click="goToSettings"
-                :hover-effect="{ backgroundColor: 'yellow', color: '#000' }" 
-                font-size="max(24px, 4vmin)"
+                :hover-effect="{ backgroundColor: 'yellow', color: 'var(--color-primary-dark-3)' }" 
+                font-size="max(22px, 4vmin)"
                 rounded
-            >Commencez</BaseButton>
-            <!-- <BaseButton 
-                @click="goToSettings"
-                :outline="'yellow'" 
-                :hover-effect="{ backgroundColor: 'yellow', color: '#AC00EF' }" 
-                rounded
-            >Commencez</BaseButton> -->
-            
+            >
+                Jouer une partie !
+            </BaseButton>
         </div>
     </div>
 </template>
@@ -117,7 +112,7 @@
 .carre {
     position: fixed;
     z-index: 1;
-    /* opacity: 0.2; */ opacity: 0.1;
+    opacity: 0.15;
     background-color: #fff;
     width: max(150px, 40vmin);
     aspect-ratio: 1 / 1;
@@ -155,26 +150,21 @@
 .txt-intro {
     font-size: max(27px, 7vmin);
     text-align: center;
-    /* font-family: 'Abril Fatface', cursive;
-    font-family: 'Caveat Brush', cursive;
-    font-family: 'DM Serif Display', serif; */
     font-family: 'Yeseva One', cursive;
     text-shadow: 0 5px 2px rgba(0,0,0,0.4);
 }
 button {
-    background-color: rgb(255, 143, 164);
-    text-shadow: 0 2px 1px #aa5767;
-    color: #fff;
+    background-color: var(--color-tertiary); 
+    color: var(--color-primary-dark-2);
+    font-weight: 500;
     margin: 6vmin auto 0 auto;
     width: 70%;
     box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
-    font-weight: bold;
+    white-space: nowrap;
 }
-button:hover {
-    color: #000;
-    text-shadow: 0 2px 1px #f1ed00
+:deep(.libelle) {
+    transform: translateY(-2px);
 }
-
 .wrapper-card {
     position: absolute;
     z-index: 3;
@@ -201,11 +191,11 @@ button:hover {
     position: absolute;
     margin: var(--top-position-el-pg-intro) 0 0 0;
     z-index: 4;
-    font-size: 6vmax;
+    font-size: 7vmax;
     color: rgb(61, 61, 61);
     text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff;
-    font-family: 'Poppins', sans-serif; 
-    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
     opacity: 0;
 }
 .score.anim {
@@ -217,7 +207,7 @@ button:hover {
     50% { opacity: 1; }
     100% {
         opacity: 0;
-        transform: translateY(-6vh);
+        transform: translateY(-7vh);
     }
 }
 </style>

@@ -36,17 +36,18 @@
     .msg-countdown {
         color: #fff;
         width: 80vw;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 400;
+        font-size: clamp(16px, 3.4vmin, 24px);
+        line-height: clamp(18px, 3.6vmin, 24px);
         text-align: center;
-        font-size: clamp(16px, 3.3vmin, 21px);
-        line-height: clamp(18px, 3.6vmin, 21px);
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
+        text-wrap: balance;
     }
     .countdown {
         font-family: inherit;
-        font-weight: 800;
+        font-weight: 500;
         margin: 0 0.2vw;
-        text-shadow: 2px 3px rgb(111, 0, 153);
+        text-shadow: 2px 3px var(--color-primary-dark-2);
         transform: scale(1.2);
     }
 </style>
