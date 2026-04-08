@@ -7,11 +7,10 @@
                     id="close-menu" 
                     @click="toggleMenu"
                 />
-                
                 <BaseButton 
                     @click="goToAccueil" 
                     :outline="primaryColor" 
-                    :hover-effect="{ backgroundColor: primaryColor, color: '#fff' }" 
+                    :hover-bg-slide="{ color: primaryColor }" 
                     rounded
                 >
                     Accueil
@@ -107,14 +106,17 @@
     }
 }
 
-button.bt,
-:slotted(button.bt) {
+button,
+:slotted(button) {
     font-size: clamp(18px, 3.5vw, 26px);
-    font-weight: bold;
+    font-weight: 500;
     margin: 2vh 0;
     width: min(70%, 700px);
     line-height: clamp(19px, 4.3vw, 26px);
     padding: 3vmin 3vmin;
+    &:hover {
+        color: #fff;
+    }
 }
 
 #menu {
@@ -130,9 +132,9 @@ button.bt,
     justify-content: center;
     align-items: center;
     transition: top 0.3s ease-in-out;
-}
-#menu.display {
-    top: 0;
+    &.display {
+        top: 0;
+    }
 }
 #icon-menu,
 #close-menu {
@@ -143,18 +145,19 @@ button.bt,
     display: flex;
     flex-direction: column;
     position: relative;
-}
-.wrapper-icon-menu > div::after {
-    content: "MENU";
-    font-weight: bold;
-    font-size: clamp(15px, 1.2vw, 18px);
-    position: absolute;
-    text-align: center;
-    width: 100%;
-    font-family: monospace;
-    transform: translateY(15px);
-    opacity: 0;
-    transition: all 0.3s ease;
+
+    &::after {
+        content: "MENU";
+        font-weight: bold;
+        font-size: clamp(15px, 1.2vw, 18px);
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        font-family: monospace;
+        transform: translateY(15px);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
 }
 .wrapper-icon-menu:hover > div::after {
     opacity: 1;
@@ -165,13 +168,13 @@ button.bt,
     top: 3vh;
     left: 3vh;
     transition: transform 0.3s ease-in-out;
-}
-#close-menu::before {
-    content: "Fermer";
-    position: absolute;
+    &::before {
+        content: "Fermer";
+        position: absolute;
 
-}
-#close-menu:hover {
-    transform: rotate(180deg);
+    }
+    &:hover {
+        transform: rotate(180deg);
+    }
 }
 </style>

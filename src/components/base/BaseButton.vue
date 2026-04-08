@@ -1,14 +1,16 @@
 <template>
-  <button class="bt" :class="CSS">
+  <button :class="CSS">
     <slot name="icon-left"></slot>
     <span class="libelle" :class="textAlign">
         <slot />
     </span>
     <slot name="icon-right"></slot>
-    <span class="bg"></span>
   </button>
 </template>
 
+<script>
+    const acceptedValues = ['left', 'right'];
+</script>  
 <script setup>
     import { defineProps, computed } from 'vue'
 
@@ -17,27 +19,6 @@
             type: String,
             required: false,
             default: "unset"
-        },
-        hoverEffect: {
-            type:  Object,
-            required: false,
-            default: () => { return { color: "unset", backgroundColor: "unset" } },
-            validator(value) {
-                const val = Object.prototype.toString.call(value);
-                if(val === '[object Object]') { // Si objet...
-                    if(!('color' in value) && !('backgroundColor' in value) && !('fromRight' in value)) {
-                        console.error("Il n'y a ni la propriété 'color' ni la propriété 'backgroundColor', ni la propriété 'fromRight' dans la prop 'hover-effect' passée !!", value)
-                        return false
-                    } else if('fromRight' in value && value.fromRight !== true) {
-                        console.error("La propriété 'fromRight' de la prop 'hover-effect' n'a pas une valeur conforme. Elle doit être égale à true")
-                        return false
-                    } else {
-                        return true
-                    }
-                } else { // ...sinon...
-                    return false
-                }
-            }
         },
         rounded: {
             type: Boolean,
@@ -55,15 +36,38 @@
         textAlignRight: {
             type: Boolean,
             required: false 
+        },
+        hoverBgSlide: {
+            type: Object,
+            required: false,
+            default: () => { return { from: "left", color: "unset" } },
+            validator(value) {
+                let msgError = "";
+                if('from' in value) { console.log("validator hoverBgSlide - if", value)
+                    if (!acceptedValues.includes(value.from)) { console.log("validator hoverBgSlide - if - if", value)
+                        msgError = `La propriété 'from' de la prop 'hover-bg-slide' doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value.from}`;
+                    }
+                }
+                if('color' in value) {
+                    if(!(typeof value.color === 'string' && value.color.trim() !== '')) {
+                        msgError += `\nLa propriété 'color' de la prop 'hover-bg-slide' doit être une chaîne de caractères non vide. Valeur reçue : ${value.color}`;
+                    }
+                } else {
+                    msgError += `Il manque la propriété 'color' dans la prop 'hover-bg-slide' passée : ${JSON.stringify(value)}`;
+                }
+                if(msgError) {
+                    console.error(msgError);
+                    return false;
+                }
+            }
         }
     })
 
     const CSS = computed(() => {
         let classes = "";
         if(props.outline !== 'unset') classes += "outline "
-        if(props.hoverEffect) classes += "hover "
-        if(typeof props.hoverEffect !== 'undefined' && 'fromRight' in props.hoverEffect && props.hoverEffect.fromRight === true) classes += "hover-from-right "
         if(props.rounded) classes += "rounded "
+        if(typeof props.hoverBgSlide !== 'undefined' && 'from' in props.hoverBgSlide && acceptedValues.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
         return classes
     })
 
@@ -76,7 +80,7 @@
 </script>
 
 <style scoped>
-    button.bt {
+    button {
         padding: 2vmin 3vmin;
         transition: all 0.3s ease-in-out;
         cursor: pointer;
@@ -88,47 +92,45 @@
         display: flex; 
         align-items: center; 
         justify-content: center;
-    }
-    button.bt.outline {
-        border-width: 4px;
-        border-color: v-bind('props.outline');
-        color: v-bind('props.outline');
-        background-color: transparent;
-    }
-    button.bt.rounded {
-        border-radius: 100vh;
-    }
-    
-    button > .libelle { 
-        /* position: absolute; */ 
-        z-index:2;
-        font-size: v-bind('props.fontSize');
-        width: 100%;
-    }
-    button > .libelle.text-align-left {
-        text-align: left;
-    }
-    button > .libelle.text-align-right {
-        text-align: right;
-    }
-    button.bt > .bg {
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-color: v-bind('props.hoverEffect.backgroundColor');
-        top: 0;
-        left: -100%;
-        position: absolute;
-        z-index: 0;
-        transition: left 0.3s ease-in-out;
-    }
-    button.bt.hover-from-right > .bg {
-        left: 100%;
-    }
-    button.bt.hover:hover {
-        color: v-bind('props.hoverEffect.color');
-    }
-    button.bt.hover:hover > .bg {
-        left: 0%;
+        &.outline {
+            border-width: 4px;
+            border-color: v-bind('props.outline');
+            color: v-bind('props.outline');
+            background-color: transparent;
+        }
+        &.rounded {
+            border-radius: 100vh;
+        }
+
+        & > .libelle { 
+            z-index: 1;
+            font-size: v-bind('props.fontSize');
+            width: 100%;
+
+            &.text-align-left {
+                text-align: left;
+            }
+            &.text-align-right {
+                text-align: right;
+            }
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background-color: v-bind('props.hoverBgSlide.color');
+            transition: left 0.3s ease-in-out;
+        }
+        &.hover-from-right:after {
+            left: 100%;
+        }
+        &:hover:after {
+            left: 0;
+        }
     }
 </style>

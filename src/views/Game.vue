@@ -23,7 +23,7 @@
       <BaseButton 
           @click="replay" 
           :outline="primaryColor" 
-          :hover-effect="{ backgroundColor: primaryColor, color: '#fff' }" 
+          :hover-bg-slide="{ color: primaryColor }" 
           rounded
       >
           Rejouer avec les mêmes paramètres

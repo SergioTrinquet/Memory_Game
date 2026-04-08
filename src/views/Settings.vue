@@ -2,269 +2,98 @@
   <Header /> 
   <div class="modals">
 
-  <!-- TEST -->
-  <!-- Nombre de joueurs -->
-  <CustomModal 
-    id="first-modal" 
-    data-order="0"
-    :show="selectedModal[0]" 
-    :legend="'Sélectionnez le nombre de joueurs'"
-    :current-modal="currentModal"
-  >
-    <div class="modal-content">
-          <select v-model="nbOfPlayers"> 
-            <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
-          </select>
-    <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
-          <div class="wrapper-joueurs">
-            <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-              <div class="input-joueur-wrapper">
-                <input 
-                  type="text" name="joueur" 
-                  :placeholder="'Nom du joueur ' + idx" 
-                  v-model="inputsPlayers[idx - 1]"
-                  :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
-                /> 
-                <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
-              </div>
-            </div> 
-          </div>
-    </div>
-
-    <template v-slot:buttons>
-      <BaseButton
-        @click="recordNbPlayers"
-        class="bt-navigation"
-        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-      >
-        Suivant 
-        <template v-slot:icon-right>
-          <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-        </template>
-      </BaseButton>
-    </template>
-  </CustomModal>
-
-   <!-- Nombre de paires -->
-   <CustomModal 
-    data-order="1"
-    :show="selectedModal[1]" 
-    :legend="'Combien de paires identiques'"
-    :current-modal="currentModal"
-  >
-      <div class="select-settings-wrapper">
-        <select 
-          v-model="nbPairOfCards" 
-          :class="{ 'error': errorSelectNbPair }"
-        >
-          <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
-        </select>
-        <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
+    <!-- Nombre de joueurs -->
+    <CustomModal 
+      id="first-modal" 
+      data-order="0"
+      :show="selectedModal[0]" 
+      :legend="'Sélectionnez le nombre de joueurs'"
+      :current-modal="currentModal"
+    >
+      <div class="modal-content">
+            <select v-model="nbOfPlayers"> 
+              <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
+            </select>
+      <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
+            <div class="wrapper-joueurs">
+              <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
+                <div class="input-joueur-wrapper">
+                  <input 
+                    type="text" name="joueur" 
+                    :placeholder="'Nom du joueur ' + idx" 
+                    v-model="inputsPlayers[idx - 1]"
+                    :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
+                  /> 
+                  <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
+                </div>
+              </div> 
+            </div>
       </div>
 
       <template v-slot:buttons>
         <BaseButton
-          @click="stepBack"
-          class="bt-navigation"
-          text-align-right
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
-        >
-          précédent 
-          <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-          </template>
-        </BaseButton>
-        <BaseButton
-          @click="recordNbPairs"
-          class="bt-navigation"
-          text-align-left
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-        >
-          suivant 
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
-      </template>
-  </CustomModal>
-
-
-  <!-- Sélection du thème -->
-  <CustomModal 
-    data-order="2"
-    :show="selectedModal[2]" 
-    :legend="'Choisissez un thème'"
-    :current-modal="currentModal"
-  >
-    <div class="select-settings-wrapper">
-      <select 
-        v-model="theme"
-        :class="{ 'error': errorTheme }"
-      >
-        <option v-for="theme in optionThemes" :key="theme">{{ theme }}</option>
-      </select>
-      <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
-    </div>
-
-    <template v-slot:buttons>
-        <BaseButton
-          @click="stepBack"
-          class="bt-navigation"
-          text-align-right
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
-        >
-          précédent 
-          <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-          </template>
-        </BaseButton>
-
-        <BaseButton
-          @click="recordTheme"
-          class="bt-navigation"
-          text-align-left
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-        >
-          suivant 
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
-    </template>
-  </CustomModal>
-
-  <!-- Laps de temps max. entre 2 cartes -->
-  <CustomModal 
-    data-order="3"
-    :show="selectedModal[3]" 
-    :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
-    :current-modal="currentModal"
-  >
-    <div class="range-settings-wrapper">
-      <div class="range">
-        <span>3</span>
-        <input 
-          type="range" 
-          v-model="timeDisplayCard" 
-          min="3" max="15" 
-          step="1"
-        >
-        <span>15</span>
-      </div>
-      <div class="result-seconds">{{ timeDisplayCard }} secondes</div>
-    </div>    
-
-    <template v-slot:buttons>
-      <BaseButton
-        @click="stepBack"
-        class="bt-navigation"
-        text-align-right
-        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
-      >
-        précédent 
-        <template v-slot:icon-left>
-          <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-        </template>
-      </BaseButton>
-
-      <BaseButton
-        @click="recordTimeVisibleCard"
-        class="bt-navigation"
-        text-align-left
-        :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-      >
-        suivant 
-        <template v-slot:icon-right>
-          <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-        </template>
-      </BaseButton>
-    </template>
-  </CustomModal>
-  <!-- FIN TEST -->
-
-    
-    <!-- Nombre de joueurs -->
-    <!-- <Modal :show="selectedModal[0]" id="first-modal">  
-      <div class="modal-legend">Sélectionnez le nombre de joueurs</div>
-      
-      <div class="modal-content">
-        <select v-model="nbOfPlayers"> 
-          <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
-        </select>
-        <div class="wrapper-joueurs">
-          <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-            <div class="input-joueur-wrapper">
-              <input 
-                type="text" name="joueur" 
-                :placeholder="'Nom du joueur ' + idx" 
-                v-model="inputsPlayers[idx - 1]"
-                :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
-              /> 
-              <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
-            </div>
-          </div> 
-        </div>
-      </div>
-
-      <div class="modal-buttons" data-order="0">
-        <BaseButton
           @click="recordNbPlayers"
           class="bt-navigation"
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+          :hover-bg-slide="{color: colorHoverEffect}"
         >
           Suivant 
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
-      </div>
-    </Modal> -->
-
+      </template>
+    </CustomModal>
 
     <!-- Nombre de paires -->
-    <!-- <Modal :show="selectedModal[1]">
-      <div class="modal-legend">Combien de paires identiques</div>
+    <CustomModal 
+      data-order="1"
+      :show="selectedModal[1]" 
+      :legend="'Combien de paires identiques'"
+      :current-modal="currentModal"
+    >
+        <div class="select-settings-wrapper">
+          <select 
+            v-model="nbPairOfCards" 
+            :class="{ 'error': errorSelectNbPair }"
+          >
+            <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
+          </select>
+          <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
+        </div>
 
-      <div class="select-settings-wrapper">
-        <select 
-          v-model="nbPairOfCards" 
-          :class="{ 'error': errorSelectNbPair }"
-        >
-          <option v-for="nb in optionNbPairs" :key="nb">{{ nb }}</option>
-        </select>
-        <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
-      </div>
-      
-      <div class="modal-buttons" data-order="1">
-        <BaseButton
-          @click="stepBack"
-          class="bt-navigation"
-          text-align-right
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
-        >
-          précédent 
-          <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-          </template>
-        </BaseButton>
-        <BaseButton
-          @click="recordNbPairs"
-          class="bt-navigation"
-          text-align-left
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-        >
-          suivant 
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
-      </div>
-    </Modal> -->
-
+        <template v-slot:buttons>
+          <BaseButton
+            @click="stepBack"
+            class="bt-navigation"
+            text-align-right
+            :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
+          >
+            précédent 
+            <template v-slot:icon-left>
+              <font-awesome-icon icon="arrow-left-long" class="icon-left" />
+            </template>
+          </BaseButton>
+          <BaseButton
+            @click="recordNbPairs"
+            class="bt-navigation"
+            text-align-left
+            :hover-bg-slide="{ color: colorHoverEffect }"
+          >
+            suivant 
+            <template v-slot:icon-right>
+              <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+            </template>
+          </BaseButton>
+        </template>
+    </CustomModal>
 
     <!-- Sélection du thème -->
-    <!-- <Modal :show="selectedModal[2]">
-      <div class="modal-legend">Choisissez un thème</div>
+    <CustomModal 
+      data-order="2"
+      :show="selectedModal[2]" 
+      :legend="'Choisissez un thème'"
+      :current-modal="currentModal"
+    >
       <div class="select-settings-wrapper">
         <select 
           v-model="theme"
@@ -275,40 +104,41 @@
         <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
       </div>
 
-      <div class="modal-buttons" data-order="2">
+      <template v-slot:buttons>
+          <BaseButton
+            @click="stepBack"
+            class="bt-navigation"
+            text-align-right
+            :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
+          >
+            précédent 
+            <template v-slot:icon-left>
+              <font-awesome-icon icon="arrow-left-long" class="icon-left" />
+            </template>
+          </BaseButton>
 
-        <BaseButton
-          @click="stepBack"
-          class="bt-navigation"
-          text-align-right
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
-        >
-          précédent 
-          <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-          </template>
-        </BaseButton>
-
-        <BaseButton
-          @click="recordTheme"
-          class="bt-navigation"
-          text-align-left
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
-        >
-          suivant 
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
-
-      </div>
-    </Modal> -->
-
+          <BaseButton
+            @click="recordTheme"
+            class="bt-navigation"
+            text-align-left
+            :hover-bg-slide="{ color: colorHoverEffect }"
+          >
+            suivant 
+            <template v-slot:icon-right>
+              <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
+            </template>
+          </BaseButton>
+      </template>
+    </CustomModal>
 
     <!-- Laps de temps max. entre 2 cartes -->
-    <!-- <Modal :show="selectedModal[3]">
-      <div class="modal-legend">Laps de temps max. entre l'apparition des 2 cartes</div>
-      <div>
+    <CustomModal 
+      data-order="3"
+      :show="selectedModal[3]" 
+      :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
+      :current-modal="currentModal"
+    >
+      <div class="range-settings-wrapper">
         <div class="range">
           <span>3</span>
           <input 
@@ -320,15 +150,14 @@
           <span>15</span>
         </div>
         <div class="result-seconds">{{ timeDisplayCard }} secondes</div>
-      </div>
+      </div>    
 
-      <div class="modal-buttons" data-order="3">
-        
+      <template v-slot:buttons>
         <BaseButton
           @click="stepBack"
           class="bt-navigation"
           text-align-right
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff', fromRight: true }"
+          :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
         >
           précédent 
           <template v-slot:icon-left>
@@ -340,24 +169,21 @@
           @click="recordTimeVisibleCard"
           class="bt-navigation"
           text-align-left
-          :hover-effect="{ backgroundColor: colorHoverEffect, color: '#fff' }"
+          :hover-bg-slide="{ color: colorHoverEffect }"
         >
           suivant 
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
         </BaseButton>
-
-      </div>
-    </Modal>  -->
-   
+      </template>
+    </CustomModal>
 
   </div>
 </template>
 
 <script setup>
   import Header from '@/components/Header.vue'
-  /* import Modal from '@/components/base/BaseModal.vue'  */   
   import CustomModal from '@/components/CustomModal.vue'  
   import BaseButton from '@/components/base/BaseButton.vue'
 
@@ -434,8 +260,6 @@
     }
   }
 
-
-
   // 2eme fenêtre modale
   function recordNbPairs(e) {
     if(!!nbPairOfCards.value != false) {
@@ -463,7 +287,6 @@
     store.commit('SET_TIME_DISPLAY_CARD', timeDisplayCard.value);  // Ajout enregistremnt dans var. du store 'theme'
     router.push({ name: 'jeu' }) // Redirection vers page 'Settings'
   }
-
 
   function moveTowardsModal(e, step) {
     // On détermine le numéro de la modale que l'on doit afficher
@@ -636,6 +459,9 @@ button.bt-navigation {
   height: max(6vh, 34px);
   width: max(160px, 50%);
   font-size: clamp(20px, 3.3vmin, 28px);
+  /* &:after {
+    background-color: v-bind(colorHoverEffect);
+  } */
 }
 button.bt-navigation:first-child {
   margin: 0 1.5vh 0 0;

@@ -21,19 +21,12 @@
             <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
             <BaseButton 
                 @click="goToSettings"
-                :hover-effect="{ backgroundColor: 'yellow', color: 'var(--color-primary-dark-3)' }" 
                 font-size="max(22px, 4vmin)"
                 rounded
+                :hover-bg-slide="{ color: 'var(--button-intro-hover-slide)' }"
             >
-                Jouer une partie !
+                Jouer une partie
             </BaseButton>
-            <!-- <BaseButton 
-                @click="goToSettings"
-                font-size="max(22px, 4vmin)"
-                rounded
-            >
-                Jouer une partie !
-            </BaseButton> -->
         </div>
     </div>
 </template>
@@ -153,12 +146,14 @@ button {
     width: 70%;
     box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
     white-space: nowrap;
-
-    /* &:hover {
-        background-color: yellow;
-        background-color: red;
+    &:hover {
         color: var(--color-primary-dark-3);
-    } */
+    }
+
+    --button-intro-hover-slide: yellow;
+    @supports (color: hsl(from var(--color-tertiary) h s calc(l + 10))) {
+        --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
+    }
 }
 :deep(.libelle) {
     transform: translateY(-2px);
