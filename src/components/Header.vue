@@ -106,19 +106,6 @@
     }
 }
 
-button,
-:slotted(button) {
-    font-size: clamp(18px, 3.5vw, 26px);
-    font-weight: 500;
-    margin: 2vh 0;
-    width: min(70%, 700px);
-    line-height: clamp(19px, 4.3vw, 26px);
-    padding: 3vmin 3vmin;
-    &:hover {
-        color: #fff;
-    }
-}
-
 #menu {
     position: fixed;
     z-index: 2;
@@ -126,7 +113,7 @@ button,
     height: 100%;
     width: 100vw;
     background-color: rgba(255,255,255,0.95);
-    color: #7E00B0;
+    color: var(--color-primary);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -135,7 +122,20 @@ button,
     &.display {
         top: 0;
     }
+    
+    :deep(button) {
+        font-size: clamp(18px, 3.5vw, 26px);
+        font-weight: 500;
+        margin: 2vh 0;
+        width: min(70%, 700px);
+        line-height: clamp(19px, 4.3vw, 26px);
+        padding: 3vmin 3vmin;
+        &:hover {
+            color: #fff;
+        }
+    }
 }
+
 #icon-menu,
 #close-menu {
     cursor: pointer;
