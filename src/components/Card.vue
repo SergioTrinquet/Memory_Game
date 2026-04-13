@@ -146,8 +146,8 @@
     }
     .flip-card-front {
         cursor: pointer;
-        background-color: #f7ff1f;
-        box-shadow: 0 0 0 min(5px, 0.5vmax) #fff inset;
+        background-color: var(--color-tertiary-light);
+        background-position: center;
         box-shadow: 0 0 0 clamp(3px, 0.8vmin, 6px) #fff inset;
     }
     @media screen and (min-width: 801px), screen and (min-height: 751px) {

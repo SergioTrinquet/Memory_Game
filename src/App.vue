@@ -18,7 +18,8 @@ export default {
   --color-primary-dark-1: hsl(from var(--color-primary) h s calc(l - 10));  /* 37% */
   --color-primary-dark-2: hsl(from var(--color-primary) h s calc(l - 20)); /* 27% */
   --color-primary-dark-3: hsl(from var(--color-primary) h s calc(l - 28)); /* 19% */
-  --color-tertiary: #f1ed00;
+  --color-tertiary: hsl(59, 100%, 47%);
+  --color-tertiary-light: hsl(from var(--color-tertiary) h s calc(l + 10));
   --color-error: red;
   --padding-modal-settings: 3vh;
 }
