@@ -40,9 +40,6 @@
           v-if="displayCountdown"
           @countdown-over="onCountdownOver"
         />
-        <!-- <Countdown
-          @countdown-over="onCountdownOver"
-        /> -->
       </Transition>
     </div>
 
@@ -104,7 +101,6 @@
   const store = useStore();
   const router = useRouter();
 
-  
   const contentMsg = ref({ text: "", animationName: "" }); // Message
   const cardsState = ref([])
 
@@ -123,14 +119,10 @@
       return arr
   }
   
-
-    /* NVELLE VERSION */
   const players = ref([]); 
   let idxPlayer; 
   let nbPlayers = 0;
   let idxCards = ref([]);
-   /* FIN NVELLE VERSION */
-
 
   // Mélange des cartes
   function setShuffledIdxCards() {
@@ -150,7 +142,6 @@
     
     return tempoArray
   }
-
 
   // Gestion flip + score
   const nbMaxFlipsPerTurn = 2,  // nb maximum de carte(s) qu'il est possible de retourner par tour et par joueur
@@ -191,18 +182,16 @@
         } else {  // ...Sinon...
           flipCardsFailing();
         }
-        
       }
-
 
     } /* else {
       //console.log("Plus de 2 clics pour le meme joueur! PAS BIEN") //TEST
       // FAIRE EN SORTE QUE CURSOR SOIT NOT ALLOWED QD CARD SURVOLEE
     } */
-
   }
 
 
+  const DELAY_BEFORE_MSG_DISPLAYED = 1500;
 
   function flipCardsFailing() {
     setTimeout((cards) => {
@@ -225,10 +214,9 @@
 
         reinit();
       }, 
-      1500, 
+      DELAY_BEFORE_MSG_DISPLAYED, 
       cardsFlippedPerTurn)
   }
-
 
   function flipCardsSuccess() {
     let text = "",
@@ -261,7 +249,7 @@
 
       reinit();
     }, 
-    1500, 
+    DELAY_BEFORE_MSG_DISPLAYED, 
     cardsFlippedPerTurn)
   }
 
@@ -273,7 +261,7 @@
   }
 
 
-  // Recup message personnalisé en fct° du nombre de sucès à la suite
+  // Recup message personnalisé en fct° du nombre de succès à la suite
   const maxNbCongratulationsMessage = store.getters.getMaxNbCongratulationsMessage;
   function getWordsForMsg(i) {
     let j = (i > maxNbCongratulationsMessage ? maxNbCongratulationsMessage : i),
@@ -285,10 +273,6 @@
   // Affichage confettis
   async function displayConfettis() {
     jsConfetti = new JSConfetti() // Création canvas pour confettis
-    /*
-    jsConfetti.addConfetti()  // Affichage confettis
-      .then(() => document.querySelector('canvas').remove()); // Qd confettis disparaisent, suppression canvas affichant confettis
-    */
     await jsConfetti.addConfetti({
       confettiNumber: 500,
       confettiRadius: 10,
@@ -364,10 +348,8 @@
   }
 
 
-
   const gridDisposition = reactive({  rows: 0, columns: 0 })
   const gridDimensions = reactive({ width: 0, height: 0 })  
-  const gridTemplateAreasStyle = ref([])
 
   const getOrientation = () =>  (window.matchMedia("(min-aspect-ratio:1/1)").matches) ? "paysage" : "portrait"
 
@@ -376,36 +358,11 @@
     return {
         'grid-template-columns': `repeat(${gridDisposition.columns}, minmax(0, 1fr))`,
         'grid-template-rows': `repeat(${gridDisposition.rows}, minmax(0, 1fr))`,
-        'grid-template-areas': gridTemplateAreasStyle.value,
         'aspect-ratio': `${gridDisposition.columns} / ${gridDisposition.rows}`,
-        // Solution n°1 qui fonctionne mais pas top visuellement
-        //'height': '70vh'
-        // Solution n°2
         'width': gridDimensions.width,
         'height': gridDimensions.height
       }
   })
-
-
-
-  // Pour générer les areas de la prop. 'grid-template-areas'
-  function setGridTemplateAreasStyle() {
-    const columns = gridDisposition.columns;
-    const rows = gridDisposition.rows;
-
-    let valAttributeGTA = [];
-    let k = 1;
-    for(var i = 1; i <= rows; i++) {
-      var lgn = "";
-      for(var j = 1; j <= columns; j++) {
-        lgn += `div${k} `
-        k++;
-      }
-      valAttributeGTA.push(`"${lgn.trim()}"`);
-    }
-    gridTemplateAreasStyle.value = valAttributeGTA.join(" ");
-  }
-
 
   function setGridWidthAndHeightStyle() {
     const columns = gridDisposition.columns;
@@ -475,7 +432,6 @@
   // Appelé qd click sur bt ds composant enfant pour changer disposition des cartes
   function onDispositionChanged() {   
     setGridDisposition(gridDispositionProposition, gridDisposition); // MAJ données gridDisposition       
-    setGridTemplateAreasStyle(); // 1. Update CSS 'grid-template-areas'
     setGridWidthAndHeightStyle(); // 2. Update CSS 'width' et 'height'
     displayComponentButtonChangeCardsDisposition.value = false; // Disparition composant bouton
   }
@@ -499,8 +455,6 @@
       setGridDisposition({ rows, columns }, gridDisposition);
 
       setGridWidthAndHeightStyle(); // Calcul largeur/hauteur grille
-      setGridTemplateAreasStyle(); // Pour obtenir la valeur de la propriété CSS 'grid-template-areas'
-
 
       nbPlayers = players.value.length;
       if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
@@ -516,44 +470,61 @@
   });
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .player {
-    min-width: 0;
+  min-width: 0;
+
+  > div {
+    display: flex;
+    padding: clamp(5px, 1vw, 10px);
+    margin: 0 2px;
+  }
+
+  &.playing > div {
+    outline: dashed 3px #fff;
+    border-radius: 6px;
+    max-width: fit-content;
+  }
+  .score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: hsl(312, 100%, 75%);
+    color: #fff;
+    border-radius: 10px;
+    padding: 5px 12px;
+    margin: 0 min(2vw, 10px) 0 0;
+    min-width: 30px;
+    text-shadow: 2px 2px hsl(350, 89%, 72%);
+    font-family: 'Fredoka', sans serif;
+    font-weight: 500;
+  }
+  .number {
+    color: var(--color-tertiary);
+    font-family: 'Fredoka', sans serif;
+    font-weight: 500;
+    font-size: clamp(15px, 2.7vmin, 22px);
+  }
+  .number-optional-text {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  .number.increase::after {
+    animation: 1s ease-in plus-one;
+    content: "+1";
+    position: absolute;
+    z-index: 2;
+    opacity: 0.2;
+  }
+
+  .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: clamp(18px, 3.8vmin, 28px);
+  }
 }
-.player > div {
-  display: flex;
-  padding: clamp(5px, 1vw, 10px);
-  margin: 0 2px;
-}
-.player.playing > div {
-  outline: dashed 3px #fff;
-  border-radius: 6px;
-  max-width: fit-content;
-}
-.player .score {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FF80E5;
-  color: #fff;
-  border-radius: 10px;
-  padding: 5px 12px;
-  margin: 0 min(2vw, 10px) 0 0;
-  min-width: 30px;
-  text-shadow: 2px 2px #f7768c;
-  font-family: 'Fredoka', sans serif;
-  font-weight: 500;
-}
-.player .number {
-  color: var(--color-tertiary);
-  font-family: 'Fredoka', sans serif;
-  font-weight: 500;
-  font-size: clamp(15px, 2.7vmin, 22px);
-}
-.player .number-optional-text {
-  font-family: inherit;
-  font-size: inherit;
-}
+
 @media screen and (max-width: 480px) {
   .player.three {
     .number-optional-text {
@@ -568,22 +539,9 @@
     }
   } 
 }
-.player .number.increase::after {
-  animation: 1s ease-in plusOne;
-  content: "+1";
-  position: absolute;
-  z-index: 2;
-  opacity: 0.2;
-}
-@keyframes plusOne {
+@keyframes plus-one {
   0% { opacity: 0; margin-top: 5vh; transform: scale(1); }
   100% {  opacity: 1; margin-top: 0vh; transform: scale(2); }
-}
-.player .name {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  height: clamp(18px, 3.8vmin, 28px);
 }
 
 .number-and-name-player {
@@ -606,13 +564,7 @@
 }
 
 .cards-grid {
-  /* border: dotted 1px #fff; */ /* TEST */
   display: grid; 
-  /* grid-template-columns: 1fr 1fr 1fr; 
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas: 
-    "div1 div2 div3"
-    "div4 div5 div6"; */ 
   gap: 10px 10px;
   max-height: 70vh;
   max-width: min(80vw, 780px);
@@ -623,26 +575,9 @@
   }
 }
 
-$nbdivs: 30;
-@for $i from 1 through $nbdivs {
-  .cards-grid > div:nth-child(#{$i}) {
-    grid-area: div#{$i};
-  }
-}
-/* .cards-grid > div:first-child { grid-area: div1; }
-.cards-grid > div:nth-child(2) { grid-area: div2; }
-.cards-grid > div:nth-child(3) { grid-area: div3; }
-.cards-grid > div:nth-child(4) { grid-area: div4; }
-.cards-grid > div:nth-child(5) { grid-area: div5; }
-.cards-grid > div:nth-child(6) { grid-area: div6; }
-...
-.cards-grid > div:nth-child(30) { grid-area: div30; }
- */
-
- .wrapper-cards-nb-turns {
+.wrapper-cards-nb-turns {
   position: relative;
- }
-
+}
 
 .fade-enter-active,
 .fade-leave-active {
