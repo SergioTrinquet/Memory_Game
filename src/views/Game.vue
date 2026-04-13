@@ -565,13 +565,18 @@
 
 .cards-grid {
   display: grid; 
-  gap: 10px 10px;
+  gap: 10px;
   max-height: 70vh;
   max-width: min(80vw, 780px);
-}
-@media screen and (max-width: 480px) {
-  .cards-grid {
-    gap: 9px 9px;
+
+  @media screen and (max-width: 480px) {
+    gap: 9px;
+  }
+  @media screen and (max-width: 400px) {
+    gap: 8px;
+  }
+  @media screen and (max-width: 300px) {
+    gap: 7px;
   }
 }
 
