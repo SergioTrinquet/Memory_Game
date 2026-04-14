@@ -49,7 +49,7 @@
       <div 
         class="cards-grid" 
         v-if="displayCardsGrid"
-        :style="styleContainer"
+        :style="styleGrid"
       >
         <Card 
           :nbCards="nbCards" 
@@ -73,7 +73,7 @@
         <ButtonChangeCardsDisposition 
           :grid-dispo-proposition="gridDispositionProposition"
           @disposition-changed="onDispositionChanged" 
-          v-if="displayComponentButtonChangeCardsDisposition"
+          v-if="displayChangeCardsDispositonButton"
         />
     </Transition>
 
@@ -87,15 +87,14 @@
   import Card from '@/components/Card.vue'
 
   import { useStore } from 'vuex'
-  import { ref, reactive, computed, onMounted, defineAsyncComponent } from 'vue'
+  import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
   import { useRouter } from 'vue-router'
 
-  import { useConfetti } from '../composables/useConfettis'
+  import { useGridResponsive } from '@/composables/useGridResponsive.js'
+  import { useConfetti } from '@/composables/useConfettis'
   const displayConfettis = useConfetti();
 
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
-  const displayComponentButtonChangeCardsDisposition = ref(false)
-
   const Countdown = defineAsyncComponent(() => import(/* webpackChunkName: "CountDown" */ '@/components/CountDown.vue'))
   const NbTurnsPlayed = defineAsyncComponent(() => import(/* webpackChunkName: "NbTurnsPlayed" */ '@/components/NbTurnsPlayed.vue'))
 
@@ -295,7 +294,6 @@
     return msgResultatFinal;
   }
 
-
   // Qd player n'a pas cliqué sur 2eme carte à temps (avant fin du décompte)
   function onCountdownOver() {
     contentMsg.value = { 
@@ -306,7 +304,6 @@
     turns.value += 1; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
     displayCountdown.value = false;
   }
-
 
 
   const displayMenu = ref(null);
@@ -328,100 +325,12 @@
       cardsState.value = setCardsInitialState() // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
   }
 
-
-  const gridDisposition = reactive({  rows: 0, columns: 0 })
-  const gridDimensions = reactive({ width: 0, height: 0 })  
-
-  const getOrientation = () =>  (window.matchMedia("(min-aspect-ratio:1/1)").matches) ? "paysage" : "portrait"
-
-  // Attributs de style de la grille
-  const styleContainer = computed(() => {
-    return {
-        'grid-template-columns': `repeat(${gridDisposition.columns}, minmax(0, 1fr))`,
-        'grid-template-rows': `repeat(${gridDisposition.rows}, minmax(0, 1fr))`,
-        'aspect-ratio': `${gridDisposition.columns} / ${gridDisposition.rows}`,
-        'width': gridDimensions.width,
-        'height': gridDimensions.height
-      }
-  })
-
-  function setGridWidthAndHeightStyle() {
-    const columns = gridDisposition.columns;
-    const rows = gridDisposition.rows;
-
-    // Affectation variables servant à déterminer largeur ou hauteur de la grille de cartes afin que celle-ci ne déborde jamais de l'écran :
-    // Détermination du point de bascule entre hauteur fixe / largeur auto, et largeur fixe / hauteur auto.
-    const windowWidth = document.documentElement.clientWidth;
-    const windowHeight = document.documentElement.clientHeight;
-    const proportionMaxWidthGrid = 0.8; // Pour 80vw
-    const proportionMaxHeightGrid = 0.7; // Pour 70vh
-
-    let width_cardsGrid, height_cardsGrid = "";
-    const lengthSideCard = windowWidth * proportionMaxWidthGrid / columns;
-
-    if((lengthSideCard * rows) >= (windowHeight * proportionMaxHeightGrid)) { // Si la hauteur de la grille dépasse la hauteur max autorisée (ici 70vh)...
-      width_cardsGrid = "auto";
-      height_cardsGrid = `${(proportionMaxHeightGrid * 100)}vh`;
-    } else {
-      width_cardsGrid = `${(proportionMaxWidthGrid * 100)}vw`;
-      height_cardsGrid = "auto";
-    }
-    gridDimensions.width = width_cardsGrid;
-    gridDimensions.height = height_cardsGrid;
-  }
-
-
-
-  const gridDispositionProposition = reactive({ rows: 0, columns: 0  })
-  let lastValOrientation = "" 
-
-  function setGridRowsAndColumnsProposition() {
-        const orientation = getOrientation();
-
-        // Prevoir cas changement orientation mobile/tablette
-        /* if(window.matchMedia("(hover:hover)").matches) {
-            console.log("Ordi"); //TEST
-        } else {
-        console.log("Mobile/Tablette"); //TEST
-        //if(window.matchMedia("orientation: portrait").matches) { }
-        } */
-        
-        if(orientation !== lastValOrientation) { // Si changement orientation...
-            // Récup nb lignes et colonnes idéals de la grid en fct° de l'orientation de l'écran
-            const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(orientation);
-            // Affectation de ces données à variable 'gridDispositionProposition'
-            setGridDisposition({ columns, rows }, gridDispositionProposition);
-
-            // Affichage bouton pour demander à l'utilisateur s'il veut changer la dispo des cartes
-            displayComponentButtonChangeCardsDisposition.value = (gridDispositionProposition.rows !== gridDisposition.rows) ? true : false;
-        }
-        lastValOrientation = orientation;
-    }
-
- 
-  let sto = null;
-  window.addEventListener("resize", () => {
-    // Appel fonction que qd event 'resize' s'arrête pour des raisons de performance
-    clearTimeout(sto);
-    sto = setTimeout(() =>{ 
-      setGridRowsAndColumnsProposition();
-      setGridWidthAndHeightStyle()  // Pour obtenir les valeurs des propriétés CSS 'width' et 'height'
-    }, 500); 
-  })
-
-
-  // Appelé qd click sur bt ds composant enfant pour changer disposition des cartes
-  function onDispositionChanged() {   
-    setGridDisposition(gridDispositionProposition, gridDisposition); // MAJ données gridDisposition       
-    setGridWidthAndHeightStyle(); // 2. Update CSS 'width' et 'height'
-    displayComponentButtonChangeCardsDisposition.value = false; // Disparition composant bouton
-  }
-
-
-  function setGridDisposition(gridDispoFrom, gridDispoTo) {
-      if('rows' in gridDispoFrom) gridDispoTo.rows = gridDispoFrom.rows;
-      if('columns' in gridDispoFrom) gridDispoTo.columns = gridDispoFrom.columns;
-  }
+const { initGrid,  
+        gridDispositionProposition, 
+        styleGrid, 
+        onDispositionChanged, 
+        displayChangeCardsDispositonButton 
+      } = useGridResponsive();
 
 
   onMounted(() => {
@@ -430,12 +339,7 @@
     } else { // ...sinon...
       newGame(); 
 
-      // Affichage grille de cartes : Pour déterminer le nb de lignes/colonnes 
-      // de la grille de cartes en fonction de l'orientation de l'écran
-      const { columns, rows } = store.getters.getSelectedNbPairOfCardsData(getOrientation());
-      setGridDisposition({ rows, columns }, gridDisposition);
-
-      setGridWidthAndHeightStyle(); // Calcul largeur/hauteur grille
+      initGrid(); // Initialisation de la grille de cartes : Détermination du nb de lignes/colonnes et des dimensions de la grille en fonction de l'orientation de l'écran
 
       nbPlayers = players.value.length;
       if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
@@ -549,6 +453,10 @@
   gap: 10px;
   max-height: 70vh;
   max-width: min(80vw, 780px);
+
+  /* TEST */
+  /* width: min(750px, 80vw); */
+  /* FIN TEST */
 
   @media screen and (max-width: 480px) {
     gap: 9px;
