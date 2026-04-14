@@ -90,7 +90,8 @@
   import { ref, reactive, computed, onMounted, defineAsyncComponent } from 'vue'
   import { useRouter } from 'vue-router'
 
-  import JSConfetti from 'js-confetti'
+  import { useConfetti } from '../composables/useConfettis'
+  const displayConfettis = useConfetti();
 
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
   const displayComponentButtonChangeCardsDisposition = ref(false)
@@ -149,8 +150,7 @@
   let cardsFlippedPerTurn = [],
       nbFlipPlayer = 0,   // nb de carte(s) retournée(s) par joueur
       foundPairs = 0,   // nb de paires trouvées par l'ensemble des joueurs
-      successiveFoundPairsPerPlayer = 0,
-      jsConfetti = undefined;
+      successiveFoundPairsPerPlayer = 0;
   const turns = ref(0),
         displayCountdown = ref(false);
 
@@ -268,25 +268,6 @@
         k = (i < maxNbCongratulationsMessage ? "" : i);
     return k + store.getters.getCongratulationsMessageById(j);
   }
-
-
-  // Affichage confettis
-  async function displayConfettis() {
-    jsConfetti = new JSConfetti() // Création canvas pour confettis
-    await jsConfetti.addConfetti({
-      confettiNumber: 500,
-      confettiRadius: 10,
-    });  // Affichage confettis
-    await jsConfetti.addConfetti({
-      emojis: ['🌈', '✨', '🌸'],
-      emojiSize: 25
-    });
-    await jsConfetti.addConfetti({
-      confettiNumber: 500
-    });
-    document.querySelector('canvas').remove(); // Qd confettis disparaisent, suppression canvas affichant confettis
-  }
-
 
   // Génération message final qd tes les cartes ont été trouvées
   function msgEndOfTheGame(nbTurns) {
