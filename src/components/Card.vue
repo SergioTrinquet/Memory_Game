@@ -5,8 +5,8 @@
         :class="cardState(i)"
     >
         <div class="flip-card-inner">
-          <div v-if="props.clickEvent" @click="emiFlip" class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
-          <div v-else class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
+            <div v-if="props.clickEvent" @click="emiFlip" class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
+            <div v-else class="flip-card-front"><!-- <div>{{ indexCards[i] }}</div> --></div>
             <div class="flip-card-back">
                 <svg 
                     :viewBox="getViewBox(indexCards[i])" 
@@ -81,7 +81,7 @@
     // Emit pour execut° fonction flip dans composant parent
     const emit = defineEmits(['timeToFlip'])
     function emiFlip(e) {
-        emit('timeToFlip', e);
+        emit('timeToFlip', e.target.closest(".flip-card").dataset.order);
     }
 </script>
 

@@ -92,6 +92,13 @@
 
   import { useGridResponsive } from '@/composables/useGridResponsive.js'
   import { useConfetti } from '@/composables/useConfettis'
+  
+  const { initGrid,  
+        gridDispositionProposition, 
+        styleGrid, 
+        onDispositionChanged, 
+        displayChangeCardsDispositonButton 
+      } = useGridResponsive();
   const displayConfettis = useConfetti();
 
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
@@ -101,7 +108,7 @@
   const store = useStore();
   const router = useRouter();
 
-  const contentMsg = ref({ text: "", animationName: "" }); // Message
+  const contentMsg = ref({ text: "", animationName: "" });
   const cardsState = ref([])
 
   const pl = computed(() => store.state.players); // Data joueurs saisis dans page 'Settings'
@@ -154,13 +161,11 @@
         displayCountdown = ref(false);
 
   // Qd click sur coté verso d'une carte
-  function flip(e) {
+  function flip(order) {
     nbFlipPlayer++;
   
     if(nbFlipPlayer <= nbMaxFlipsPerTurn) {
 
-      const card = e.target.closest(".flip-card");
-      const order = card.dataset.order;
       cardsState.value[order] = 1 // On retourne la carte
 
       cardsFlippedPerTurn.push({ "idx": idxCards.value[order], "order": order }); // Enregistrement idx et order de la carte
@@ -324,13 +329,6 @@
       successiveFoundPairsPerPlayer = 0;
       cardsState.value = setCardsInitialState() // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
   }
-
-const { initGrid,  
-        gridDispositionProposition, 
-        styleGrid, 
-        onDispositionChanged, 
-        displayChangeCardsDispositonButton 
-      } = useGridResponsive();
 
 
   onMounted(() => {
