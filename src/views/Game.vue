@@ -118,14 +118,8 @@
 
   const primaryColor = store.getters.getPrimaryColor
 
-  const setCardsInitialState = () => {
-      let arr = []
-      for(var i = 0; i < nbCards.value; i++) {
-          arr.push(0)
-      }
-      return arr
-  }
-  
+  let timeoutDisplayMenu = null;
+
   const players = ref([]); 
   let idxPlayer; 
   let nbPlayers = 0;
@@ -146,7 +140,7 @@
       tempoArray[i] = tempoArray[j];
       tempoArray[j] = temp;
     }
-    
+
     return tempoArray
   }
 
@@ -176,7 +170,6 @@
       if(nbFlipPlayer == nbMaxFlipsPerTurn) { // Si 2eme carte tournée...
         // On arrete le countdown si le délai max n'est pas dépassé
         displayCountdown.value = false
-
         turns.value += 1;
 
         const idx_CardsFlippedPerTurn = cardsFlippedPerTurn.map(c => c.idx);  //console.log("idx_CardsFlippedPerTurn", idx_CardsFlippedPerTurn); //TEST
@@ -188,15 +181,10 @@
         }
       }
 
-    } /* else {
-      //console.log("Plus de 2 clics pour le meme joueur! PAS BIEN") //TEST
-      // FAIRE EN SORTE QUE CURSOR SOIT NOT ALLOWED QD CARD SURVOLEE
-    } */
+    }
   }
 
-
-  const DELAY_BEFORE_MSG_DISPLAYED = 1500;
-
+  const delayBeforeMsgDisplayed = 1500;
   function flipCardsFailing() {
     setTimeout((cards) => {
         cards.forEach(c => {
@@ -210,7 +198,8 @@
         if(nbPlayers > 1) { // Quand plusieurs joueurs...
           players.value[idxPlayer].turn = false;
           idxPlayer += 1;
-          if(idxPlayer > nbPlayers - 1) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
+          // if(idxPlayer > nbPlayers - 1) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
+          if(idxPlayer >= nbPlayers) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
           
           players.value[idxPlayer].turn = true;
           contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' });
@@ -218,15 +207,14 @@
 
         reinit();
       }, 
-      DELAY_BEFORE_MSG_DISPLAYED, 
+      delayBeforeMsgDisplayed, 
       cardsFlippedPerTurn)
   }
 
   function flipCardsSuccess() {
-    let text = "",
-        animationName = undefined;
-
     setTimeout((cards) => {
+      let text = "",
+        animationName = "";
       cards.forEach(c => {
         cardsState.value[c.order] = 2 // Code pour dire que paire trouvée
       });
@@ -235,15 +223,15 @@
 
         // Message personnalisé qd coups gagnants successifs
       successiveFoundPairsPerPlayer++;
-      const msgPart = getWordsForMsg(successiveFoundPairsPerPlayer);
+      const msgPart = getCongratsMessage(successiveFoundPairsPerPlayer);
       
 
       foundPairs += 1; // Nb de paires trouvées par l'ensemble des joueurs ou le joueur
       
       if(foundPairs == selectedNbPairOfCards.value) { // Si ttes les paires sont trouvées...
-        text = msgEndOfTheGame(turns.value);
-        setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
+        text = getEndGameMessage(turns.value);
         animationName = 'winner';
+        timeoutDisplayMenu = setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
         displayConfettis();
       } else { //...Sinon si jeu pas encore fini
         text = `!! ${msgPart} ${players.value[idxPlayer].nom.toUpperCase()} !!`;
@@ -253,10 +241,9 @@
 
       reinit();
     }, 
-    DELAY_BEFORE_MSG_DISPLAYED, 
+    delayBeforeMsgDisplayed, 
     cardsFlippedPerTurn)
   }
-
 
   // Réinitialisation après chaque tour d'un joueur
   function reinit() {
@@ -266,15 +253,14 @@
 
 
   // Recup message personnalisé en fct° du nombre de succès à la suite
-  const maxNbCongratulationsMessage = store.getters.getMaxNbCongratulationsMessage;
-  function getWordsForMsg(i) {
-    let j = (i > maxNbCongratulationsMessage ? maxNbCongratulationsMessage : i),
-        k = (i < maxNbCongratulationsMessage ? "" : i);
-    return k + store.getters.getCongratulationsMessageById(j);
+  const maxNbCongratsMessage = store.getters.getMaxNbCongratulationsMessage;
+  function getCongratsMessage(count) {
+      let id = (count > maxNbCongratsMessage ? maxNbCongratsMessage : count);
+      return (count < maxNbCongratsMessage ? "" : count) + store.getters.getCongratulationsMessageById(id);
   }
 
   // Génération message final qd tes les cartes ont été trouvées
-  function msgEndOfTheGame(nbTurns) {
+  function getEndGameMessage(nbTurns) {
     let msgResultatFinal = "";
     const playersScore = players.value.map(p => p.score);
     const maxScore = Math.max(...playersScore); // On détermine quel est le score max.
@@ -327,8 +313,31 @@
       foundPairs = 0;
       turns.value = 0;
       successiveFoundPairsPerPlayer = 0;
-      cardsState.value = setCardsInitialState() // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
-  }
+      cardsState.value = Array(nbCards.value).fill(0) // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
+
+      nbPlayers = players.value.length;
+      if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
+      
+      clearTimeout(timeoutDisplayMenu); 
+
+      // Msg d'intro
+      contentMsg.value = [
+        { text: "3", animationName: "countdown" },
+        { text: "2", animationName: "countdown" },
+        { text: "1", animationName: "countdown" },
+        { text: "Go!", animationName: "countdown" }
+      ]
+    }
+
+    ///////// TEST COMPOSABLE'useGameLogic.js' ////////
+    /* const { 
+        contentMsg,
+        displayMenu,
+        newGame,
+        flip,
+        onCountdownOver
+      } = useGameLogic(store, displayConfettis, nbPlayers); */
+    ///////// FIN TEST COMPOSABLE'useGameLogic.js' ////////
 
 
   onMounted(() => {
@@ -338,17 +347,6 @@
       newGame(); 
 
       initGrid(); // Initialisation de la grille de cartes : Détermination du nb de lignes/colonnes et des dimensions de la grille en fonction de l'orientation de l'écran
-
-      nbPlayers = players.value.length;
-      if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
-
-      // Msg d'intro
-      contentMsg.value = [
-        { text: "3", animationName: "countdown" },
-        { text: "2", animationName: "countdown" },
-        { text: "1", animationName: "countdown" },
-        { text: "Go!", animationName: "countdown" }
-      ]
     }
   });
 </script>
