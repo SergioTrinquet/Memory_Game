@@ -4,7 +4,7 @@
         :class="{ display: localMsg.length > 0 }"
         @click="clearMsg"
     >
-        <div :class="CLASS_CONTENT_MSG" v-html="localMsg"></div>
+        <div :class="contentMsgClassName" v-html="localMsg"></div>
     </div>
 </template>
 
@@ -24,14 +24,15 @@
                 const items = Array.isArray(value) ? value : [value];
                 const isValid = items.every(i => i && typeof i === 'object' && 'text' in i && 'animationName' in i);
                 if (!isValid) console.error("Format de message invalide : 'text' et 'animationName' sont requis.");
-                // if (!isValid) throw new Error("Format de message invalide : 'text' et 'animationName' sont requis.");
                 return isValid;
             }
-        } 
+        }, 
+        clear: Boolean
     })
-
+    
+    const emit = defineEmits(['onMsgCleared']);
     let localMsg = ref("");
-    const CLASS_CONTENT_MSG = 'content-message';
+    const contentMsgClassName = 'content-message';
     let tl = null;
     let promiseChain = Promise.resolve(); // Gère la file d'attente des messages
 
@@ -42,13 +43,24 @@
             promiseChain = promiseChain.then(() => displayMessage(val)); // Pour chainer les messages + anim sans que le dernier appelé ne s'affiche avant la fin du précédent
         }
     )
+
+    watch(
+        () => props.clear,
+        (val) => {
+            if(val) {
+                console.log("watch sur 'props.clear'", val); //TEST 
+                clearMsg();
+                emit('onMsgCleared');
+            }
+        }
+    )
     
     async function displayMessage(val) {
         const messages = Array.isArray(val) ? val : [val];
 
          // Création d'une nouvelle timeline
         tl = anime.timeline({
-            targets: `.${CLASS_CONTENT_MSG}`,
+            targets: `.${contentMsgClassName}`,
         });
 
         for (const msg of messages) {
@@ -75,17 +87,21 @@
 
         // Nettoyage final
         localMsg.value = "";
-        const el = document.querySelector(`.${CLASS_CONTENT_MSG}`);
+        const el = document.querySelector(`.${contentMsgClassName}`);
         if (el) el.removeAttribute('style');
     }
 
     // Appelé qd click sur fond message pour le faire disparaitre
-    function clearMsg() { 
+    function clearMsg() {
+        // promiseChain = Promise.resolve(); // On réinitialise la chaîne
         if (tl) {
             localMsg.value = ""; 
             // On va directement à la fin de l'animation en cours, ce qui entraine la fin de la promesse :'resolve' appelée dès la fin de l'anim. que l'on vient d'écourter
             // Cela permet de passer au message suivant s'il y en a un, sans attendre la fin de la promesse
             tl.seek(tl.duration); 
+            /* // On stoppe l'animation en cours
+            tl.pause();
+            tl = null; */
         }
     }
 </script>

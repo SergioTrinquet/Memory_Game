@@ -1,5 +1,9 @@
 <template>
-  <Message :content="contentMsg" />
+  <Message 
+    :content="contentMsg" 
+    :clear="clearMsg" 
+    @on-msg-cleared="setClearMsg"
+  />
 
   <Header 
     :displayMenu="displayMenu" 
@@ -91,7 +95,6 @@
   import { useRouter } from 'vue-router'
 
   import { useGridResponsive } from '@/composables/useGridResponsive.js'
-  import { useConfetti } from '@/composables/useConfettis'
   
   const { initGrid,  
         gridDispositionProposition, 
@@ -99,7 +102,6 @@
         onDispositionChanged, 
         displayChangeCardsDispositonButton 
       } = useGridResponsive();
-  const displayConfettis = useConfetti();
 
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
   const Countdown = defineAsyncComponent(() => import(/* webpackChunkName: "CountDown" */ '@/components/CountDown.vue'))
@@ -109,21 +111,20 @@
   const router = useRouter();
 
   const contentMsg = ref({ text: "", animationName: "" });
-  const cardsState = ref([])
+  const cardsState = ref([]);
 
   const pl = computed(() => store.state.players); // Data joueurs saisis dans page 'Settings'
   const selectedNbPairOfCards = computed(() => store.state.nb_pair_of_cards);
   const nbCards = computed(() => selectedNbPairOfCards.value !== null ? parseInt(selectedNbPairOfCards.value) * 2 : 0 ); // Doit-on en faire un Getter dans Vuex ?
   const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
 
-  const primaryColor = store.getters.getPrimaryColor
-
-  let timeoutDisplayMenu = null;
-
+  const displayMenu = ref(null);
   const players = ref([]); 
   let idxPlayer; 
   let nbPlayers = 0;
   let idxCards = ref([]);
+  
+  const primaryColor = store.getters.getPrimaryColor
 
   // Mélange des cartes
   function setShuffledIdxCards() {
@@ -159,7 +160,6 @@
     nbFlipPlayer++;
   
     if(nbFlipPlayer <= nbMaxFlipsPerTurn) {
-
       cardsState.value[order] = 1 // On retourne la carte
 
       cardsFlippedPerTurn.push({ "idx": idxCards.value[order], "order": order }); // Enregistrement idx et order de la carte
@@ -180,13 +180,15 @@
           flipCardsFailing();
         }
       }
-
     }
   }
 
+  let timeoutFlipCardsSuccess = null;
+  let timeoutFlipCardsFailing = null;
+  let timeoutDisplayMenu = null;
   const delayBeforeMsgDisplayed = 1500;
   function flipCardsFailing() {
-    setTimeout((cards) => {
+    timeoutFlipCardsFailing = setTimeout((cards) => {
         cards.forEach(c => {
           cardsState.value[c.order] = 0 // ...On retourne à nouveau les cartes
         });
@@ -205,14 +207,15 @@
           contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' });
         } 
 
-        reinit();
+        resetTurn();
       }, 
       delayBeforeMsgDisplayed, 
       cardsFlippedPerTurn)
   }
 
-  function flipCardsSuccess() {
-    setTimeout((cards) => {
+  let useConfettisComposable = null;
+  async function flipCardsSuccess() {
+    timeoutFlipCardsSuccess = setTimeout(async (cards) => {
       let text = "",
         animationName = "";
       cards.forEach(c => {
@@ -225,30 +228,36 @@
       successiveFoundPairsPerPlayer++;
       const msgPart = getCongratsMessage(successiveFoundPairsPerPlayer);
       
-
       foundPairs += 1; // Nb de paires trouvées par l'ensemble des joueurs ou le joueur
       
       if(foundPairs == selectedNbPairOfCards.value) { // Si ttes les paires sont trouvées...
         text = getEndGameMessage(turns.value);
         animationName = 'winner';
         timeoutDisplayMenu = setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
-        displayConfettis();
+        
+        if(!useConfettisComposable) useConfettisComposable = await useConfettisAsync();
+        useConfettisComposable.displayConfettis();
       } else { //...Sinon si jeu pas encore fini
         text = `!! ${msgPart} ${players.value[idxPlayer].nom.toUpperCase()} !!`;
         animationName = 'success';
       }
       contentMsg.value = { text, animationName };
 
-      reinit();
+      resetTurn();
     }, 
     delayBeforeMsgDisplayed, 
     cardsFlippedPerTurn)
   }
 
   // Réinitialisation après chaque tour d'un joueur
-  function reinit() {
+  function resetTurn() {
     nbFlipPlayer = 0;
     cardsFlippedPerTurn = [];
+  }
+
+  async function useConfettisAsync() {
+    const { useConfetti } = await import('@/composables/useConfettis.js');
+    return useConfetti();
   }
 
 
@@ -297,13 +306,33 @@
   }
 
 
-  const displayMenu = ref(null);
-  function replay() {
+  const clearMsg = ref(false);
+  async function replay() {
+    // On kill les timeout qui pourraient encore être en cours d'exécution pour le retournement des cartes gagnantes ou perdantes du tour précédent
+    clearTimeout(timeoutFlipCardsSuccess);
+    clearTimeout(timeoutFlipCardsFailing); 
+    clearTimeout(timeoutDisplayMenu);
+    resetTurn();
+
+    // clearTimeout(timeoutDisplayMenu); // On kill le timeout qui pourrait encore être en cours d'exécution pour l'affichage du menu à la fin de la partie précédente (notamment si nouvelle partie lancée avant que le délai d'affichage du menu de fin de partie ne soit écoulé)
+    clearMsg.value = true;
+
+    // Pour interrompre les animations de confettis en cours d'exécution 
+    // si une nouvelle partie est lancée avant que les confettis 
+    // de la partie précédente aient fini de tomber
+    if(!useConfettisComposable) useConfettisComposable = await useConfettisAsync();
+    useConfettisComposable.clearCanvas();
+
     newGame(); // On réinitialise
     displayMenu.value = false; // On ferme le menu
   }
 
   function setDisplayMenu() { displayMenu.value = null } // Réinitialisation
+
+  function setClearMsg() { 
+    clearMsg.value = false 
+    // console.log("setClearMsg", clearMsg.value); //TEST
+  }
 
   function newGame() {
       // Réinitialisation variables locales
@@ -317,8 +346,6 @@
 
       nbPlayers = players.value.length;
       if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
-      
-      clearTimeout(timeoutDisplayMenu); 
 
       // Msg d'intro
       contentMsg.value = [

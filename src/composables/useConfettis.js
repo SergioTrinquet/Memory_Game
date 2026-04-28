@@ -1,8 +1,9 @@
 import JSConfetti from 'js-confetti'
 
 export function useConfetti() {
-
-    const CANVAS_CLASS_NAME = 'confetti-canvas';
+    const canvasClassName = 'confetti-canvas';
+    const canvasConfettis = setCanvas();  // Création canvas pour confettis
+    let jsConfetti = new JSConfetti({ canvas: canvasConfettis })
 
     function setCanvas() {
         const canvas = document.createElement('canvas');
@@ -12,7 +13,7 @@ export function useConfetti() {
         canvas.style.width = '100%';
         canvas.style.height = '100%';
         canvas.style.pointerEvents = 'none'; // pour laisser cliquer au travers
-        canvas.className = CANVAS_CLASS_NAME;
+        canvas.className = canvasClassName;
         document.body.appendChild(canvas);
         return canvas;
     }
@@ -22,9 +23,6 @@ export function useConfetti() {
     }
 
     async function displayConfettis() {
-        const canvasConfettis = setCanvas();  // Création canvas pour confettis
-        let jsConfetti = new JSConfetti({ canvas: canvasConfettis })
-        
         await jsConfetti.addConfetti({
         confettiNumber: 500,
         confettiRadius: 10,
@@ -40,5 +38,12 @@ export function useConfetti() {
         removeCanvas(canvasConfettis); // Qd confettis disparaisent, suppression canvas
     }
 
-    return displayConfettis;
+    function clearCanvas() {
+        jsConfetti.clearCanvas();
+    }
+
+    return { 
+        displayConfettis, 
+        clearCanvas 
+    }
 }
