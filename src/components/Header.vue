@@ -62,11 +62,10 @@
     watch(
         () => props.displayMenu, 
         (val) => {
-        display.value = val;
-        if(!val) emit('onCloseMenu');
+            display.value = val;
+            if(!val) emit('onCloseMenu');
     })
    
-
     function toggleMenu() {
         display.value = !display.value;
     }
@@ -122,20 +121,18 @@
     &.display {
         top: 0;
     }
-    
-    :deep(button) {
-        font-size: clamp(18px, 3.5vw, 26px);
-        font-weight: 500;
-        margin: 2vh 0;
-        width: min(70%, 700px);
-        line-height: clamp(19px, 4.3vw, 26px);
-        padding: 3vmin 3vmin;
-        &:hover {
-            color: #fff;
-        }
+}
+:deep(button) {
+    font-size: clamp(18px, 3.5vw, 26px);
+    font-weight: 500;
+    margin: 2vh 0;
+    width: min(70%, 700px);
+    line-height: clamp(19px, 4.3vw, 26px);
+    padding: 3vmin 3vmin;
+    &:hover {
+        color: #fff;
     }
 }
-
 #icon-menu,
 #close-menu {
     cursor: pointer;
