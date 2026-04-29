@@ -71,8 +71,6 @@
       
     </div>
 
-
-    <!-- <div v-else>Le nb de cartes n'a pas été sélectionné</div> -->
     <Transition name="fade">
         <ButtonChangeCardsDisposition 
           :grid-dispo-proposition="gridDispositionProposition"
@@ -90,290 +88,57 @@
   import Message from '@/components/Message.vue'
   import Card from '@/components/Card.vue'
 
+  import { onMounted, defineAsyncComponent, computed } from 'vue'
   import { useStore } from 'vuex'
-  import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
   import { useRouter } from 'vue-router'
 
   import { useGridResponsive } from '@/composables/useGridResponsive.js'
-  
-  const { initGrid,  
-        gridDispositionProposition, 
-        styleGrid, 
-        onDispositionChanged, 
-        displayChangeCardsDispositonButton 
-      } = useGridResponsive();
+  import { useGameLogic } from '@/composables/useGameLogic.js'
 
+  // Composants asynchrones
   const ButtonChangeCardsDisposition =  defineAsyncComponent(() => import(/* webpackChunkName: "ButtonChangeCardsDisposition" */ '@/components/ButtonChangeCardsDisposition.vue'))
   const Countdown = defineAsyncComponent(() => import(/* webpackChunkName: "CountDown" */ '@/components/CountDown.vue'))
   const NbTurnsPlayed = defineAsyncComponent(() => import(/* webpackChunkName: "NbTurnsPlayed" */ '@/components/NbTurnsPlayed.vue'))
 
   const store = useStore();
   const router = useRouter();
+  const primaryColor = computed(() => store.getters.getPrimaryColor);
 
-  const contentMsg = ref({ text: "", animationName: "" });
-  const cardsState = ref([]);
+  // Logique de la grille responsive
+  const { 
+    initGrid,  
+    gridDispositionProposition, 
+    styleGrid, 
+    onDispositionChanged, 
+    displayChangeCardsDispositonButton 
+  } = useGridResponsive();
 
-  const pl = computed(() => store.state.players); // Data joueurs saisis dans page 'Settings'
-  const selectedNbPairOfCards = computed(() => store.state.nb_pair_of_cards);
-  const nbCards = computed(() => selectedNbPairOfCards.value !== null ? parseInt(selectedNbPairOfCards.value) * 2 : 0 ); // Doit-on en faire un Getter dans Vuex ?
-  const displayCardsGrid = computed(() => nbCards.value > 0 && idxCards.value.length > 0)
-
-  const displayMenu = ref(null);
-  const players = ref([]); 
-  let idxPlayer; 
-  let nbPlayers = 0;
-  let idxCards = ref([]);
-  
-  const primaryColor = store.getters.getPrimaryColor
-
-  // Mélange des cartes
-  function setShuffledIdxCards() {
-    let tempoArray = []
-    // On rempli le tableau de paires d'index...
-    for(var i=1; i <= selectedNbPairOfCards.value; i++) {
-      tempoArray.unshift(i, i);
-    }
-    
-    // ...On shuffle
-    for (let i = tempoArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = tempoArray[i];
-      tempoArray[i] = tempoArray[j];
-      tempoArray[j] = temp;
-    }
-
-    return tempoArray
-  }
-
-  // Gestion flip + score
-  const nbMaxFlipsPerTurn = 2,  // nb maximum de carte(s) qu'il est possible de retourner par tour et par joueur
-        delayDisplayMenu = 5000;
-  let cardsFlippedPerTurn = [],
-      nbFlipPlayer = 0,   // nb de carte(s) retournée(s) par joueur
-      foundPairs = 0,   // nb de paires trouvées par l'ensemble des joueurs
-      successiveFoundPairsPerPlayer = 0;
-  const turns = ref(0),
-        displayCountdown = ref(false);
-
-  // Qd click sur coté verso d'une carte
-  function flip(order) {
-    nbFlipPlayer++;
-  
-    if(nbFlipPlayer <= nbMaxFlipsPerTurn) {
-      cardsState.value[order] = 1 // On retourne la carte
-
-      cardsFlippedPerTurn.push({ "idx": idxCards.value[order], "order": order }); // Enregistrement idx et order de la carte
-
-      // Apparition Décompte secondes
-      if(nbFlipPlayer == 1) displayCountdown.value = true
-
-      if(nbFlipPlayer == nbMaxFlipsPerTurn) { // Si 2eme carte tournée...
-        // On arrete le countdown si le délai max n'est pas dépassé
-        displayCountdown.value = false
-        turns.value += 1;
-
-        const idx_CardsFlippedPerTurn = cardsFlippedPerTurn.map(c => c.idx);  //console.log("idx_CardsFlippedPerTurn", idx_CardsFlippedPerTurn); //TEST
-        // Check si cartes identiques ou pas 
-        if([...new Set(idx_CardsFlippedPerTurn)].length == 1) { // ...Si les 2 cartes retournées identiques
-          flipCardsSuccess();
-        } else {  // ...Sinon...
-          flipCardsFailing();
-        }
-      }
-    }
-  }
-
-  let timeoutFlipCardsSuccess = null;
-  let timeoutFlipCardsFailing = null;
-  let timeoutDisplayMenu = null;
-  const delayBeforeMsgDisplayed = 1500;
-  function flipCardsFailing() {
-    timeoutFlipCardsFailing = setTimeout((cards) => {
-        cards.forEach(c => {
-          cardsState.value[c.order] = 0 // ...On retourne à nouveau les cartes
-        });
-
-        successiveFoundPairsPerPlayer = 0;
-
-        contentMsg.value = [{ text: "<span class='icon'>😬</span> Raté!", animationName: 'fail' }];
-
-        if(nbPlayers > 1) { // Quand plusieurs joueurs...
-          players.value[idxPlayer].turn = false;
-          idxPlayer += 1;
-          // if(idxPlayer > nbPlayers - 1) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
-          if(idxPlayer >= nbPlayers) idxPlayer = 0;  // Si la variable 'idxPlayer' dépasse le nb de joueurs, on la remet à 0
-          
-          players.value[idxPlayer].turn = true;
-          contentMsg.value.push({ text: ` A ton tour ${players.value[idxPlayer].nom}`, animationName: 'followingFail' });
-        } 
-
-        resetTurn();
-      }, 
-      delayBeforeMsgDisplayed, 
-      cardsFlippedPerTurn)
-  }
-
-  let useConfettisComposable = null;
-  async function flipCardsSuccess() {
-    timeoutFlipCardsSuccess = setTimeout(async (cards) => {
-      let text = "",
-        animationName = "";
-      cards.forEach(c => {
-        cardsState.value[c.order] = 2 // Code pour dire que paire trouvée
-      });
-
-      players.value[idxPlayer].score += 1; // Incrémentation score
-
-        // Message personnalisé qd coups gagnants successifs
-      successiveFoundPairsPerPlayer++;
-      const msgPart = getCongratsMessage(successiveFoundPairsPerPlayer);
-      
-      foundPairs += 1; // Nb de paires trouvées par l'ensemble des joueurs ou le joueur
-      
-      if(foundPairs == selectedNbPairOfCards.value) { // Si ttes les paires sont trouvées...
-        text = getEndGameMessage(turns.value);
-        animationName = 'winner';
-        timeoutDisplayMenu = setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
-        
-        if(!useConfettisComposable) useConfettisComposable = await useConfettisAsync();
-        useConfettisComposable.displayConfettis();
-      } else { //...Sinon si jeu pas encore fini
-        text = `!! ${msgPart} ${players.value[idxPlayer].nom.toUpperCase()} !!`;
-        animationName = 'success';
-      }
-      contentMsg.value = { text, animationName };
-
-      resetTurn();
-    }, 
-    delayBeforeMsgDisplayed, 
-    cardsFlippedPerTurn)
-  }
-
-  // Réinitialisation après chaque tour d'un joueur
-  function resetTurn() {
-    nbFlipPlayer = 0;
-    cardsFlippedPerTurn = [];
-  }
-
-  async function useConfettisAsync() {
-    const { useConfetti } = await import('@/composables/useConfettis.js');
-    return useConfetti();
-  }
-
-
-  // Recup message personnalisé en fct° du nombre de succès à la suite
-  const maxNbCongratsMessage = store.getters.getMaxNbCongratulationsMessage;
-  function getCongratsMessage(count) {
-      let id = (count > maxNbCongratsMessage ? maxNbCongratsMessage : count);
-      return (count < maxNbCongratsMessage ? "" : count) + store.getters.getCongratulationsMessageById(id);
-  }
-
-  // Génération message final qd tes les cartes ont été trouvées
-  function getEndGameMessage(nbTurns) {
-    let msgResultatFinal = "";
-    const playersScore = players.value.map(p => p.score);
-    const maxScore = Math.max(...playersScore); // On détermine quel est le score max.
-    let findDuplicates = playersScore => playersScore.filter((item, index) => playersScore.indexOf(item) != index); // On isole les doublons
-    
-    if(findDuplicates(playersScore).includes(maxScore)) { // Si plusieurs scores max. (donc plusieurs vainqueurs)...
-      
-      // On récupère noms des joueurs avec le plus grand score
-      const equalPlayers = players.value.filter(p => p.score == maxScore);
-      const namesEqualPlayers = equalPlayers.map(ep => ep.nom.toUpperCase()).join(" et ");
-      msgResultatFinal += `!! 🤷 Egalité entre ${namesEqualPlayers} !!`
-    
-    } else { // Sinon si un seul score max: Un seul vainqueur
-      
-      const winner = players.value.find(p => p.score == maxScore);
-      msgResultatFinal += (nbPlayers == 1) ? 
-                          `👏 Bravo ${winner.nom.toUpperCase()}, partie terminée en ${nbTurns} tours` : 
-                          `!! Et le/la gagnante est ${winner.nom.toUpperCase()} !!`;
-
-    }
-
-    return msgResultatFinal;
-  }
-
-  // Qd player n'a pas cliqué sur 2eme carte à temps (avant fin du décompte)
-  function onCountdownOver() {
-    contentMsg.value = { 
-      text: `Trop tard ${players.value[idxPlayer].nom}`, 
-      animationName: 'tooLate' 
-    };
-    flipCardsFailing();
-    turns.value += 1; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
-    displayCountdown.value = false;
-  }
-
-
-  const clearMsg = ref(false);
-  async function replay() {
-    // On kill les timeout qui pourraient encore être en cours d'exécution pour le retournement des cartes gagnantes ou perdantes du tour précédent
-    clearTimeout(timeoutFlipCardsSuccess);
-    clearTimeout(timeoutFlipCardsFailing); 
-    clearTimeout(timeoutDisplayMenu);
-    resetTurn();
-
-    // clearTimeout(timeoutDisplayMenu); // On kill le timeout qui pourrait encore être en cours d'exécution pour l'affichage du menu à la fin de la partie précédente (notamment si nouvelle partie lancée avant que le délai d'affichage du menu de fin de partie ne soit écoulé)
-    clearMsg.value = true;
-
-    // Pour interrompre les animations de confettis en cours d'exécution 
-    // si une nouvelle partie est lancée avant que les confettis 
-    // de la partie précédente aient fini de tomber
-    if(!useConfettisComposable) useConfettisComposable = await useConfettisAsync();
-    useConfettisComposable.clearCanvas();
-
-    newGame(); // On réinitialise
-    displayMenu.value = false; // On ferme le menu
-  }
-
-  function setDisplayMenu() { displayMenu.value = null } // Réinitialisation
-
-  function setClearMsg() { 
-    clearMsg.value = false 
-    // console.log("setClearMsg", clearMsg.value); //TEST
-  }
-
-  function newGame() {
-      // Réinitialisation variables locales
-      players.value = pl.value.map(p => ({nom: p.nom, score: 0, turn: false}));
-      idxPlayer = 0;
-      idxCards.value = setShuffledIdxCards();
-      foundPairs = 0;
-      turns.value = 0;
-      successiveFoundPairsPerPlayer = 0;
-      cardsState.value = Array(nbCards.value).fill(0) // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
-
-      nbPlayers = players.value.length;
-      if(nbPlayers > 1) players.value[idxPlayer].turn = true; // Au tour du 1er joueur
-
-      // Msg d'intro
-      contentMsg.value = [
-        { text: "3", animationName: "countdown" },
-        { text: "2", animationName: "countdown" },
-        { text: "1", animationName: "countdown" },
-        { text: "Go!", animationName: "countdown" }
-      ]
-    }
-
-    ///////// TEST COMPOSABLE'useGameLogic.js' ////////
-    /* const { 
-        contentMsg,
-        displayMenu,
-        newGame,
-        flip,
-        onCountdownOver
-      } = useGameLogic(store, displayConfettis, nbPlayers); */
-    ///////// FIN TEST COMPOSABLE'useGameLogic.js' ////////
-
+  // Logique du jeu
+  const {
+    contentMsg,
+    displayMenu,
+    players,
+    cardsState,
+    turns,
+    displayCountdown,
+    idxCards,
+    nbCards,
+    displayCardsGrid,
+    clearMsg,
+    newGame,
+    flip,
+    onCountdownOver,
+    replay,
+    setDisplayMenu,
+    setClearMsg
+  } = useGameLogic(store);
 
   onMounted(() => {
-    if(pl.value.length == 0) { // Si pas de joueurs enregistrés (à cause d'un reload sur cette page qui réinitie ttes les propriétés du store par ex.
-      router.push({ name: 'introduction' }) // Redirection vers page d'intro
-    } else { // ...sinon...
+    if (store.state.players.length === 0) { // Si pas de joueurs enregistrés (à cause d'un reload sur cette page qui réinitie ttes les propriétés du store par ex.) : Redirection vers page d'intro
+      router.push({ name: 'introduction' });
+    } else {
       newGame(); 
-
-      initGrid(); // Initialisation de la grille de cartes : Détermination du nb de lignes/colonnes et des dimensions de la grille en fonction de l'orientation de l'écran
+      initGrid();
     }
   });
 </script>
