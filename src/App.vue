@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'App',
-  mounted() {
+ /*  mounted() {
     this.updateThemeColor();
   },
   methods: {
@@ -21,7 +21,7 @@ export default {
         }
       }
     }
-  }
+  } */
 }
 </script>
 
