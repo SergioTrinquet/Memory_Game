@@ -5,6 +5,23 @@
 <script>
 export default {
   name: 'App',
+  mounted() {
+    this.updateThemeColor();
+  },
+  methods: {
+    updateThemeColor() {
+      // On attend un petit tick pour s'assurer que le CSS est bien appliqué
+      const rootStyles = getComputedStyle(document.documentElement);
+      const color = rootStyles.getPropertyValue('--color-primary-dark-1');
+      
+      if (color) {
+        const metaTag = document.querySelector('meta[name="theme-color"]');
+        if (metaTag) {
+          metaTag.setAttribute('content', color.trim());
+        }
+      }
+    }
+  }
 }
 </script>
 
