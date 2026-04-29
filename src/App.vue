@@ -9,8 +9,7 @@ export default {
 </script>
 
 <style>
-/* @import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap'); */
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Story+Script&family=Poppins:wght@100;200;300;400;500;600&family=Yeseva+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Yeseva+One&display=swap');
 
 :root {
   --color-primary: hsl(283, 100%, 47%);
@@ -46,7 +45,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
 
 button, 
 button > span,
@@ -91,5 +89,9 @@ select {
   &:focus {
     outline: 3px solid hsl(from var(--color-primary) h s calc(l + 35));
   }
+}
+
+div, span { /* Pour empecher présence curseur avec Edge */
+  user-select: none;
 }
 </style>
