@@ -191,6 +191,9 @@
   import { ref, computed, watch } from 'vue'
   import { useRouter } from 'vue-router'
 
+  const store = useStore();
+  const router = useRouter();
+  
   let selectedModal = ref([true, false, false, false]);
   let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
@@ -202,9 +205,6 @@
   let errorTheme = ref(false);
   let timeDisplayCard = ref(5);
 
-  const store = useStore();
-  const router = useRouter();
-  
   const maxNbPlayers = computed(() => store.state.max_nb_players);
   const optionNbPairs = computed(() => store.state.option_nb_pairs.map(p => p.nb_pairs));
   const optionThemes = computed(() => store.state.option_themes.map(t => t.intitule));
@@ -302,7 +302,6 @@
   
   // Pour mettre à jour 'inputsPlayers' qd sélect° nb de joueurs
   watch(nbOfPlayers, (val) => {
-
     let upToDateInputsPlayers = [],
         upToDateMsgErrors = [];
     for(var i=0; i < parseInt(val); i++) {
@@ -340,6 +339,7 @@
 .msg-error {
   width: 100%;
 }
+
 .select-settings-wrapper .msg-error {
   width: calc(100% - (2 * var(--padding-modal-settings)));
 }
@@ -360,25 +360,46 @@
   padding: 1.7vh 0;
   display: flex;
 }
-.lgn-joueur label {
+/* .lgn-joueur label {
   margin: 0 10px 0 0;
   display: flex;
   align-items: center;
   flex-grow: 1;
-}
+} */
 .input-joueur-wrapper {
   position: relative;
-}
-.input-joueur-wrapper input {
-  margin: 0 auto;
-  display: block;
+  input {
+    margin: 0 auto;
+    display: block;
+  }
 }
 ::placeholder {
   color: #6f6f6f;
 }
 
+
+option,
+.msg-error {
+  font-size: clamp(14px, 3vw, 17px);
+}
+input, 
+select {
+  font-size:clamp(17px, 3vmin, 20px);
+}
+
 select {
   width: 35%;
+}
+
+input[type="text"], 
+select {
+  border: 0;
+  background-color: #e9e9e9;
+  padding: 1vh 2vh;
+  border-radius: 4px;
+  &:focus {
+    outline: 3px solid hsl(from var(--color-primary) h s calc(l + 35));
+  }
 }
 
 .lgn-joueur input.error,
@@ -407,15 +428,15 @@ select.error {
   font-size: min(3vmin, 24px);
   margin: 0 auto;
   width: 70%;
+  span {
+    margin: 0 8px;
+  }
 }
 .range span,
 .result-seconds {
   font-family: 'Fredoka', sans-serif; 
   font-size: clamp(20px, 4vmin, 24px);
   color: var(--color-primary);
-}
-.range span {
-  margin: 0 8px;
 }
 .result-seconds {
   text-align: center;
@@ -453,21 +474,43 @@ input[type="range"]::-webkit-slider-runnable-track  {
   background: transparent;
 }
 
+.icon-left,
+.icon-right {
+  position: absolute;
+  z-index: 1;
+  transition: transform 0.2s ease;
+  --icon-arrow-position: 3vw;
+}
+.icon-left {
+  left: var(--icon-arrow-position);
+}
+.icon-right {
+  right: var(--icon-arrow-position);
+}
+
 button.bt-navigation {
   background-color: var(--color-primary);
   color: #fff;
   height: max(6vh, 34px);
   width: max(160px, 50%);
   font-size: clamp(20px, 3.3vmin, 28px);
-  /* &:after {
-    background-color: v-bind(colorHoverEffect);
-  } */
-}
-button.bt-navigation:first-child {
-  margin: 0 1.5vh 0 0;
-}
-button.bt-navigation:last-child {
-  margin: 0 0 0  1.5vh;
+
+  &:first-child {
+    margin: 0 1.5vh 0 0;
+  }
+  &:last-child {
+    margin: 0 0 0  1.5vh;
+  }
+
+  &:hover {
+    --icon-arrow-move: 1vw;
+    .icon-left {
+      transform: translateX(calc(-1 * var(--icon-arrow-move)));
+    }
+    .icon-right {
+      transform: translateX(var(--icon-arrow-move));
+    }
+  }
 }
 
 #first-modal {
@@ -477,26 +520,6 @@ button.bt-navigation:last-child {
   input[type="text"], select {
     width: max(160px, 50%);
   }
-}
-
-.icon-left,
-.icon-right {
-  position: absolute;
-  z-index: 1;
-  transition: transform 0.2s ease;
-}
-.icon-left {
-  left: 3vw;
-}
-.icon-right {
-  right: 3vw;
-}
-
-button.bt-navigation:hover .icon-left {
-  transform: translateX(-1vw);
-}
-button.bt-navigation:hover .icon-right {
-  transform: translateX(1vw);
 }
 
 @media screen and (max-width: 480px) {
