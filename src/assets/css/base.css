@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Yeseva+One&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+}
+
+html, 
+body, 
+#app {
+    height: 100%;
+}
+html, body {
+    overflow: hidden; /* Empeche de reloader qd pull vers le bas sur mobile */ 
+}
+body {
+    font-family: 'Yeseva One', cursive;
+    font-size: clamp(16px, 4vmin, 28px);
+    color: #fff;
+    background: center/cover no-repeat url('../imgs/fond.svg'), linear-gradient(0deg, hsl(283, 100%, 40%) 16%, hsl(283, 100%, 40%) 100%);
+}
+
+div, span { /* Pour empecher présence curseur avec Edge */
+  user-select: none;
+}
+
+
+button, 
+button > span,
+input, 
+select, 
+option,
+.msg-error {
+  font-family: 'Fredoka', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+button, 
+button > span {
+  cursor: pointer;
+}
+button > span { font-weight: unset; }
+
+input, 
+select, 
+option,
+.msg-error {
+  text-align: center;
+}
