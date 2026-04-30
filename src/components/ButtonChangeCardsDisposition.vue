@@ -95,7 +95,47 @@
         /* Pour transition qd apparait */
         opacity: 0;
         animation: fadeInFromTop 0.6s ease-in-out 0.7s forwards;
+
+        & > * {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 30px 25px 0 25px;
+            border-color: #fff transparent transparent transparent;
+            left: 50%;
+            transform: translate(-50%, 100%);
+        }
+
+        &.hidden {
+            display: none;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: inherit;
+        }
+
+        .bt-close-msg {
+            margin: min(2vh,15px) auto 0 auto;
+            border: none;
+            background-color: var(--color-primary-dark-2);
+            color: #fff;
+            padding: 1vh 3vw;
+            border-radius: 8px;
+            transition: 0.3s all ease-in-out;
+            &:hover {
+                background-color: var(--color-primary-dark-3);
+            }
+        }
     }
+
     @keyframes fadeInFromTop {
         0% { 
             transform: translateY(-20px);
@@ -105,41 +145,5 @@
             transform: translateY(0);
             opacity: 1; 
         }
-    }
-    .msg-disposition-cartes::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 30px 25px 0 25px;
-        border-color: #fff transparent transparent transparent;
-        left: 50%;
-        transform: translate(-50%, 100%);
-    }
-
-    .msg-disposition-cartes.hidden {
-        display: none;
-    }
-
-    .msg-disposition-cartes > * {
-        font-family: 'Fredoka', sans-serif;
-    }
-    .msg-disposition-cartes p {
-        margin: 10px 0;
-        font-size: inherit;
-    }
-    .msg-disposition-cartes .bt-close-msg {
-        margin: min(2vh,15px) auto 0 auto;
-        border: none;
-        background-color: var(--color-primary-dark-2);
-        color: #fff;
-        padding: 1vh 3vw;
-        border-radius: 8px;
-        transition: 0.3s all ease-in-out;
-    }
-    .msg-disposition-cartes .bt-close-msg:hover {
-        background-color: var(--color-primary-dark-3);
     }
 </style>
