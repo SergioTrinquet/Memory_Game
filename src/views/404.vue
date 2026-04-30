@@ -7,10 +7,19 @@
             n'existe pas.</p>
         </div>
         <router-link to="/">
-           <button>Retour à la page d'accueil</button>
+            <BaseButton 
+                rounded
+                variant="action"
+            >
+                Retour à la page d'accueil
+            </BaseButton>
         </router-link>
     </div>
 </template>
+
+<script setup>
+    import BaseButton from '@/components/base/BaseButton.vue'
+</script>
 
 <style scoped>
 .container {
@@ -28,14 +37,13 @@
     font-family: 'Yeseva One', cursive;
     margin: 0 0 4vh 0;
 }
+a {
+    text-decoration: none;
+}   
 button {
-    background-color: var(--color-tertiary);
-    border-radius: 5px;
-    border-width: 0;
-    padding: 10px 2vw;
-    font-size: 3.5vmin;
-    font-weight: bold;
     margin-top: 3vh;
+    font-size: 3vmin;
+    padding-inline: 5vmin;
 }
 .icon {
     font-size: 6vmin;

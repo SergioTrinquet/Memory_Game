@@ -24,6 +24,17 @@
             type: Boolean,
             required: false 
         },
+        variant: {
+            type: String,
+            required: false,
+            validator(value) {
+                const acceptedValues = ['action'];
+                if(!acceptedValues.includes(value)) {
+                    console.error(`La prop 'variant' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value}`);
+                    return false;
+                }
+            }
+        },
         fontSize: {
             type: String,
             required: false,
@@ -43,8 +54,8 @@
             default: () => { return { from: "left", color: "unset" } },
             validator(value) {
                 let msgError = "";
-                if('from' in value) { console.log("validator hoverBgSlide - if", value)
-                    if (!acceptedValues.includes(value.from)) { console.log("validator hoverBgSlide - if - if", value)
+                if('from' in value) {
+                    if (!acceptedValues.includes(value.from)) {
                         msgError = `La propriété 'from' de la prop 'hover-bg-slide' doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value.from}`;
                     }
                 }
@@ -67,6 +78,7 @@
         let classes = "";
         if(props.outline !== 'unset') classes += "outline "
         if(props.rounded) classes += "rounded "
+        if(props.variant) classes += `variant-${props.variant} `
         if(typeof props.hoverBgSlide !== 'undefined' && 'from' in props.hoverBgSlide && acceptedValues.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
         return classes
     })
@@ -131,6 +143,22 @@
         }
         &:hover:after {
             left: 0;
+        }
+
+        &.variant-action {
+            background-color: var(--color-tertiary); 
+            color: var(--color-primary-dark-2);
+            font-weight: 500;
+            box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
+            white-space: nowrap;
+
+            &:after {
+                --button-intro-hover-slide: yellow;
+                @supports (color: hsl(from var(--color-tertiary) h s calc(l + 10))) {
+                    --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
+                }
+                background-color: var(--button-intro-hover-slide);
+            }
         }
     }
 </style>

@@ -19,11 +19,11 @@
         <div class="square last"></div>
         <div class="content-intro-txt">
             <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
-            <BaseButton 
+            <BaseButton
                 @click="goToSettings"
                 font-size="max(22px, 4vmin)"
                 rounded
-                :hover-bg-slide="{ color: 'var(--button-intro-hover-slide)' }"
+                variant="action"
             >
                 Jouer une partie
             </BaseButton>
@@ -37,18 +37,18 @@
     import { onMounted, ref } from 'vue'  
     import { useRouter } from 'vue-router'
 
-    let i = 0
     const router = useRouter();
     const cardState1 = ref(0)
     const cardState2 = ref(0)
-    const idxImgs = [[1, 5], [3, 3], [2, 4], [3, 5], [10, 10], [13, 14]]
-    const flattenIdxImgs = idxImgs.flat()
     const idxImgCard1 = ref(1)
     const idxImgCard2 = ref(1)
     const animationScore = ref(false)
+    const idxImgs = [[1, 5], [3, 3], [2, 4], [3, 5], [10, 10], [13, 14]]
+    const flattenIdxImgs = idxImgs.flat()
     const interval = 5500
     const delayFlipSecondCard = interval / 2.75 //Soit 2000
     const delayFlipBothCards = delayFlipSecondCard * 2
+    let i = 0
 
     function goToSettings() {
         router.push({ name: 'parametres' }) // Redirection vers page 'Settings'
@@ -139,21 +139,8 @@
     text-shadow: 0 5px 2px rgba(0,0,0,0.4);
 }
 button {
-    background-color: var(--color-tertiary); 
-    color: var(--color-primary-dark-2);
-    font-weight: 500;
     margin: 6vmin auto 0 auto;
     width: 70%;
-    box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
-    white-space: nowrap;
-    &:hover {
-        color: var(--color-primary-dark-3);
-    }
-
-    --button-intro-hover-slide: yellow;
-    @supports (color: hsl(from var(--color-tertiary) h s calc(l + 10))) {
-        --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
-    }
 }
 :deep(.libelle) {
     transform: translateY(-2px);
