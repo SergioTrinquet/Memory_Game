@@ -36,7 +36,7 @@
           class="bt-navigation"
           :hover-bg-slide="{color: colorHoverEffect}"
         >
-          Suivant 
+          <!-- suivant  -->{{ libelleButtonNext }}
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
@@ -79,7 +79,7 @@
             text-align-left
             :hover-bg-slide="{ color: colorHoverEffect }"
           >
-            suivant 
+            <!-- suivant  -->{{ libelleButtonNext }}
             <template v-slot:icon-right>
               <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
             </template>
@@ -123,11 +123,31 @@
             text-align-left
             :hover-bg-slide="{ color: colorHoverEffect }"
           >
-            suivant 
+            <!-- suivant  -->{{ libelleButtonNext }}
             <template v-slot:icon-right>
               <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
             </template>
           </BaseButton>
+
+
+
+          <!-- ///////////////// -->
+          <!-- <BaseButton
+            @click="stepBack"
+            class="bt-navigation"
+          >
+            annuler 
+            <font-awesome-icon icon="fa-arrow-rotate-left" class="icon" />
+          </BaseButton>
+
+          <BaseButton
+            @click="recordTheme"
+            class="bt-navigation"
+          >
+            {{ libelleButtonNext }}
+            <font-awesome-icon icon="fa-check" class="icon" />
+          </BaseButton> -->
+          <!-- ///////////////// -->
       </template>
     </CustomModal>
 
@@ -171,7 +191,7 @@
           text-align-left
           :hover-bg-slide="{ color: colorHoverEffect }"
         >
-          suivant 
+          <!-- suivant  -->{{ libelleButtonNext }}
           <template v-slot:icon-right>
             <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
           </template>
@@ -189,11 +209,14 @@
 
   import { useStore } from 'vuex'
   import { ref, computed, watch } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { useRouter, useRoute } from 'vue-router'
+  import { PARAMETERS_LIST } from '@/constants/settings.js'
 
   const store = useStore();
   const router = useRouter();
+  const route = useRoute();
   
+  let libelleButtonNext = "";
   let selectedModal = ref([true, false, false, false]);
   let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
@@ -213,7 +236,11 @@
   const colorHoverEffect = store.getters.getColorHoverEffectSettings
   
   function stepBack(e) {
-    moveTowardsModal(e, -1);
+    if (route.params.section) {
+      router.push({ name: 'jeu' });
+    } else {
+      moveTowardsModal(e, -1);
+    }
   }
 
   // 1ere fenêtre modale
@@ -256,7 +283,12 @@
       });
       //console.log("playersArray", playersArray); //TEST
       store.commit('SET_PLAYERS_NAMES', playersArray);  // Ajout enregistremnt dans var. du store 'players'
-      moveTowardsModal(e, 1);
+      
+      if (route.params.section) {
+        router.push({ name: 'jeu' });
+      } else {
+        moveTowardsModal(e, 1);
+      }
     }
   }
 
@@ -265,7 +297,12 @@
     if(!!nbPairOfCards.value != false) {
       errorSelectNbPair.value = false;
       store.commit('SET_NB_PAIR_OF_CARDS', nbPairOfCards.value);  // Ajout enregistrement dans var. du store 'nb_pair_of_cards'
-      moveTowardsModal(e, 1);
+      
+      if (route.params.section) {
+        router.push({ name: 'jeu' });
+      } else {
+        moveTowardsModal(e, 1);
+      }
     } else {
       errorSelectNbPair.value = true;
     }
@@ -276,7 +313,12 @@
     if(!!theme.value != false) {
       errorTheme.value = false;
       store.commit('SET_THEME', theme.value);  // Ajout enregistremnt dans var. du store 'theme'
-      moveTowardsModal(e, 1);
+      
+      if (route.params.section) {
+        router.push({ name: 'jeu' });
+      } else {
+        moveTowardsModal(e, 1);
+      }
     } else {
       errorTheme.value = true;
     }
@@ -304,7 +346,7 @@
   watch(nbOfPlayers, (val) => {
     let upToDateInputsPlayers = [],
         upToDateMsgErrors = [];
-    for(var i=0; i < parseInt(val); i++) {
+    for(let i=0; i < parseInt(val); i++) {
       // Affectat° tableau saisie champ nom des joueurs
       let content = !!inputsPlayers.value[i] == false ? "" : inputsPlayers.value[i];
       upToDateInputsPlayers.push(content);
@@ -317,6 +359,24 @@
     inputsPlayers.value = [...upToDateInputsPlayers];
     msgErrorInputsPlayers.value = [...upToDateMsgErrors];
   });  
+
+
+  // Pour détecter si on vient du menu pour changer les paramètres
+  watch(
+    () => route.params.section,
+    (val) => {
+      libelleButtonNext = (typeof val !== "undefined" ? "valider" : "suivant");
+
+      const param = PARAMETERS_LIST.find(p => p.id === val);
+      if (param) {
+        const temp_selectedModal = [false, false, false, false];
+        temp_selectedModal[param.modalIndex] = true;
+        selectedModal.value = [...temp_selectedModal];
+        currentModal.value = param.modalIndex + 1;
+      }
+    },
+    { immediate: true }
+  )
 </script>
 
 <style scoped lang="scss">
@@ -472,6 +532,11 @@ input[type="range"]::-webkit-slider-runnable-track  {
   box-shadow: none;
   border: none;
   background: transparent;
+}
+.icon {
+  position: absolute;
+  z-index: 1;
+  transform: translateX(1vw);
 }
 
 .icon-left,

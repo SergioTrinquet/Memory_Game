@@ -33,6 +33,11 @@
           Rejouer avec les mêmes paramètres
       </BaseButton>
     </template>
+
+    <template v-slot:select-change-parametres>
+      <SelectParameter />
+    </template>
+
   </Header> 
 
 
@@ -87,6 +92,7 @@
   import Header from '@/components/Header.vue'
   import Message from '@/components/Message.vue'
   import Card from '@/components/Card.vue'
+  import SelectParameter from '@/components/SelectParameter.vue'
 
   import { onMounted, defineAsyncComponent, computed } from 'vue'
   import { useStore } from 'vuex'

@@ -28,7 +28,7 @@
             type: String,
             required: false,
             validator(value) {
-                const acceptedValues = ['action'];
+                const acceptedValues = ['action', 'menu'];
                 if(!acceptedValues.includes(value)) {
                     console.error(`La prop 'variant' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value}`);
                     return false;
@@ -158,6 +158,18 @@
                     --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
                 }
                 background-color: var(--button-intro-hover-slide);
+            }
+        }
+
+        &.variant-menu {
+            border: solid 4px var(--color-primary);
+            color: var(--color-primary);
+            background-color: transparent;
+            font-weight: 500;
+
+            &:after {
+                background-color: var(--color-primary);
+                color: #fff;
             }
         }
     }

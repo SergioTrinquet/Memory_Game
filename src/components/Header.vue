@@ -17,6 +17,8 @@
                 </BaseButton>
                 
                 <slot name="btn-rejouer"></slot>
+
+                <slot name="select-change-parametres"></slot>
             </div>
         </teleport>
         <div class="wrapper-icon-menu">

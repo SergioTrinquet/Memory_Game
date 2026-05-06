@@ -13,7 +13,7 @@ const routes = [
         component: Intro 
     },
     { 
-        path: '/settings', 
+        path: '/settings/:section?', 
         name: 'parametres', 
         component: Settings 
     },
