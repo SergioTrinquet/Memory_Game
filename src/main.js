@@ -8,9 +8,9 @@ import './assets/css/main.css'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
-import { faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons'
 /* add icons to the library */
-library.add(faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle)
+library.add(faArrowRightLong, faArrowLeftLong, faCheck, faBars, faXmark, faExclamationCircle, faArrowRotateLeft)
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
