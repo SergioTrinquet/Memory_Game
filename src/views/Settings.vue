@@ -210,13 +210,22 @@
   import { useStore } from 'vuex'
   import { ref, computed, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
-  import { PARAMETERS_LIST } from '@/constants/settings.js'
+  import { 
+    PARAMETERS_LIST, 
+    OPTION_NB_PAIRS, 
+    OPTION_THEMES, 
+    MAX_NB_PLAYERS 
+  } from '@/constants/settings.js'
 
   const store = useStore();
   const router = useRouter();
   const route = useRoute();
   
   let libelleButtonNext = "";
+  const maxNbPlayers = MAX_NB_PLAYERS;
+  const optionNbPairs = OPTION_NB_PAIRS.map(p => p.nb_pairs);
+  const optionThemes = OPTION_THEMES.map(t => t.intitule);
+  
   let selectedModal = ref([true, false, false, false]);
   let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
@@ -228,12 +237,9 @@
   let errorTheme = ref(false);
   let timeDisplayCard = ref(5);
 
-  const maxNbPlayers = computed(() => store.state.max_nb_players);
-  const optionNbPairs = computed(() => store.state.option_nb_pairs.map(p => p.nb_pairs));
-  const optionThemes = computed(() => store.state.option_themes.map(t => t.intitule));
   const objPlayer = computed(() => store.state.player);
 
-  const colorHoverEffect = store.getters.getColorHoverEffectSettings
+  const colorHoverEffect = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-dark-1').trim();
   
   function stepBack(e) {
     if (route.params.section) {

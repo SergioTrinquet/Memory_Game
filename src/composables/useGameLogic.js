@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { CONGRATULATIONS_MESSAGES } from '@/constants/settings.js'
 
 export function useGameLogic(store) {
     const contentMsg = ref({ text: "", animationName: "" });
@@ -98,10 +99,12 @@ export function useGameLogic(store) {
     }
 
     // Génération message personnalisé qd coups gagnants successifs
-    const maxNbCongratsMessage = store.getters.getMaxNbCongratulationsMessage;
     function getCongratsMessage(count) {
-        let id = (count > maxNbCongratsMessage ? maxNbCongratsMessage : count);
-        return (count < maxNbCongratsMessage ? "" : count) + store.getters.getCongratulationsMessageById(id);
+        const nbMaxCongratsMsgs = CONGRATULATIONS_MESSAGES.length;
+        const id = (count > nbMaxCongratsMsgs ? nbMaxCongratsMsgs : count);
+        const obj = CONGRATULATIONS_MESSAGES.find(msg => msg.tour == id);
+        const msg = obj ? obj.mot : "";
+        return (count < nbMaxCongratsMsgs ? "" : count) + msg;
     }
 
     // Génération message final qd ttes les cartes sont trouvées

@@ -26,6 +26,7 @@
 <script setup>
     import { defineProps, defineEmits, computed } from 'vue'
     import { useStore } from 'vuex'
+    import { OPTION_THEMES } from '@/constants/settings.js'
         
     // Les props
     const props = defineProps({ 
@@ -67,7 +68,7 @@
 
     // Chargement image carte
     const store = useStore()
-    const selectedTheme = computed(() => store.state.theme !== null ? store.state.theme : store.state.option_themes[0].intitule); // Soit on récpère le thème sélectionné par l'utilisateur, soit s'il n'y en a pas, on prend le 1er dans la liste des thèmes
+    const selectedTheme = computed(() => store.state.theme !== null ? store.state.theme : OPTION_THEMES[0].intitule); // Soit on récpère le thème sélectionné par l'utilisateur, soit s'il n'y en a pas, on prend le 1er dans la liste des thèmes
     const pathImg = require(`@/assets/imgs/${selectedTheme.value}/${selectedTheme.value}.svg`);
     const sizeImg = 1024;
     const cols = 4

@@ -21,22 +21,18 @@
 </template>
 
 <script setup>
+    import { computed, defineEmits, defineProps, ref } from 'vue'
     import BaseButton from '@/components/base/BaseButton.vue'
-    
-    import { computed, defineEmits, defineProps } from 'vue'
-
-    import { useStore } from 'vuex'
-    const store = useStore();
 
     const prop = defineProps({ gridDispoProposition: Object })
 
-    const displayMsgInfo = computed(() => store.state.msg_bt_change_dispo_cards)
-    
+    let displayMsgInfo = ref(true)
+
     // Libellé bouton
     const rowsColumnsGridCards = computed(() => `${prop.gridDispoProposition.rows} lignes X ${prop.gridDispoProposition.columns} colonnes`)
 
     function closeMsgInfo() {
-        store.commit('SET_DISPLAY_MSG_BT_CHANGE_DISPO_CARDS', false)
+        displayMsgInfo.value = false;
     }
 
     // Qd click bouton pour changer la disposition des cartes lorsque redimentionnement écran / chgmt orientation mobile

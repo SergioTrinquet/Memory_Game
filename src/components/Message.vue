@@ -10,11 +10,9 @@
 
 
 <script setup>
-    import { useStore } from 'vuex'
     import { defineProps, ref, watch } from 'vue'
     import anime from 'animejs/lib/anime.es.js';
-
-    const store = useStore()
+    import { ANIMATION_MESSAGES } from '@/constants/settings.js'
 
     const props = defineProps({ 
         content: { 
@@ -64,13 +62,13 @@
         });
 
         for (const msg of messages) {
-            if (!store.getters.isAnimationNameValid(msg.animationName)) {
+            const animationConfig = ANIMATION_MESSAGES.find(a => a.nom === msg.animationName);
+
+            if (!animationConfig) {
                 localMsg.value = msg.text;
                 console.error(`Animation "${msg.animationName}" inconnue`);        
                 continue;
             }
-
-            const animationConfig = store.getters.getMessageAnimationByName(msg.animationName);
 
             // On change le texte juste avant de lancer sa séquence d'animation    
             tl.add({
@@ -78,7 +76,7 @@
                 begin: () => { localMsg.value = msg.text; }
             });
 
-            // Ajout des étapes d'animation définies dans le store
+            // Ajout des étapes d'animation définies dans les constantes
             animationConfig.animations.forEach(anim => tl.add(anim));
         }
 
