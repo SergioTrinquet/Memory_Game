@@ -39,10 +39,8 @@
     import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
     import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
-    import { useStore } from 'vuex'
 
-    const store = useStore()
-    const primaryColor = store.getters.getPrimaryColor
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
     // Redirection vers la page d'accueil q click sur bt 'Accueil'
     const router = useRouter();

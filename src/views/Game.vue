@@ -94,7 +94,7 @@
   import Card from '@/components/Card.vue'
   import SelectParameter from '@/components/SelectParameter.vue'
 
-  import { onMounted, defineAsyncComponent, computed } from 'vue'
+  import { onMounted, defineAsyncComponent } from 'vue'
   import { useStore } from 'vuex'
   import { useRouter } from 'vue-router'
 
@@ -108,7 +108,7 @@
 
   const store = useStore();
   const router = useRouter();
-  const primaryColor = computed(() => store.getters.getPrimaryColor);
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
   // Logique de la grille responsive
   const { 
