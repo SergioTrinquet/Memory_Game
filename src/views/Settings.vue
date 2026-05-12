@@ -31,16 +31,13 @@
       </div>
 
       <template v-slot:buttons>
-        <BaseButton
-          @click="recordNbPlayers"
+        <ButtonSettings 
           class="bt-navigation"
-          :hover-bg-slide="{color: colorHoverEffect}"
-        >
-          <!-- suivant  -->{{ libelleButtonNext }}
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
+          @click="recordNbPlayers"
+          :direction="BUTTON_DIRECTION.FORWARD" 
+          :is-from-menu-change-parameter="fromMenuChangeParameter" 
+          :label-centered="true"
+        />
       </template>
     </CustomModal>
 
@@ -62,28 +59,18 @@
         </div>
 
         <template v-slot:buttons>
-          <BaseButton
+          <ButtonSettings 
+            class="bt-navigation"
             @click="stepBack"
+            :direction="BUTTON_DIRECTION.BACKWARD" 
+            :is-from-menu-change-parameter="fromMenuChangeParameter" 
+          />
+          <ButtonSettings 
             class="bt-navigation"
-            text-align-right
-            :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
-          >
-            précédent 
-            <template v-slot:icon-left>
-              <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-            </template>
-          </BaseButton>
-          <BaseButton
             @click="recordNbPairs"
-            class="bt-navigation"
-            text-align-left
-            :hover-bg-slide="{ color: colorHoverEffect }"
-          >
-            <!-- suivant  -->{{ libelleButtonNext }}
-            <template v-slot:icon-right>
-              <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-            </template>
-          </BaseButton>
+            :direction="BUTTON_DIRECTION.FORWARD" 
+            :is-from-menu-change-parameter="fromMenuChangeParameter" 
+          />
         </template>
     </CustomModal>
 
@@ -105,49 +92,18 @@
       </div>
 
       <template v-slot:buttons>
-          <BaseButton
-            @click="stepBack"
-            class="bt-navigation"
-            text-align-right
-            :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
-          >
-            précédent 
-            <template v-slot:icon-left>
-              <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-            </template>
-          </BaseButton>
-
-          <BaseButton
-            @click="recordTheme"
-            class="bt-navigation"
-            text-align-left
-            :hover-bg-slide="{ color: colorHoverEffect }"
-          >
-            <!-- suivant  -->{{ libelleButtonNext }}
-            <template v-slot:icon-right>
-              <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-            </template>
-          </BaseButton>
-
-
-
-          <!-- ///////////////// -->
-          <!-- <BaseButton
-            @click="stepBack"
-            class="bt-navigation"
-          >
-            annuler 
-            <font-awesome-icon icon="fa-arrow-rotate-left" class="icon" />
-          </BaseButton>
-
-          <BaseButton
-            @click="recordTheme"
-            class="bt-navigation"
-          >
-            {{ libelleButtonNext }}
-            <font-awesome-icon icon="fa-check" class="icon" />
-          </BaseButton> -->
-          <!-- ///////////////// -->
+        <ButtonSettings 
+          class="bt-navigation"
+          @click="stepBack"
+          :direction="BUTTON_DIRECTION.BACKWARD" 
+          :is-from-menu-change-parameter="fromMenuChangeParameter" 
+        />
+        <ButtonSettings 
+          class="bt-navigation"
+          @click="recordTheme"
+          :direction="BUTTON_DIRECTION.FORWARD" 
+          :is-from-menu-change-parameter="fromMenuChangeParameter" 
+        />
       </template>
     </CustomModal>
 
@@ -173,29 +129,18 @@
       </div>    
 
       <template v-slot:buttons>
-        <BaseButton
+        <ButtonSettings 
+          class="bt-navigation"
           @click="stepBack"
+          :direction="BUTTON_DIRECTION.BACKWARD"
+          :is-from-menu-change-parameter="fromMenuChangeParameter" 
+        />
+        <ButtonSettings 
           class="bt-navigation"
-          text-align-right
-          :hover-bg-slide="{ color: colorHoverEffect, from: 'right' }"
-        >
-          précédent 
-          <template v-slot:icon-left>
-            <font-awesome-icon icon="arrow-left-long" class="icon-left" />
-          </template>
-        </BaseButton>
-
-        <BaseButton
           @click="recordTimeVisibleCard"
-          class="bt-navigation"
-          text-align-left
-          :hover-bg-slide="{ color: colorHoverEffect }"
-        >
-          <!-- suivant  -->{{ libelleButtonNext }}
-          <template v-slot:icon-right>
-            <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
-          </template>
-        </BaseButton>
+          :direction="BUTTON_DIRECTION.FORWARD"
+          :is-from-menu-change-parameter="fromMenuChangeParameter" 
+        />
       </template>
     </CustomModal>
 
@@ -205,7 +150,7 @@
 <script setup>
   import Header from '@/components/Header.vue'
   import CustomModal from '@/components/CustomModal.vue'  
-  import BaseButton from '@/components/base/BaseButton.vue'
+  import ButtonSettings from '@/components/ButtonSettings.vue';
 
   import { useStore } from 'vuex'
   import { ref, computed, watch } from 'vue'
@@ -214,18 +159,18 @@
     PARAMETERS_LIST, 
     OPTION_NB_PAIRS, 
     OPTION_THEMES, 
-    MAX_NB_PLAYERS 
+    MAX_NB_PLAYERS,
+    BUTTON_DIRECTION
   } from '@/constants/settings.js'
 
   const store = useStore();
   const router = useRouter();
   const route = useRoute();
   
-  let libelleButtonNext = "";
   const maxNbPlayers = MAX_NB_PLAYERS;
   const optionNbPairs = OPTION_NB_PAIRS.map(p => p.nb_pairs);
   const optionThemes = OPTION_THEMES.map(t => t.intitule);
-  
+
   let selectedModal = ref([true, false, false, false]);
   let nbOfPlayers = ref("1 joueur");
   let nbPairOfCards = ref(null);
@@ -236,11 +181,10 @@
   let theme = ref(null);
   let errorTheme = ref(false);
   let timeDisplayCard = ref(5);
+  let fromMenuChangeParameter = ref(false); // pour savoir si on vient du menu pour changer les paramètres ou pas (car si oui, le libellé du bouton "suivant" doit être "valider")
 
   const objPlayer = computed(() => store.state.player);
 
-  const colorHoverEffect = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-dark-1').trim();
-  
   function stepBack(e) {
     if (route.params.section) {
       router.push({ name: 'jeu' });
@@ -371,7 +315,8 @@
   watch(
     () => route.params.section,
     (val) => {
-      libelleButtonNext = (typeof val !== "undefined" ? "valider" : "suivant");
+
+      fromMenuChangeParameter.value = !!val; // true si on vient du menu pour changer les paramètres, false sinon
 
       const param = PARAMETERS_LIST.find(p => p.id === val);
       if (param) {
@@ -539,12 +484,12 @@ input[type="range"]::-webkit-slider-runnable-track  {
   border: none;
   background: transparent;
 }
-.icon {
+
+/* .icon {
   position: absolute;
   z-index: 1;
   transform: translateX(1vw);
 }
-
 .icon-left,
 .icon-right {
   position: absolute;
@@ -557,22 +502,22 @@ input[type="range"]::-webkit-slider-runnable-track  {
 }
 .icon-right {
   right: var(--icon-arrow-position);
-}
-
+} */
+/* A METTRE EN COMMENTAIRE */
 button.bt-navigation {
   background-color: var(--color-primary);
   color: #fff;
   height: max(6vh, 34px);
   width: max(160px, 50%);
   font-size: clamp(20px, 3.3vmin, 28px);
-
+  
   &:first-child {
     margin: 0 1.5vh 0 0;
   }
   &:last-child {
     margin: 0 0 0  1.5vh;
   }
-
+  
   &:hover {
     --icon-arrow-move: 1vw;
     .icon-left {
@@ -583,6 +528,9 @@ button.bt-navigation {
     }
   }
 }
+/* FIN - A METTRE EN COMMENTAIRE */
+
+
 
 #first-modal {
   button.bt-navigation {

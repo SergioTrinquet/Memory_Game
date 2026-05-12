@@ -96,3 +96,14 @@ export const ANIMATION_MESSAGES = [
         ]
     }
 ];
+
+
+export const BUTTON_DIRECTION = {
+  BACKWARD: 'backward',
+  FORWARD: 'forward'
+}
+
+//// A FAIRE /////
+// export const BUTTON_VARIANTS = {} // 'action', 'menu'
+// export const BUTTON_HOVER_BG_SIDE = {} // 'left', 'right'
+// 'from', 'color' // Voir si encore utile

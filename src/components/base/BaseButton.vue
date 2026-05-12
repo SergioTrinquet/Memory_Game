@@ -51,7 +51,7 @@
         hoverBgSlide: {
             type: Object,
             required: false,
-            default: () => { return { from: "left", color: "unset" } },
+            default: () => { return {/*  from: "left", color: "unset"  */} },
             validator(value) {
                 let msgError = "";
                 if('from' in value) {
