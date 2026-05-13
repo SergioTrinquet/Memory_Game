@@ -1,11 +1,5 @@
 <template>
-    <!-- <button class="select-parameters">
-        <div id="main-label" @click="toggleParameters">Changer un paramètre</div>
-        <div @click="redirectToParameter">
-            <span v-for="(parameter, i) in parameters" :key="i" :id="parameter.id">{{ parameter.label }}</span>
-        </div>
-    </button> -->
-    <BaseButton variant="menu" class="select-params">
+    <BaseButton :variant="BUTTON_VARIANTS.MENU">
         <span id="main-label" @click="toggleParameters">Changer un paramètre</span>
         <ul @click="redirectToParameter">
             <li v-for="(parameter, i) in parameters" :key="i" >
@@ -18,7 +12,7 @@
 <script setup>
     import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
-    import { PARAMETERS_LIST } from '@/constants/settings.js'
+    import { PARAMETERS_LIST, BUTTON_VARIANTS } from '@/constants/settings.js'
     const router = useRouter();
 
     const parameters = PARAMETERS_LIST;
@@ -36,56 +30,46 @@
 </script>
 
 <style scoped>
-/* .select-parameters {
-    border-style: solid;
+button {
+    --padding-size: 3vmin;
+    --color-delimitation-menu-submenu: var(--color-primary);
 
     border-radius: 5vh;
-    border-width: 4px;
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background-color: transparent;
-
-    font-weight: 500;
-    cursor: pointer;
+    padding: 0;
 
     #main-label {
-        font-size: clamp(18px, 3.5vw, 26px);
-        text-align: center;
+        display: grid;
+        padding: var(--padding-size);
 
-        & + * {
-            display: none;
-            flex-direction: column;
-        }
-        &.list-parameters-hidden + * {
-            display: flex;
-        }
-    }
-} */
-
-
-/* style uniquement pour la version avec BaseButton */
-.select-params {
-    border-radius: 5vh;
-
-    #main-label {
         & + * {
             /* display: none; */
-            list-style: none;
-
+            
             transition: all 0.3s ease-in-out;
             height: 0;
             overflow: hidden;
             interpolate-size: allow-keywords;
+            
+            list-style: none;
+            padding-inline: var(--padding-size);
         }
         &.list-parameters-hidden + * {
             display: block;
-            margin: 1vh 0 0 0;
             height: auto;
         }
     }
-
+    
     li {
-        padding: 0.5vh 0;
+        padding: 0.6vh 0;
+        
+        &:first-child {
+            transition: border-top 0.3s ease-in-out;
+            border-top: dashed 1px var(--color-delimitation-menu-submenu);
+            padding-top: calc(var(--padding-size) - 1vmin);
+        }
+        &:last-child {
+            padding-bottom: var(--padding-size);
+        }
+
         span {
             position: relative;
             &:after {
@@ -95,7 +79,7 @@
                 height: 2px;
                 top: 100%;
                 left: 50%;
-                background-color: #fff;
+                background-color: var(--color-secondary-bt-menu);
                 border-radius:3px;
                 transition: all 0.2s ease-in-out;
             }
@@ -104,6 +88,10 @@
                 width: 100%;
             }
         }
+    }
+
+    &:hover li:first-child {
+        --color-delimitation-menu-submenu: var(--color-secondary-bt-menu);
     }
 }
 </style>

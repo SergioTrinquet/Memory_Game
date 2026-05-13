@@ -180,7 +180,7 @@
             background-color: transparent;
             font-weight: 500;
             &:hover {
-                color: #fff;
+                color: var(--color-secondary-bt-menu);
             }
             &:after {
                 background-color: var(--color-primary);
