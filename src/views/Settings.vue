@@ -9,6 +9,7 @@
       :show="selectedModal[0]" 
       :legend="'Sélectionnez le nombre de joueurs'"
       :current-modal="currentModal"
+      :show-step-label="!fromMenuChangeParameter"
     >
       <div class="modal-content">
             <select v-model="nbOfPlayers"> 
@@ -31,6 +32,11 @@
       </div>
 
       <template v-slot:buttons>
+        <ButtonSettings v-if="fromMenuChangeParameter"
+            @click="stepBack"
+            :direction="BUTTON_DIRECTION.BACKWARD" 
+            :is-from-menu-change-parameter="fromMenuChangeParameter" 
+          />
         <ButtonSettings 
           @click="recordNbPlayers"
           :direction="BUTTON_DIRECTION.FORWARD" 
@@ -46,6 +52,7 @@
       :show="selectedModal[1]" 
       :legend="'Combien de paires identiques'"
       :current-modal="currentModal"
+      :show-step-label="!fromMenuChangeParameter"
     >
         <div class="select-settings-wrapper">
           <select 
@@ -77,6 +84,7 @@
       :show="selectedModal[2]" 
       :legend="'Choisissez un thème'"
       :current-modal="currentModal"
+      :show-step-label="!fromMenuChangeParameter"
     >
       <div class="select-settings-wrapper">
         <select 
@@ -108,6 +116,7 @@
       :show="selectedModal[3]" 
       :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
       :current-modal="currentModal"
+      :show-step-label="!fromMenuChangeParameter"
     >
       <div class="range-settings-wrapper">
         <div class="range">
@@ -278,7 +287,8 @@
     let order = e.target.closest('[data-order]').dataset.order;
     const newOrder = parseInt(order) + step;
     // Affectat° var. qui va afficher et cacher les bonnes modales
-    let temp_selectedModal = [false, false, false, false];
+    // let temp_selectedModal = [false, false, false, false];
+    let temp_selectedModal = new Array(PARAMETERS_LIST.length).fill(false);
     temp_selectedModal[newOrder] = true;
     selectedModal.value = [...temp_selectedModal];
     // Mise à jour n° de la modale
@@ -313,7 +323,7 @@
 
       const param = PARAMETERS_LIST.find(p => p.id === val);
       if (param) {
-        const temp_selectedModal = [false, false, false, false];
+        const temp_selectedModal = new Array(PARAMETERS_LIST.length).fill(false); // => [false, false, false, false]
         temp_selectedModal[param.modalIndex] = true;
         selectedModal.value = [...temp_selectedModal];
         currentModal.value = param.modalIndex + 1;

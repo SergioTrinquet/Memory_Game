@@ -1,6 +1,6 @@
 <template>
     <Modal :show="props.show">
-        <div class="etapes">
+        <div class="etapes" :class="{ 'hidden': !props.showStepLabel }">
             <div>étape {{ props.currentModal }} sur 4</div>
         </div>
         <div class="modal-legend">{{ props.legend }}</div>
@@ -29,6 +29,10 @@
         currentModal: {
             type: Number,
             required: true
+        },
+        showStepLabel: {
+            type: Boolean,
+            required: true
         }
     });
 </script>
@@ -39,12 +43,15 @@
     position: absolute;
     z-index: 1;
     top: min(-38px, -1.4em);
-}
-.etapes * {
-    color: #fff;
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 500;
-    font-size: min(5.8vmin, 23px);
+    * {
+        color: #fff;
+        font-family: 'Fredoka', sans-serif;
+        font-weight: 500;
+        font-size: min(5.8vmin, 23px);
+    }
+    &.hidden {
+        display: none;
+    }
 }
 .modal-legend {
     font-size: clamp(22px, 3.6vmin, 34px);
