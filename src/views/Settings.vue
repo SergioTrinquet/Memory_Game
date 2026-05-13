@@ -32,7 +32,6 @@
 
       <template v-slot:buttons>
         <ButtonSettings 
-          class="bt-navigation"
           @click="recordNbPlayers"
           :direction="BUTTON_DIRECTION.FORWARD" 
           :is-from-menu-change-parameter="fromMenuChangeParameter" 
@@ -60,13 +59,11 @@
 
         <template v-slot:buttons>
           <ButtonSettings 
-            class="bt-navigation"
             @click="stepBack"
             :direction="BUTTON_DIRECTION.BACKWARD" 
             :is-from-menu-change-parameter="fromMenuChangeParameter" 
           />
           <ButtonSettings 
-            class="bt-navigation"
             @click="recordNbPairs"
             :direction="BUTTON_DIRECTION.FORWARD" 
             :is-from-menu-change-parameter="fromMenuChangeParameter" 
@@ -93,13 +90,11 @@
 
       <template v-slot:buttons>
         <ButtonSettings 
-          class="bt-navigation"
           @click="stepBack"
           :direction="BUTTON_DIRECTION.BACKWARD" 
           :is-from-menu-change-parameter="fromMenuChangeParameter" 
         />
         <ButtonSettings 
-          class="bt-navigation"
           @click="recordTheme"
           :direction="BUTTON_DIRECTION.FORWARD" 
           :is-from-menu-change-parameter="fromMenuChangeParameter" 
@@ -130,13 +125,11 @@
 
       <template v-slot:buttons>
         <ButtonSettings 
-          class="bt-navigation"
           @click="stepBack"
           :direction="BUTTON_DIRECTION.BACKWARD"
           :is-from-menu-change-parameter="fromMenuChangeParameter" 
         />
         <ButtonSettings 
-          class="bt-navigation"
           @click="recordTimeVisibleCard"
           :direction="BUTTON_DIRECTION.FORWARD"
           :is-from-menu-change-parameter="fromMenuChangeParameter" 
@@ -485,57 +478,7 @@ input[type="range"]::-webkit-slider-runnable-track  {
   background: transparent;
 }
 
-/* .icon {
-  position: absolute;
-  z-index: 1;
-  transform: translateX(1vw);
-}
-.icon-left,
-.icon-right {
-  position: absolute;
-  z-index: 1;
-  transition: transform 0.2s ease;
-  --icon-arrow-position: 3vw;
-}
-.icon-left {
-  left: var(--icon-arrow-position);
-}
-.icon-right {
-  right: var(--icon-arrow-position);
-} */
-/* A METTRE EN COMMENTAIRE */
-button.bt-navigation {
-  background-color: var(--color-primary);
-  color: #fff;
-  height: max(6vh, 34px);
-  width: max(160px, 50%);
-  font-size: clamp(20px, 3.3vmin, 28px);
-  
-  &:first-child {
-    margin: 0 1.5vh 0 0;
-  }
-  &:last-child {
-    margin: 0 0 0  1.5vh;
-  }
-  
-  &:hover {
-    --icon-arrow-move: 1vw;
-    .icon-left {
-      transform: translateX(calc(-1 * var(--icon-arrow-move)));
-    }
-    .icon-right {
-      transform: translateX(var(--icon-arrow-move));
-    }
-  }
-}
-/* FIN - A METTRE EN COMMENTAIRE */
-
-
-
 #first-modal {
-  button.bt-navigation {
-    margin: 0;
-  }
   input[type="text"], select {
     width: max(160px, 50%);
   }
@@ -554,11 +497,6 @@ button.bt-navigation {
 
   :deep(.libelle) {
     display: none;
-  }
-  .bt-navigation :deep(.icon-left), 
-  .bt-navigation :deep(.icon-right) {
-    position: initial;
-    height: 1.4em;
   }
 
   select {
