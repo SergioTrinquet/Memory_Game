@@ -1,10 +1,10 @@
 <template>
-    <BaseButton v-if="isFromMenuChangeParameter && direction === BUTTON_DIRECTION.BACKWARD">
-        annuler
+    <BaseButton v-if="isFromMenuChangeParameter && direction === BUTTON_DIRECTION.BACKWARD" class="modify-param cancel">
         <font-awesome-icon icon="fa-arrow-rotate-left" class="icon" />
+        annuler
     </BaseButton>
 
-    <BaseButton v-else-if="isFromMenuChangeParameter && direction === BUTTON_DIRECTION.FORWARD">
+    <BaseButton v-else-if="isFromMenuChangeParameter && direction === BUTTON_DIRECTION.FORWARD" class="modify-param validate">
         valider
         <font-awesome-icon icon="fa-check" class="icon" />
     </BaseButton>
@@ -63,11 +63,35 @@
 </script>
 
 <style scoped>
-    .icon {
-        position: absolute;
-        z-index: 1;
-        transform: translateX(1vw);
+    .modify-param {
+        --color-bt-cancel: hsl(348, 90%, 60%);
+        --color-bt-validate: hsl(144, 90%, 30%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        &.cancel {
+            background-color: var(--color-bt-cancel);
+            &:hover {
+                background-color: color-mix(in oklab, var(--color-bt-cancel), hsl(0, 0%, 0%) 10%);
+            }
+        }
+        &.validate {
+            background-color: var(--color-bt-validate);
+            &:hover {
+                background-color: color-mix(in oklab, var(--color-bt-validate), hsl(0, 0%, 0%) 10%);
+            }
+        }
+
+        .libelle svg {
+            font-size: 0.75em;
+        }
+
+        &:hover {
+            background-color: yellow;
+        }
     }
+
     .icon-left,
     .icon-right {
         position: absolute;
@@ -88,8 +112,6 @@
     }
 
     button {
-        background-color: var(--color-primary);
-        color: #fff;
         height: max(6vh, 34px);
         width: max(160px, 50%);
         font-size: clamp(20px, 3.3vmin, 28px);
