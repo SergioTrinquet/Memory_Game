@@ -23,7 +23,7 @@
                 @click="goToSettings"
                 font-size="max(22px, 4vmin)"
                 rounded
-                variant="action"
+                :variant="BUTTON_VARIANTS.ACTION"
             >
                 Jouer une partie
             </BaseButton>
@@ -36,6 +36,7 @@
     import Card from '@/components/Card.vue'
     import { onMounted, ref } from 'vue'  
     import { useRouter } from 'vue-router'
+    import { BUTTON_VARIANTS } from '@/constants/settings.js'
 
     const router = useRouter();
     const cardState1 = ref(0)

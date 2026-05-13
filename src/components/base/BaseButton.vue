@@ -9,7 +9,9 @@
 </template>
 
 <script>
-    const acceptedValues = ['left', 'right'];
+    import { BUTTON_VARIANTS, BUTTON_HOVER_BG_SIDE } from '@/constants/settings.js'
+    const acceptedValuesHoverFrom = Object.values(BUTTON_HOVER_BG_SIDE);
+    const acceptedValuesVariant = Object.values(BUTTON_VARIANTS);
 </script>  
 <script setup>
     import { defineProps, computed } from 'vue'
@@ -28,9 +30,8 @@
             type: String,
             required: false,
             validator(value) {
-                const acceptedValues = ['action', 'menu'];
-                if(!acceptedValues.includes(value)) {
-                    console.error(`La prop 'variant' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value}`);
+                if(!acceptedValuesVariant.includes(value)) {
+                    console.error(`La prop 'variant' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValuesVariant.join(', ')}. Valeur reçue : ${value}`);
                     return false;
                 }
             }
@@ -55,8 +56,8 @@
             validator(value) {
                 let msgError = "";
                 if('from' in value) {
-                    if (!acceptedValues.includes(value.from)) {
-                        msgError = `La propriété 'from' de la prop 'hover-bg-slide' doit être égale à l'une des valeurs suivantes : ${acceptedValues.join(', ')}. Valeur reçue : ${value.from}`;
+                    if (!acceptedValuesHoverFrom.includes(value.from)) {
+                        msgError = `La propriété 'from' de la prop 'hover-bg-slide' doit être égale à l'une des valeurs suivantes : ${acceptedValuesHoverFrom.join(', ')}. Valeur reçue : ${value.from}`;
                     }
                 }
                 if('color' in value) {
@@ -71,6 +72,17 @@
                     return false;
                 }
             }
+        },
+        hoverBgFrom: {
+            type: String,
+            required: false,
+            default: undefined,
+            validator(value) {
+                if (!acceptedValuesHoverFrom.includes(value)) {
+                    console.error(`La prop 'hover-bg-from' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValuesHoverFrom.join(', ')}. Valeur reçue : ${value}`);
+                    return false;
+                }
+            }
         }
     })
 
@@ -78,8 +90,9 @@
         let classes = "";
         if(props.outline !== 'unset') classes += "outline "
         if(props.rounded) classes += "rounded "
-        if(props.variant) classes += `variant-${props.variant} `
-        if(typeof props.hoverBgSlide !== 'undefined' && 'from' in props.hoverBgSlide && acceptedValues.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
+        if(props.variant && acceptedValuesVariant.includes(props.variant)) classes += `variant-${props.variant} `
+        if(props.hoverBgFrom && acceptedValuesHoverFrom.includes(props.hoverBgFrom)) classes += `hover-from-${props.hoverBgFrom} `
+        // if(typeof props.hoverBgSlide !== 'undefined' && typeof props.hoverBgFrom === 'undefined' && 'from' in props.hoverBgSlide && acceptedValuesHoverFrom.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
         return classes
     })
 
@@ -166,10 +179,20 @@
             color: var(--color-primary);
             background-color: transparent;
             font-weight: 500;
-
+            &:hover {
+                color: #fff;
+            }
             &:after {
                 background-color: var(--color-primary);
-                color: #fff;
+            }
+        }
+
+        &.variant-settings {
+            background-color: var(--color-primary);
+            color: #fff;
+
+            &:after {
+                background-color: var(--color-primary-dark-1);
             }
         }
     }

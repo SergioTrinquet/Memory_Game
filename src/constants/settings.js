@@ -103,7 +103,15 @@ export const BUTTON_DIRECTION = {
   FORWARD: 'forward'
 }
 
-//// A FAIRE /////
-// export const BUTTON_VARIANTS = {} // 'action', 'menu'
-// export const BUTTON_HOVER_BG_SIDE = {} // 'left', 'right'
+export const BUTTON_HOVER_BG_SIDE = {
+    LEFT: 'left',
+    RIGHT: 'right'
+} 
+
+export const BUTTON_VARIANTS = {
+    ACTION: 'action',
+    MENU: 'menu',
+    SETTINGS: 'settings'
+} 
+
 // 'from', 'color' // Voir si encore utile

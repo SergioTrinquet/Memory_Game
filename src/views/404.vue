@@ -7,7 +7,7 @@
         <router-link to="/">
             <BaseButton 
                 rounded
-                variant="action"
+                :variant="BUTTON_VARIANTS.ACTION"
             >
                 Retour à la page d'accueil
             </BaseButton>
@@ -17,6 +17,7 @@
 
 <script setup>
     import BaseButton from '@/components/base/BaseButton.vue'
+    import { BUTTON_VARIANTS } from '@/constants/settings.js'
 </script>
 
 <style scoped>

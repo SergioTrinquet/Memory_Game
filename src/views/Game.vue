@@ -26,8 +26,7 @@
     <template v-slot:btn-rejouer>
       <BaseButton 
           @click="replay" 
-          :outline="primaryColor" 
-          :hover-bg-slide="{ color: primaryColor }" 
+          :variant="BUTTON_VARIANTS.MENU" 
           rounded
       >
           Rejouer avec les mêmes paramètres
@@ -93,6 +92,7 @@
   import Message from '@/components/Message.vue'
   import Card from '@/components/Card.vue'
   import SelectParameter from '@/components/SelectParameter.vue'
+  import { BUTTON_VARIANTS } from '@/constants/settings.js'
 
   import { onMounted, defineAsyncComponent } from 'vue'
   import { useStore } from 'vuex'
@@ -108,7 +108,6 @@
 
   const store = useStore();
   const router = useRouter();
-  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
   // Logique de la grille responsive
   const { 

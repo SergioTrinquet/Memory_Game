@@ -8,9 +8,8 @@
                     @click="toggleMenu"
                 />
                 <BaseButton 
-                    @click="goToAccueil" 
-                    :outline="primaryColor" 
-                    :hover-bg-slide="{ color: primaryColor }" 
+                    @click="goToAccueil"
+                    :variant="BUTTON_VARIANTS.MENU"
                     rounded
                 >
                     Accueil
@@ -39,8 +38,8 @@
     import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
     import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
+    import { BUTTON_VARIANTS } from '@/constants/settings.js'
 
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
 
     // Redirection vers la page d'accueil q click sur bt 'Accueil'
     const router = useRouter();
@@ -129,9 +128,6 @@
     width: min(70%, 700px);
     line-height: clamp(19px, 4.3vw, 26px);
     padding: 3vmin 3vmin;
-    &:hover {
-        color: #fff;
-    }
 }
 #icon-menu,
 #close-menu {
