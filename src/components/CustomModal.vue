@@ -63,5 +63,6 @@
     flex-direction: row;
     justify-content: center;
     background-color: var(--color-primary-light);
+    gap: 3vh;
 }
 </style>
