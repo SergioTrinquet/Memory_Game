@@ -5,7 +5,6 @@
   --color-primary-dark-2: hsl(from var(--color-primary) h s calc(l - 20)); /* 27% */
   --color-primary-dark-3: hsl(from var(--color-primary) h s calc(l - 28)); /* 19% */
   --color-tertiary: hsl(59, 100%, 47%);
-  --color-tertiary-light: hsl(from var(--color-tertiary) h s calc(l + 10));
   --color-error: red;
   --color-secondary-bt-menu: #fff;
   --padding-modal-settings: 3vh;

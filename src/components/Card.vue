@@ -145,6 +145,7 @@
     }
 
     .flip-card-front {
+        --color-tertiary-light: hsl(from var(--color-tertiary) h s calc(l + 10));
         cursor: pointer;
         background-color: var(--color-tertiary-light);
         background-position: center;
