@@ -64,23 +64,33 @@
 
 <style scoped>
     .modify-param {
-        --color-bt-cancel: hsl(348, 90%, 60%);
-        --color-bt-validate: hsl(144, 90%, 30%);
         display: flex;
         align-items: center;
         justify-content: center;
         color: #fff;
+
         &.cancel {
-            background-color: var(--color-bt-cancel);
-            &:hover {
-                background-color: color-mix(in oklab, var(--color-bt-cancel), hsl(0, 0%, 0%) 10%);
-            }
+            --color-modify-param: hsl(348, 90%, 60%);
         }
         &.validate {
-            background-color: var(--color-bt-validate);
+            --color-modify-param: hsl(144, 90%, 30%);
+        }
+        &.cancel, 
+        &.validate {
+            /* V. Originale */
+            background-color: var(--color-modify-param);
             &:hover {
-                background-color: color-mix(in oklab, var(--color-bt-validate), hsl(0, 0%, 0%) 10%);
+                background-color: color-mix(in oklab, var(--color-modify-param), hsl(0, 0%, 0%) 10%);
             }
+
+            /* V2 */
+            /* box-shadow: inset 0 0 0 2px var(--color-modify-param);
+            color: var(--color-modify-param);
+            background-color: color-mix(in oklab, var(--color-modify-param), #fff 80%);
+            &:hover {
+                color:#fff;
+                background-color: var(--color-modify-param);
+            } */
         }
 
         .libelle svg {
