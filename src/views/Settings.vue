@@ -9,26 +9,25 @@
       :show="selectedModal[0]" 
       :legend="'Sélectionnez le nombre de joueurs'"
       :current-modal="currentModal"
-      :show-step-label="!fromMenuChangeParameter"
+      :from-menu-change-param="fromMenuChangeParameter"
     >
       <div class="modal-content">
-            <select v-model="nbOfPlayers"> 
-              <option v-for="nb in maxNbPlayers" :key="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
-            </select>
-      <!-- inputsPlayers: {{ inputsPlayers }} -->  <!-- TEST -->   <!-- msgErrorInputsPlayers: {{ msgErrorInputsPlayers }} -->  <!-- TEST -->
-            <div class="wrapper-joueurs">
-              <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
-                <div class="input-joueur-wrapper">
-                  <input 
-                    type="text" name="joueur" 
-                    :placeholder="'Nom du joueur ' + idx" 
-                    v-model="inputsPlayers[idx - 1]"
-                    :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
-                  /> 
-                  <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
-                </div>
-              </div> 
+        <select v-model="nbOfPlayers"> 
+          <option v-for="nb in maxNbPlayers" :key="nb" :value="nb">{{ nb }} joueur{{ nb > 1 ? 's' : '' }}</option>
+        </select>
+        <div class="wrapper-joueurs">
+          <div v-for="idx in parseInt(nbOfPlayers)" :key="idx" class="lgn-joueur">
+            <div class="input-joueur-wrapper">
+              <input 
+                type="text" name="joueur" 
+                :placeholder="'Nom du joueur ' + idx" 
+                v-model="inputsPlayers[idx - 1]"
+                :class="{ 'error': !!msgErrorInputsPlayers[idx - 1] !== false }" 
+              /> 
+              <div v-if="msgErrorInputsPlayers[idx - 1] != ''" class="msg-error">{{ msgErrorInputsPlayers[idx - 1] }}</div>
             </div>
+          </div> 
+        </div>
       </div>
 
       <template v-slot:buttons>
@@ -52,7 +51,7 @@
       :show="selectedModal[1]" 
       :legend="'Combien de paires identiques'"
       :current-modal="currentModal"
-      :show-step-label="!fromMenuChangeParameter"
+      :from-menu-change-param="fromMenuChangeParameter"
     >
         <div class="select-settings-wrapper">
           <select 
@@ -84,7 +83,7 @@
       :show="selectedModal[2]" 
       :legend="'Choisissez un thème'"
       :current-modal="currentModal"
-      :show-step-label="!fromMenuChangeParameter"
+      :from-menu-change-param="fromMenuChangeParameter"
     >
       <div class="select-settings-wrapper">
         <select 
@@ -116,7 +115,7 @@
       :show="selectedModal[3]" 
       :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
       :current-modal="currentModal"
-      :show-step-label="!fromMenuChangeParameter"
+      :from-menu-change-param="fromMenuChangeParameter"
     >
       <div class="range-settings-wrapper">
         <div class="range">
@@ -158,6 +157,7 @@
   import { ref, computed, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
   import { 
+    SETTINGS_SECTIONS,
     PARAMETERS_LIST, 
     OPTION_NB_PAIRS, 
     OPTION_THEMES, 
@@ -174,7 +174,7 @@
   const optionThemes = OPTION_THEMES.map(t => t.intitule);
 
   let selectedModal = ref([true, false, false, false]);
-  let nbOfPlayers = ref("1 joueur");
+  let nbOfPlayers = ref("1");
   let nbPairOfCards = ref(null);
   let currentModal = ref(1);
   let inputsPlayers = ref([""]);
@@ -184,7 +184,7 @@
   let errorTheme = ref(false);
   let timeDisplayCard = ref(5);
   let fromMenuChangeParameter = ref(false); // pour savoir si on vient du menu pour changer les paramètres ou pas (car si oui, le libellé du bouton "suivant" doit être "valider")
-
+  
   const objPlayer = computed(() => store.state.player);
 
   function stepBack(e) {
@@ -233,7 +233,6 @@
         joueur.nom = input.trim();
         playersArray.push(joueur);
       });
-      //console.log("playersArray", playersArray); //TEST
       store.commit('SET_PLAYERS_NAMES', playersArray);  // Ajout enregistremnt dans var. du store 'players'
       
       if (route.params.section) {
@@ -287,12 +286,36 @@
     let order = e.target.closest('[data-order]').dataset.order;
     const newOrder = parseInt(order) + step;
     // Affectat° var. qui va afficher et cacher les bonnes modales
-    // let temp_selectedModal = [false, false, false, false];
-    let temp_selectedModal = new Array(PARAMETERS_LIST.length).fill(false);
-    temp_selectedModal[newOrder] = true;
-    selectedModal.value = [...temp_selectedModal];
+    selectGoodModal(newOrder);
     // Mise à jour n° de la modale
     currentModal.value = (newOrder + 1);
+  }
+
+  function selectGoodModal(idx) {
+    let temp_selectedModal = new Array(selectedModal.value.length).fill(false); // => [false, false, false, false]
+    temp_selectedModal[idx] = true;
+    selectedModal.value = [...temp_selectedModal];
+  }
+
+  function setInputDataWhenParamToModify(paramId) {
+    switch (paramId) {
+      case SETTINGS_SECTIONS.PLAYERS:
+        nbOfPlayers.value = store.state.players.length;
+        inputsPlayers.value = store.state.players.map(player => player.nom);
+        break;
+      case SETTINGS_SECTIONS.CARDS:
+        nbPairOfCards.value = store.state.nb_pair_of_cards; 
+        break;          
+      case SETTINGS_SECTIONS.THEME:
+        theme.value = store.state.theme;
+        break;        
+      case SETTINGS_SECTIONS.DELAY:
+        timeDisplayCard.value = store.state.time_display_card;
+        break;
+      default:
+        console.error("Erreur : Aucun paramètre ne correspond à celui sélectionné pour être modifié.");
+        break;
+    }
   }
   
   // Pour mettre à jour 'inputsPlayers' qd sélect° nb de joueurs
@@ -318,22 +341,19 @@
   watch(
     () => route.params.section,
     (val) => {
-
       fromMenuChangeParameter.value = !!val; // true si on vient du menu pour changer les paramètres, false sinon
 
       const param = PARAMETERS_LIST.find(p => p.id === val);
       if (param) {
-        const temp_selectedModal = new Array(PARAMETERS_LIST.length).fill(false); // => [false, false, false, false]
-        temp_selectedModal[param.modalIndex] = true;
-        selectedModal.value = [...temp_selectedModal];
-        currentModal.value = param.modalIndex + 1;
+        setInputDataWhenParamToModify(param.id); // Pour pré-remplir le(s) champ(s) de saisie de la modale avec les valeurs actuelles des paramètres à modifier
+        selectGoodModal(param.modalIndex);
       }
     },
     { immediate: true }
   )
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .modals {
   display: flex;
   flex-direction: column;
@@ -342,9 +362,6 @@
   min-height: 100%;
   color: rgb(255, 143, 164);
 }
-/* :deep(.modal) {
-  box-shadow: 0 20px 30px 10px rgba(0,0,0,0.3), inset 0 1.5vh rgba(255, 143, 164, 0.3);
-} */
 
 .select-settings-wrapper,
 .wrapper-joueurs,
@@ -374,12 +391,6 @@
   padding: 1.7vh 0;
   display: flex;
 }
-/* .lgn-joueur label {
-  margin: 0 10px 0 0;
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-} */
 .input-joueur-wrapper {
   position: relative;
   input {
@@ -391,7 +402,6 @@
   color: #6f6f6f;
 }
 
-
 option,
 .msg-error {
   font-size: clamp(14px, 3vw, 17px);
@@ -400,7 +410,6 @@ input,
 select {
   font-size:clamp(17px, 3vmin, 20px);
 }
-
 select {
   width: 35%;
 }

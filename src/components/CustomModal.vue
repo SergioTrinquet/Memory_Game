@@ -1,13 +1,13 @@
 <template>
     <Modal :show="props.show">
-        <div class="etapes" :class="{ 'hidden': !props.showStepLabel }">
+        <div class="etapes" v-if="!props.fromMenuChangeParam">
             <div>étape {{ props.currentModal }} sur 4</div>
         </div>
         <div class="modal-legend">{{ props.legend }}</div>
         
         <slot/>
 
-        <div class="modal-buttons">
+        <div class="modal-buttons" :class="{ 'from-menu-change-param': props.fromMenuChangeParam }">
             <slot name="buttons"></slot>
         </div>
     </Modal>
@@ -30,14 +30,14 @@
             type: Number,
             required: true
         },
-        showStepLabel: {
+        fromMenuChangeParam: {
             type: Boolean,
             required: true
         }
     });
 </script>
 
-<style>
+<style scoped>
 .etapes {
     text-align: center;
     position: absolute;
@@ -49,9 +49,6 @@
         font-weight: 500;
         font-size: min(5.8vmin, 23px);
     }
-    &.hidden {
-        display: none;
-    }
 }
 .modal-legend {
     font-size: clamp(22px, 3.6vmin, 34px);
@@ -59,6 +56,10 @@
     text-align: center;
     border-bottom: dotted min(4px, 0.5vmin) var(--color-primary-light);
     text-wrap: balance;
+
+    /* &:has(~ .from-menu-change-param) {
+        --color-primary-light: hsl(from var(--color-primary) h s l / 0.15);
+    } */
 }
 .modal-legend,
 .modal-buttons {
@@ -71,5 +72,12 @@
     justify-content: center;
     background-color: var(--color-primary-light);
     gap: 3vh;
+
+    &.from-menu-change-param {
+        background-color: transparent;
+        border-top: dotted min(4px, 0.5vmin) var(--color-primary-light);
+
+        /* --color-primary-light: hsl(from var(--color-primary) h s l / 0.15); */
+    }
 }
 </style>
