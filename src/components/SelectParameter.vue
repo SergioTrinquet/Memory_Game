@@ -42,8 +42,6 @@ button {
         padding: var(--padding-size);
 
         & + * {
-            /* display: none; */
-            
             transition: all 0.3s ease-in-out;
             height: 0;
             overflow: hidden;
