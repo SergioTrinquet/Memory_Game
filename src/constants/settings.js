@@ -1,3 +1,11 @@
+/* export const MODALS = [
+    { position:0, legend: "Sélectionnez le nombre de joueurs" },
+    { position:1, legend: "Sélectionnez le nombre de paires de cartes" },
+    { position:2, legend: "Sélectionnez le thème des cartes" },
+    { position:3, legend: "Sélectionnez le délai d'affichage des cartes" }
+] */
+
+
 export const SETTINGS_SECTIONS = {
     PLAYERS: 'players',
     CARDS: 'cards',
@@ -6,9 +14,9 @@ export const SETTINGS_SECTIONS = {
 };
 
 export const PARAMETERS_LIST = [
-    { id: SETTINGS_SECTIONS.THEME, label: 'thème', modalIndex: 2 },
     { id: SETTINGS_SECTIONS.PLAYERS, label: 'joueur(s)', modalIndex: 0 },
-    { id: SETTINGS_SECTIONS.CARDS, label: 'nombre de cartes', modalIndex: 1 },
+    { id: SETTINGS_SECTIONS.CARDS, label: 'nombre de paires', modalIndex: 1 },
+    { id: SETTINGS_SECTIONS.THEME, label: 'thème', modalIndex: 2 },
     { id: SETTINGS_SECTIONS.DELAY, label: 'délai entre les cartes', modalIndex: 3 }
 ];
 
