@@ -13,9 +13,17 @@
     import BaseButton from '@/components/base/BaseButton.vue'
     import { useRouter } from 'vue-router'
     import { PARAMETERS_LIST, BUTTON_VARIANTS } from '@/constants/settings.js'
+    
     const router = useRouter();
 
     const parameters = PARAMETERS_LIST;
+
+    const props = defineProps({
+        checkWhetherGameStartedAndExecute: { 
+            type: Function,
+            default: (fn) => fn()
+         }
+    })
 
     function toggleParameters(e) {
         e.stopPropagation(); // pour éviter que le click sur le label ne déclenche aussi le click sur le menu (car le label est dans le menu)
@@ -24,7 +32,10 @@
     function redirectToParameter(e) {
         const id = e.target.id;
         if(parameters.some(parameter => parameter.id === id)) {
-            router.push({ name: 'parametres', params: { section: id } });
+            // On enveloppe la redirection dans la fonction 'checkWhetherGameStartedAndExecute' passée en prop depuis le composant parent (Header.vue) pour vérifier s'il y a une partie en cours avant de rediriger vers la page de paramètres
+            props.checkWhetherGameStartedAndExecute(() => {
+                router.push({ name: 'parametres', params: { section: id } });
+            });
         }
     }
 </script>

@@ -1,4 +1,9 @@
 <template>
+     <DialogMenu 
+        :open="openDialog" 
+        @dialog-menu-confirm-quit="onDialogMenuConfirmQuit"
+        @dialog-menu-cancel-quit="onDialogMenuCancelQuit"
+     />
     <div class="header">
         <teleport to="body">
             <div id="menu" :class="{ 'display': display }">
@@ -15,9 +20,9 @@
                     Accueil
                 </BaseButton>
                 
-                <slot name="btn-rejouer"></slot>
+                <slot name="btn-rejouer" :check-if-game-started-and-execute="checkAndExecute"></slot>
 
-                <slot name="select-change-parametres"></slot>
+                <slot name="select-change-parametres" :check-if-game-started-and-execute="checkAndExecute"></slot>
             </div>
         </teleport>
         <div class="wrapper-icon-menu">
@@ -36,25 +41,58 @@
 
 <script setup>
     import BaseButton from '@/components/base/BaseButton.vue'
+    import { useStore } from 'vuex'
     import { useRouter } from 'vue-router'
-    import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
+    import { ref, defineProps, defineEmits, watch, useSlots, defineAsyncComponent } from 'vue'
     import { BUTTON_VARIANTS } from '@/constants/settings.js'
+    
+    const store = useStore();
+    const router = useRouter();
+    const slots = useSlots() // pour savoir si slot existe ou pas
 
+    const DialogMenu =  defineAsyncComponent(() => import(/* webpackChunkName: "DialogMenu" */ '@/components/DialogMenu.vue'))
+
+    const display = ref(false);
+    const openDialog = ref(false);
+    const pendingAction = ref(null);
 
     // Redirection vers la page d'accueil q click sur bt 'Accueil'
-    const router = useRouter();
     function goToAccueil() {
-        router.push({ name: 'introduction' }) 
+        checkAndExecute(() => {
+            router.push({ name: 'introduction' });
+        })
     }
 
+    function checkAndExecute(action) {
+        if(store.state.turns_played > 0) {
+            pendingAction.value = action;
+            openDialog.value = true;
+        } else {
+            action();
+        }
+    }
+
+    function onDialogMenuConfirmQuit() {
+        if(pendingAction.value) {
+            pendingAction.value();
+            pendingAction.value = null;
+        }
+        openDialog.value = false;
+        display.value = false;
+    }
+    function onDialogMenuCancelQuit() {
+        pendingAction.value = null;
+        openDialog.value = false;
+        display.value = false;
+    }
+
+    function toggleMenu() {
+        display.value = !display.value;
+    }
 
     // Gestion affichage ou non du menu
-    const display = ref(false);
     const props = defineProps({ displayMenu: Boolean }); 
     const emit = defineEmits(['onCloseMenu']);
-
-    // pour savoir si slot existe ou pas
-    const slots = useSlots()
     
     // Dans 1er argument du 'watch', valeur de la prop passée ds une getter function et non pas directement, sinon erreur.
     // Dans le watch : Affectat° de la valeur de la ref 'display' + emit pour réinitialisation de la prop dans le composant parent
@@ -64,10 +102,6 @@
             display.value = val;
             if(!val) emit('onCloseMenu');
     })
-   
-    function toggleMenu() {
-        display.value = !display.value;
-    }
 </script>
 
 <style scoped>

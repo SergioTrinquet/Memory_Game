@@ -142,7 +142,7 @@ export function useGameLogic(store) {
     
     // Qd click sur coté verso d'une carte
     function flip(order) {
-        if (nbFlipPlayer > nbMaxFlipsPerTurn) return
+        if (nbFlipPlayer >= nbMaxFlipsPerTurn) return
         nbFlipPlayer++;
 
         cardsState.value[order] = 1 // On retourne la carte
@@ -155,6 +155,7 @@ export function useGameLogic(store) {
             // On arrete le countdown si le délai max n'est pas dépassé
             displayCountdown.value = false
             turns.value += 1;
+            store.commit('SET_TURNS', turns.value);
 
             const idx_CardsFlippedPerTurn = cardsFlippedPerTurn.map(c => c.idx);  //console.log("idx_CardsFlippedPerTurn", idx_CardsFlippedPerTurn); //TEST
             // Check si cartes identiques ou pas 
@@ -171,6 +172,7 @@ export function useGameLogic(store) {
         };
         flipCardsMiss();
         turns.value++; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
+        store.commit('SET_TURNS', turns.value);
         displayCountdown.value = false;
     }
 
@@ -202,6 +204,7 @@ export function useGameLogic(store) {
         idxPlayer = 0;
         foundPairs = 0;
         turns.value = 0;
+        store.commit('SET_TURNS', turns.value);
         successiveFoundPairsPerPlayer = 0;
         idxCards.value = setShuffledIdxCards();
         cardsState.value = Array(nbCards.value).fill(0) // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"

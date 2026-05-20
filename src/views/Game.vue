@@ -23,9 +23,9 @@
        </div>
     </div>
 
-    <template v-slot:btn-rejouer>
+    <template #btn-rejouer="{ checkIfGameStartedAndExecute }">
       <BaseButton 
-          @click="replay" 
+          @click="checkIfGameStartedAndExecute(replay)" 
           :variant="BUTTON_VARIANTS.MENU" 
           rounded
       >
@@ -33,8 +33,8 @@
       </BaseButton>
     </template>
 
-    <template v-slot:select-change-parametres>
-      <SelectParameter />
+    <template #select-change-parametres="{ checkIfGameStartedAndExecute }">
+      <SelectParameter :check-whether-game-started-and-execute="checkIfGameStartedAndExecute"/>
     </template>
 
   </Header> 

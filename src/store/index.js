@@ -10,7 +10,8 @@ export default createStore({
         time_display_card: null,
         players: [],
         // Structure de base pour un joueur
-        player: { nom: "", score: 0, turn: false }
+        player: { nom: "", score: 0, turn: false }, // ? <= Vraiment utile ?
+        turns_played: 0
     }
   },
 
@@ -27,6 +28,9 @@ export default createStore({
     SET_TIME_DISPLAY_CARD(state, payload) {
       state.time_display_card = payload;
     },
+    SET_TURNS(state, payload) {
+      state.turns_played = payload;
+    }
   },
 
   getters: {
