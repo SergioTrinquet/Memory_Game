@@ -79,6 +79,7 @@
         }
         openDialog.value = false;
         display.value = false;
+        store.commit('SET_TURNS', 0); // Réinitialisation du nb de tours joués dans le store pour signifier que la partie est terminée et ainsi éviter que le dialog ne s'affiche à nouveau si l'utilisateur retourne au menu
     }
     function onDialogMenuCancelQuit() {
         pendingAction.value = null;
