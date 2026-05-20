@@ -16,7 +16,7 @@
         :hover-bg-from="BUTTON_HOVER_BG_SIDE.RIGHT"
     >
         précédent
-        <template v-slot:icon-left>
+        <template #icon-left>
             <font-awesome-icon icon="arrow-left-long" class="icon-left" />
         </template>
     </BaseButton>
@@ -26,7 +26,7 @@
         :variant="BUTTON_VARIANTS.SETTINGS"
     >
         suivant
-        <template v-slot:icon-right>
+        <template #icon-right>
             <font-awesome-icon icon="arrow-right-long"  class="icon-right" />
         </template>
     </BaseButton>

@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <template v-slot:buttons>
+      <template #buttons>
         <ButtonSettings v-if="fromMenuChangeParameter"
             @click="stepBack"
             :direction="BUTTON_DIRECTION.BACKWARD" 
@@ -63,7 +63,7 @@
           <div v-if="errorSelectNbPair" class="msg-error">Veuillez sélectionner une valeur.</div>
         </div>
 
-        <template v-slot:buttons>
+        <template #buttons>
           <ButtonSettings 
             @click="stepBack"
             :direction="BUTTON_DIRECTION.BACKWARD" 
@@ -95,7 +95,7 @@
         <div v-if="errorTheme" class="msg-error">Veuillez sélectionner un thème.</div>
       </div>
 
-      <template v-slot:buttons>
+      <template #buttons>
         <ButtonSettings 
           @click="stepBack"
           :direction="BUTTON_DIRECTION.BACKWARD" 
@@ -131,7 +131,7 @@
         <div class="result-seconds">{{ timeDisplayCard }} secondes</div>
       </div>    
 
-      <template v-slot:buttons>
+      <template #buttons>
         <ButtonSettings 
           @click="stepBack"
           :direction="BUTTON_DIRECTION.BACKWARD"
