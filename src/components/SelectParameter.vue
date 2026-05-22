@@ -46,7 +46,7 @@ button {
     --color-delimitation-menu-submenu: var(--color-primary);
 
     border-radius: 5vh;
-    padding: 0;
+    padding: 0 !important;
 
     #main-label {
         display: grid;

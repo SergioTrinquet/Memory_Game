@@ -6,9 +6,9 @@
   />
 
   <Header 
-    :displayMenu="displayMenu" 
-    @on-close-menu="setDisplayMenu"
+    v-model:display="displayMenu"
   >
+    <!-- Slot par défaut : Les Scores -->
     <div 
       v-for="(player, i) in players" :key="i" 
       class="player"
@@ -23,7 +23,8 @@
        </div>
     </div>
 
-    <template #btn-rejouer="{ checkIfGameStartedAndExecute }">
+    <!-- Contenu du menu relayé via le Header -->
+    <template #menu-content="{ checkIfGameStartedAndExecute }">
       <BaseButton 
           @click="checkIfGameStartedAndExecute(replay)" 
           :variant="BUTTON_VARIANTS.MENU" 
@@ -31,12 +32,8 @@
       >
           Rejouer avec les mêmes paramètres
       </BaseButton>
-    </template>
-
-    <template #select-change-parametres="{ checkIfGameStartedAndExecute }">
       <SelectParameter :check-whether-game-started-and-execute="checkIfGameStartedAndExecute"/>
     </template>
-
   </Header> 
 
 
@@ -134,7 +131,6 @@
     flip,
     onCountdownOver,
     replay,
-    setDisplayMenu,
     setClearMsg
   } = useGameLogic(store);
 

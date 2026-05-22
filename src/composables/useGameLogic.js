@@ -3,7 +3,7 @@ import { CONGRATULATIONS_MESSAGES } from '@/constants/settings.js'
 
 export function useGameLogic(store) {
     const contentMsg = ref({ text: "", animationName: "" });
-    const displayMenu = ref(null);
+    const displayMenu = ref(false);
     const players = ref([]);
     let nbPlayers = 0;
     let useConfettisComposable = null;
@@ -221,7 +221,6 @@ export function useGameLogic(store) {
         ]
     }
 
-    const setDisplayMenu = () => { displayMenu.value = null };
     const setClearMsg = () => { clearMsg.value = false };
 
     return {
@@ -239,7 +238,6 @@ export function useGameLogic(store) {
         flip,
         onCountdownOver,
         replay,
-        setDisplayMenu,
         setClearMsg
     }
 }

@@ -1,32 +1,7 @@
 <template>
-     <DialogMenu 
-        :open="openDialog" 
-        @dialog-menu-confirm-quit="onDialogMenuConfirmQuit"
-        @dialog-menu-cancel-quit="onDialogMenuCancelQuit"
-     />
     <div class="header">
-        <teleport to="body">
-            <div id="menu" :class="{ 'display': display }">
-                <font-awesome-icon 
-                    icon="xmark" 
-                    id="close-menu" 
-                    @click="toggleMenu"
-                />
-                <BaseButton 
-                    @click="goToAccueil"
-                    :variant="BUTTON_VARIANTS.MENU"
-                    rounded
-                >
-                    Accueil
-                </BaseButton>
-                
-                <slot name="btn-rejouer" :check-if-game-started-and-execute="checkAndExecute"></slot>
-
-                <slot name="select-change-parametres" :check-if-game-started-and-execute="checkAndExecute"></slot>
-            </div>
-        </teleport>
         <div class="wrapper-icon-menu">
-            <div @click="toggleMenu" >
+            <div @click="openMenu" >
                 <font-awesome-icon 
                     icon="bars"
                     id="icon-menu" 
@@ -37,72 +12,52 @@
             <slot />
         </div>
     </div>
+
+    <!-- Le Menu est maintenant intégré ici -->
+    <Menu 
+        :display="internalDisplay" 
+        @close="closeMenu"
+    >
+        <!-- On relaie le contenu personnalisé du Header vers le Menu -->
+        <template #default="slotProps">
+            <slot name="menu-content" v-bind="slotProps" />
+        </template>
+    </Menu>
 </template>
 
 <script setup>
-    import BaseButton from '@/components/base/BaseButton.vue'
-    import { useStore } from 'vuex'
-    import { useRouter } from 'vue-router'
-    import { ref, defineProps, defineEmits, watch, useSlots, defineAsyncComponent } from 'vue'
-    import { BUTTON_VARIANTS } from '@/constants/settings.js'
+    import { ref, useSlots, defineEmits, defineProps, watch, defineAsyncComponent } from 'vue'
     
-    const store = useStore();
-    const router = useRouter();
-    const slots = useSlots() // pour savoir si slot existe ou pas
+    const Menu = defineAsyncComponent(() => import(/* webpackChunkName: "Menu" */ '@/components/Menu.vue'))
 
-    const DialogMenu =  defineAsyncComponent(() => import(/* webpackChunkName: "DialogMenu" */ '@/components/DialogMenu.vue'))
-
-    const display = ref(false);
-    const openDialog = ref(false);
-    const pendingAction = ref(null);
-
-    // Redirection vers la page d'accueil q click sur bt 'Accueil'
-    function goToAccueil() {
-        checkAndExecute(() => {
-            router.push({ name: 'introduction' });
-        })
-    }
-
-    function checkAndExecute(action) {
-        if(store.state.turns_played > 0) {
-            pendingAction.value = action;
-            openDialog.value = true;
-        } else {
-            action();
+    const slots = useSlots()
+    const props = defineProps({
+        display: {
+            type: Boolean,
+            default: false
         }
-    }
-
-    function onDialogMenuConfirmQuit() {
-        if(pendingAction.value) {
-            pendingAction.value();
-            pendingAction.value = null;
-        }
-        openDialog.value = false;
-        display.value = false;
-        store.commit('SET_TURNS', 0); // Réinitialisation du nb de tours joués dans le store pour signifier que la partie est terminée et ainsi éviter que le dialog ne s'affiche à nouveau si l'utilisateur retourne au menu
-    }
-    function onDialogMenuCancelQuit() {
-        pendingAction.value = null;
-        openDialog.value = false;
-        display.value = false;
-    }
-
-    function toggleMenu() {
-        display.value = !display.value;
-    }
-
-    // Gestion affichage ou non du menu
-    const props = defineProps({ displayMenu: Boolean }); 
-    const emit = defineEmits(['onCloseMenu']);
-    
-    // Dans 1er argument du 'watch', valeur de la prop passée ds une getter function et non pas directement, sinon erreur.
-    // Dans le watch : Affectat° de la valeur de la ref 'display' + emit pour réinitialisation de la prop dans le composant parent
-    watch(
-        () => props.displayMenu, 
-        (val) => {
-            display.value = val;
-            if(!val) emit('onCloseMenu');
     })
+
+    const emit = defineEmits(['update:display', 'close-menu'])
+
+    // État interne pour gérer l'ouverture/fermeture localement
+    const internalDisplay = ref(false)
+
+    // On synchronise l'état interne avec la prop (utile pour Game.vue en fin de partie)
+    watch(() => props.display, (val) => {
+        internalDisplay.value = val
+    }, { immediate: true })
+
+    function openMenu() {
+        internalDisplay.value = true
+        emit('update:display', true)
+    }
+
+    function closeMenu() {
+        internalDisplay.value = false
+        emit('update:display', false)
+        emit('close-menu')
+    }
 </script>
 
 <style scoped>
@@ -115,6 +70,7 @@
     padding: var(--margin-header) var(--margin-header) 0 var(--margin-header);
     display: flex;
     gap: clamp(3px, 3vw, 10px);
+    z-index: 1; /* Pour être sûr qu'il soit au dessus du reste mais sous le menu (z-index 2) */
 }
 .content {
     flex-grow: 1;   
@@ -139,33 +95,7 @@
     }
 }
 
-#menu {
-    position: fixed;
-    z-index: 2;
-    top: -100%;
-    height: 100%;
-    width: 100vw;
-    background-color: rgba(255,255,255,0.95);
-    color: var(--color-primary);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: top 0.3s ease-in-out;
-    &.display {
-        top: 0;
-    }
-}
-:deep(button) {
-    font-size: clamp(18px, 3.5vw, 26px);
-    font-weight: 500;
-    margin: 2vh 0;
-    width: min(70%, 700px);
-    line-height: clamp(19px, 4.3vw, 26px);
-    padding: 3vmin 3vmin;
-}
-#icon-menu,
-#close-menu {
+#icon-menu {
     cursor: pointer;
     font-size: clamp(35px, 3vw, 45px);
 }
@@ -190,19 +120,5 @@
 .wrapper-icon-menu:hover > div::after {
     opacity: 1;
     transform: translateY(clamp(35px, 5vmax, 45px));
-}
-#close-menu {
-    position: absolute;
-    top: 3vh;
-    left: 3vh;
-    transition: transform 0.3s ease-in-out;
-    &::before {
-        content: "Fermer";
-        position: absolute;
-
-    }
-    &:hover {
-        transform: rotate(180deg);
-    }
 }
 </style>
