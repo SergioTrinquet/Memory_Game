@@ -56,7 +56,7 @@
     }
 
     function checkAndExecute(action) {
-        if(store.state.turns_played > 0) {
+        if(store.state.game_in_progress) {
             pendingAction.value = action;
             openDialog.value = true;
         } else {
@@ -71,7 +71,7 @@
         }
         openDialog.value = false;
         emit('close');
-        store.commit('SET_TURNS', 0);
+        store.commit('SET_GAME_IN_PROGRESS', false);
     }
 
     function onDialogMenuCancelQuit() {

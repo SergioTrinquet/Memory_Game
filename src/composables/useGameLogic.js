@@ -59,6 +59,7 @@ export function useGameLogic(store) {
                 timeoutDisplayMenu = setTimeout(() => { displayMenu.value = true }, delayDisplayMenu);
                 if(!useConfettisComposable) useConfettisComposable = await useConfettisAsync();
                 useConfettisComposable.displayConfettis();
+                store.commit('SET_GAME_IN_PROGRESS', false);
             } else { //...Sinon si jeu pas encore fini
                 const msgPart = getCongratsMessage(successiveFoundPairsPerPlayer); // Message personnalisé qd coups gagnants successifs
                 text = `!! ${msgPart} ${players.value[idxPlayer].nom.toUpperCase()} !!`;
@@ -145,6 +146,10 @@ export function useGameLogic(store) {
         if (nbFlipPlayer >= nbMaxFlipsPerTurn) return
         nbFlipPlayer++;
 
+        if(!store.state.game_in_progress) {
+            store.commit('SET_GAME_IN_PROGRESS', true);
+        }
+
         cardsState.value[order] = 1 // On retourne la carte
         cardsFlippedPerTurn.push({ "idx": idxCards.value[order], "order": order }); // Enregistrement idx et order de la carte
 
@@ -155,7 +160,6 @@ export function useGameLogic(store) {
             // On arrete le countdown si le délai max n'est pas dépassé
             displayCountdown.value = false
             turns.value += 1;
-            store.commit('SET_TURNS', turns.value);
 
             const idx_CardsFlippedPerTurn = cardsFlippedPerTurn.map(c => c.idx);  //console.log("idx_CardsFlippedPerTurn", idx_CardsFlippedPerTurn); //TEST
             // Check si cartes identiques ou pas 
@@ -172,7 +176,6 @@ export function useGameLogic(store) {
         };
         flipCardsMiss();
         turns.value++; // Incrémentation du nombre de tours joués (même si pas de 2eme carte tournée)
-        store.commit('SET_TURNS', turns.value);
         displayCountdown.value = false;
     }
 
@@ -204,7 +207,6 @@ export function useGameLogic(store) {
         idxPlayer = 0;
         foundPairs = 0;
         turns.value = 0;
-        store.commit('SET_TURNS', turns.value);
         successiveFoundPairsPerPlayer = 0;
         idxCards.value = setShuffledIdxCards();
         cardsState.value = Array(nbCards.value).fill(0) // On réinitialise les cartes : Concrètement cela les retournent et retirent les marqueurs "founds"
