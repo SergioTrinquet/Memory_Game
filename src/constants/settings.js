@@ -119,7 +119,10 @@ export const BUTTON_HOVER_BG_SIDE = {
 export const BUTTON_VARIANTS = {
     ACTION: 'action',
     MENU: 'menu',
-    SETTINGS: 'settings'
+    SETTINGS_PREV: 'settings prev',
+    SETTINGS_NEXT: 'settings next',
+    VALIDATE: 'validate',
+    CANCEL: 'cancel'
 } 
 
 // 'from', 'color' // Voir si encore utile

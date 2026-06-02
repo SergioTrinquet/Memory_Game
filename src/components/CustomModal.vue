@@ -50,16 +50,17 @@
         font-size: min(5.8vmin, 23px);
     }
 }
+
+.modal-legend:has(~ .from-menu-change-param),
+.modal-buttons.from-menu-change-param {
+    --color-primary-light: hsl(from var(--color-primary) h s l / 0.2);
+}
 .modal-legend {
     font-size: clamp(22px, 3.6vmin, 34px);
     line-height: clamp(24px, 4vmin, 34px);
     text-align: center;
     border-bottom: dotted min(4px, 0.5vmin) var(--color-primary-light);
     text-wrap: balance;
-
-    /* &:has(~ .from-menu-change-param) {
-        --color-primary-light: hsl(from var(--color-primary) h s l / 0.15);
-    } */
 }
 .modal-legend,
 .modal-buttons {
@@ -72,12 +73,5 @@
     justify-content: center;
     background-color: var(--color-primary-light);
     gap: 3vh;
-
-    &.from-menu-change-param {
-        background-color: transparent;
-        border-top: dotted min(4px, 0.5vmin) var(--color-primary-light);
-
-        /* --color-primary-light: hsl(from var(--color-primary) h s l / 0.15); */
-    }
 }
 </style>

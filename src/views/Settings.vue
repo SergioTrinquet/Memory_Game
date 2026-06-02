@@ -514,10 +514,6 @@ input[type="range"]::-webkit-slider-runnable-track  {
     }
   }
 
-  :deep(.libelle) {
-    display: none;
-  }
-
   select {
     width: 60%;
   }

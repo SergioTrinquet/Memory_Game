@@ -1,10 +1,16 @@
 <template>
   <button :class="CSS">
-    <slot name="icon-left"></slot>
+     <font-awesome-icon icon="arrow-left-long" class="icon-left" 
+        v-if="props.variant == BUTTON_VARIANTS.SETTINGS_PREV" 
+     />
+    
     <span class="libelle" :class="textAlign">
         <slot />
     </span>
-    <slot name="icon-right"></slot>
+
+    <font-awesome-icon icon="arrow-right-long" class="icon-right" 
+        v-if="props.variant == BUTTON_VARIANTS.SETTINGS_NEXT" 
+    />
   </button>
 </template>
 
@@ -41,14 +47,6 @@
             required: false,
             default: 'initial'
         },
-        textAlignLeft: {
-            type: Boolean,
-            required: false 
-        },
-        textAlignRight: {
-            type: Boolean,
-            required: false 
-        },
         hoverBgSlide: {
             type: Object,
             required: false,
@@ -60,26 +58,18 @@
                         msgError = `La propriété 'from' de la prop 'hover-bg-slide' doit être égale à l'une des valeurs suivantes : ${acceptedValuesHoverFrom.join(', ')}. Valeur reçue : ${value.from}`;
                     }
                 }
+                if('bgcolor' in value) {
+                    if(!(typeof value.bgcolor === 'string' && value.bgcolor.trim() !== '')) {
+                        msgError += `\nLa propriété 'bgcolor' de la prop 'hover-bg-slide' doit être une chaîne de caractères non vide. Valeur reçue : ${value.bgcolor}`;
+                    }
+                }
                 if('color' in value) {
                     if(!(typeof value.color === 'string' && value.color.trim() !== '')) {
                         msgError += `\nLa propriété 'color' de la prop 'hover-bg-slide' doit être une chaîne de caractères non vide. Valeur reçue : ${value.color}`;
                     }
-                } else {
-                    msgError += `Il manque la propriété 'color' dans la prop 'hover-bg-slide' passée : ${JSON.stringify(value)}`;
                 }
                 if(msgError) {
                     console.error(msgError);
-                    return false;
-                }
-            }
-        },
-        hoverBgFrom: {
-            type: String,
-            required: false,
-            default: undefined,
-            validator(value) {
-                if (!acceptedValuesHoverFrom.includes(value)) {
-                    console.error(`La prop 'hover-bg-from' du composant BaseButton doit être égale à l'une des valeurs suivantes : ${acceptedValuesHoverFrom.join(', ')}. Valeur reçue : ${value}`);
                     return false;
                 }
             }
@@ -91,15 +81,7 @@
         if(props.outline !== 'unset') classes += "outline "
         if(props.rounded) classes += "rounded "
         if(props.variant && acceptedValuesVariant.includes(props.variant)) classes += `variant-${props.variant} `
-        if(props.hoverBgFrom && acceptedValuesHoverFrom.includes(props.hoverBgFrom)) classes += `hover-from-${props.hoverBgFrom} `
-        // if(typeof props.hoverBgSlide !== 'undefined' && typeof props.hoverBgFrom === 'undefined' && 'from' in props.hoverBgSlide && acceptedValuesHoverFrom.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
-        return classes
-    })
-
-    const textAlign = computed(() => {
-        let classes = "";
-        if(props.textAlignLeft) classes = "text-align-left "
-        if(props.textAlignRight) classes = "text-align-right "
+        if(typeof props.hoverBgSlide !== 'undefined' && 'from' in props.hoverBgSlide && acceptedValuesHoverFrom.includes(props.hoverBgSlide.from)) classes += `hover-from-${props.hoverBgSlide.from} `
         return classes
     })
 </script>
@@ -132,11 +114,9 @@
             font-size: v-bind('props.fontSize');
             width: 100%;
 
-            &.text-align-left {
-                text-align: left;
-            }
-            &.text-align-right {
-                text-align: right;
+            &:hover {
+                transition:all 0.3s ease-in-out;
+                color: v-bind('props.hoverBgSlide.color');
             }
         }
 
@@ -148,7 +128,7 @@
             height: 100%;
             top: 0;
             left: -100%;
-            background-color: v-bind('props.hoverBgSlide.color');
+            background-color: v-bind('props.hoverBgSlide.bgcolor');
             transition: left 0.3s ease-in-out;
         }
         &.hover-from-right:after {
@@ -194,6 +174,84 @@
             &:after {
                 background-color: var(--color-primary-dark-1);
             }
+
+            &.prev {
+                text-align: right;
+                &:after {
+                    left: 100%;
+                }
+                &:hover:after {
+                    left: 0;
+                }
+            }
+            &.next {
+                text-align: left;
+            }
+
+            .icon-left,
+            .icon-right {
+                position: absolute;
+                z-index: 1;
+                transition: transform 0.2s ease;
+                --icon-arrow-position: 3vw;
+
+                @media screen and (max-width: 480px) {
+                    position: initial;
+                    height: 1.4em;
+                }
+            }
+            .icon-left {
+                left: var(--icon-arrow-position);
+            }
+            .icon-right {
+                right: var(--icon-arrow-position);
+            }
+
+            &:hover {
+                --icon-arrow-move: 1vw;
+                .icon-left {
+                    transform: translateX(calc(-1 * var(--icon-arrow-move)));
+                }
+                .icon-right {
+                    transform: translateX(var(--icon-arrow-move));
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                &:has(.icon-left) .libelle,
+                &:has(.icon-right) .libelle {
+                    display: none;
+                }
+            }
+        }
+
+        &.variant-validate, 
+        &.variant-cancel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .libelle > :deep(svg) {
+                font-size: 0.8em;
+            }
+
+            @media screen and (max-width: 480px) {
+                .libelle > *:not(svg) {
+                    display: none;
+                }
+                .libelle > :deep(svg) {
+                    font-size: 1em;
+                }
+            }
+        }
+
+        &.variant-validate {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+        &.variant-cancel {
+            background-color: transparent;
+            color: var(--color-primary);
+            box-shadow: inset 0 0 0 3px var(--color-primary);
         }
     }
 </style>
