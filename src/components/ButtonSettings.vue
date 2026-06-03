@@ -6,7 +6,7 @@
     <!-- <BaseButton 
         v-if="isFromMenuChangeParameter && direction === BUTTON_DIRECTION.BACKWARD" 
         :outline="'var(--color-primary)'"
-        :hover-bg-slide="{from: 'right', bgcolor: 'var(--color-primary)', color: '#fff'}"
+        :hover-bg-slide="{from: BUTTON_HOVER_BG_SIDE.RIGHT, bgcolor: 'var(--color-primary)', color: '#fff'}"
     > -->
         <font-awesome-icon icon="fa-arrow-rotate-left" />
         <span>annuler</span>
@@ -39,7 +39,7 @@
 
 <script setup>
     import BaseButton from '@/components/base/BaseButton.vue'
-    import { BUTTON_DIRECTION, BUTTON_VARIANTS } from '@/constants/settings.js'
+    import { BUTTON_DIRECTION, BUTTON_VARIANTS/*, BUTTON_HOVER_BG_SIDE*/ } from '@/constants/settings.js'
 
     const { direction, isFromMenuChangeParameter, labelCentered } = defineProps({
         direction: { 
