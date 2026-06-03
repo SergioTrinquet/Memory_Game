@@ -116,13 +116,12 @@ export const BUTTON_HOVER_BG_SIDE = {
     RIGHT: 'right'
 } 
 
+import variants from '../assets/scss/_variants.module.scss';
 export const BUTTON_VARIANTS = {
-    ACTION: 'action',
-    MENU: 'menu',
-    SETTINGS_PREV: 'settings prev',
-    SETTINGS_NEXT: 'settings next',
-    VALIDATE: 'validate',
-    CANCEL: 'cancel'
+    ACTION: variants.ACTION,
+    MENU: variants.MENU,
+    SETTINGS_PREV: variants.SETTINGS_PREV,
+    SETTINGS_NEXT: variants.SETTINGS_NEXT,
+    VALIDATE: variants.VALIDATE,
+    CANCEL: variants.CANCEL
 } 
-
-// 'from', 'color' // Voir si encore utile

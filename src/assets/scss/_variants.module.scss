@@ -1,0 +1,16 @@
+// Source de vérité ici pour les variants de boutons, importés dans 'settings.js' et 'BaseButton.vue'
+$variants:(
+    "ACTION": "action",
+    "MENU": "menu",
+    "SETTINGS_PREV": "settings-prev",
+    "SETTINGS_NEXT": "settings-next",
+    "VALIDATE": "validate",
+    "CANCEL": "cancel"
+);
+
+// 2. On exporte pour le JS
+:export {
+    @each $key, $value in $variants {
+        #{$key}: #{$value};
+    }
+}

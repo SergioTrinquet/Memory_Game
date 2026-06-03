@@ -86,7 +86,7 @@
     })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     button {
         padding: 2vmin 3vmin;
         transition: all 0.3s ease-in-out;
@@ -113,9 +113,8 @@
             z-index: 1;
             font-size: v-bind('props.fontSize');
             width: 100%;
-
+            transition:all 0.3s ease-in-out;
             &:hover {
-                transition:all 0.3s ease-in-out;
                 color: v-bind('props.hoverBgSlide.color');
             }
         }
@@ -138,120 +137,116 @@
             left: 0;
         }
 
-        &.variant-action {
-            background-color: var(--color-tertiary); 
-            color: var(--color-primary-dark-2);
-            font-weight: 500;
-            box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
-            white-space: nowrap;
+        @import "../../assets/scss/_variants.module.scss";
+        @each $key, $name in $variants {
+            &.variant-#{$name} {
+                @if $key == "ACTION" {
+                    background-color: var(--color-tertiary);
+                    color: var(--color-primary-dark-2);
+                    font-weight: 500;
+                    box-shadow: 0 0.5vmin 1vmin rgba(0,0,0,0.3);
+                    white-space: nowrap;
 
-            &:after {
-                --button-intro-hover-slide: yellow;
-                @supports (color: hsl(from var(--color-tertiary) h s calc(l + 10))) {
-                    --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
+                    &:after {
+                        --button-intro-hover-slide: yellow;
+                        @supports (color: hsl(from var(--color-tertiary) h s calc(l + 10))) {
+                            --button-intro-hover-slide: hsl(from var(--color-tertiary) h s calc(l + 10));
+                        }
+                        background-color: var(--button-intro-hover-slide);
+                    }
+                } @else if $key == "MENU" {
+                    border: solid 4px var(--color-primary);
+                    color: var(--color-primary);
+                    background-color: transparent;
+                    font-weight: 500;
+                    &:hover {
+                        color: var(--color-secondary-bt-menu);
+                    }
+                    &:after {
+                        background-color: var(--color-primary);
+                    }
+                } @else if $key == "SETTINGS_PREV" or $key == "SETTINGS_NEXT" {
+                    background-color: var(--color-primary);
+                    color: #fff;
+                    &:after {
+                        background-color: var(--color-primary-dark-1);
+                    }
+
+                    @if $key == "SETTINGS_PREV" {
+                        text-align: right;
+                        &:after {
+                            left: 100%;
+                        }
+                        &:hover:after {
+                            left: 0;
+                        }
+                    } @else if $key == "SETTINGS_NEXT" {
+                        text-align: left;
+                    }
+
+                    .icon-left,
+                    .icon-right {
+                        position: absolute;
+                        z-index: 1;
+                        transition: transform 0.2s ease;
+                        --icon-arrow-position: 3vw;
+
+                        @media screen and (max-width: 480px) {
+                            position: initial;
+                            height: 1.4em;
+                        }
+                    }
+                    .icon-left {
+                        left: var(--icon-arrow-position);
+                    }
+                    .icon-right {
+                        right: var(--icon-arrow-position);
+                    }
+
+                    &:hover {
+                        --icon-arrow-move: 1vw;
+                        .icon-left {
+                            transform: translateX(calc(-1 * var(--icon-arrow-move)));
+                        }
+                        .icon-right {
+                            transform: translateX(var(--icon-arrow-move));
+                        }
+                    }
+
+                    @media screen and (max-width: 480px) {
+                        &:has(.icon-left) .libelle,
+                        &:has(.icon-right) .libelle {
+                            display: none;
+                        }
+                    }
+                } @else if $key == "VALIDATE" or $key == "CANCEL" {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    .libelle > :slotted(svg) {
+                        font-size: 0.8em;
+                    }
+
+                    @media screen and (max-width: 480px) {
+                        .libelle > *:not(svg) {
+                            display: none;
+                        }
+                        .libelle > :slotted(svg) {
+                            font-size: 1em;
+                        }
+                    }
+
+                    @if $key == "VALIDATE" {
+                        background-color: var(--color-primary);
+                        color: #fff;
+                    } @else if $key == "CANCEL" {
+                        background-color: transparent;
+                        color: var(--color-primary);
+                        box-shadow: inset 0 0 0 3px var(--color-primary);
+                    }
                 }
-                background-color: var(--button-intro-hover-slide);
             }
         }
 
-        &.variant-menu {
-            border: solid 4px var(--color-primary);
-            color: var(--color-primary);
-            background-color: transparent;
-            font-weight: 500;
-            &:hover {
-                color: var(--color-secondary-bt-menu);
-            }
-            &:after {
-                background-color: var(--color-primary);
-            }
-        }
-
-        &.variant-settings {
-            background-color: var(--color-primary);
-            color: #fff;
-
-            &:after {
-                background-color: var(--color-primary-dark-1);
-            }
-
-            &.prev {
-                text-align: right;
-                &:after {
-                    left: 100%;
-                }
-                &:hover:after {
-                    left: 0;
-                }
-            }
-            &.next {
-                text-align: left;
-            }
-
-            .icon-left,
-            .icon-right {
-                position: absolute;
-                z-index: 1;
-                transition: transform 0.2s ease;
-                --icon-arrow-position: 3vw;
-
-                @media screen and (max-width: 480px) {
-                    position: initial;
-                    height: 1.4em;
-                }
-            }
-            .icon-left {
-                left: var(--icon-arrow-position);
-            }
-            .icon-right {
-                right: var(--icon-arrow-position);
-            }
-
-            &:hover {
-                --icon-arrow-move: 1vw;
-                .icon-left {
-                    transform: translateX(calc(-1 * var(--icon-arrow-move)));
-                }
-                .icon-right {
-                    transform: translateX(var(--icon-arrow-move));
-                }
-            }
-
-            @media screen and (max-width: 480px) {
-                &:has(.icon-left) .libelle,
-                &:has(.icon-right) .libelle {
-                    display: none;
-                }
-            }
-        }
-
-        &.variant-validate, 
-        &.variant-cancel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .libelle > :deep(svg) {
-                font-size: 0.8em;
-            }
-
-            @media screen and (max-width: 480px) {
-                .libelle > *:not(svg) {
-                    display: none;
-                }
-                .libelle > :deep(svg) {
-                    font-size: 1em;
-                }
-            }
-        }
-
-        &.variant-validate {
-            background-color: var(--color-primary);
-            color: #fff;
-        }
-        &.variant-cancel {
-            background-color: transparent;
-            color: var(--color-primary);
-            box-shadow: inset 0 0 0 3px var(--color-primary);
-        }
-    }
+    } 
 </style>
