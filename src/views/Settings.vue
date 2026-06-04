@@ -113,7 +113,7 @@
     <CustomModal 
       data-order="3"
       :show="selectedModal[3]" 
-      :legend="'Laps de temps max. entre l\'apparition des 2 cartes'"
+      :legend="'Délai max. avant de retourner la 2eme carte'"
       :current-modal="currentModal"
       :from-menu-change-param="fromMenuChangeParameter"
     >
