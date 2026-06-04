@@ -18,8 +18,12 @@
         <div class="square first"></div>
         <div class="square last"></div>
         <div class="content-intro-txt">
-            <div class="txt-intro">Bienvenue dans le jeu<br />du Memory !</div>
+            <div class="txt-intro">
+                <p>Bienvenue dans le jeu</p>
+                <p>du Memory !</p>
+            </div>
             <BaseButton
+                id="bt-start"
                 @click="goToSettings"
                 font-size="max(22px, 4vmin)"
                 rounded
@@ -128,12 +132,41 @@
     100% { transform: rotate(-45deg); }
 }
 
+#bt-start {
+    @starting-style {
+        transform: scale(0.8) translateY(5vh);
+        opacity: 0;
+    }
+    transition-property: transform, opacity;
+    transition-duration: 0.4s;
+    /* transition-timing-function: ease-out; */
+    transition-timing-function: cubic-bezier(0.07, 0.12, 0.27, 0.99);
+    transition-delay: 0.3s;
+}
+
 .content-intro-txt {
     position: absolute;
     z-index: 2;
     margin-top: 7vmin;
 }
 .txt-intro {
+    p {
+        @starting-style {
+            opacity: 0;
+            transform: translateY(4vh);
+        }
+        transition-property: opacity, transform;
+        transition-duration: 0.5s;
+        transition-timing-function: cubic-bezier(0.07, 0.12, 0.27, 0.99);
+
+        &:first-child {
+            transition-delay: 0.1s;
+        }
+        &:last-child {
+            transition-delay: 0.25s;
+        }
+    }
+
     font-size: max(27px, 7vmin);
     text-align: center;
     font-family: 'Yeseva One', cursive;
@@ -147,6 +180,16 @@ button {
     transform: translateY(-2px);
 }
 .wrapper-card {
+    @starting-style {
+        opacity: 0;
+        translate: 0 2vh;
+    }
+    transition-property: opacity, translate;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0.1s;
+    translate: 0 0;
+
     position: absolute;
     z-index: 3;
     width: 12vmin;
